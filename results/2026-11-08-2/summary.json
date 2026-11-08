@@ -1,0 +1,5770 @@
+{
+  "planned": 231,
+  "finished": 231,
+  "complete": true,
+  "runs": [
+    {
+      "id": "0000-opencode-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0001-fx-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0002-smelt-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0003-omp-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0004-claude-code-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0005-codex-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0006-pi-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0007-codex-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0008-omp-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0009-pi-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0010-claude-code-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0011-opencode-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0012-fx-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0013-smelt-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0014-opencode-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0015-omp-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0016-smelt-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0017-codex-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0018-claude-code-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0019-pi-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0020-fx-startup-tui-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0021-opencode-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0022-claude-code-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0023-codex-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0024-smelt-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0025-fx-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0026-pi-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0027-omp-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0028-pi-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0029-omp-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0030-codex-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0031-smelt-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0032-claude-code-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0033-fx-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0034-opencode-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0035-opencode-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0036-smelt-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0037-omp-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0038-claude-code-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0039-fx-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0040-codex-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0041-pi-start-memory-headless-0",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0042-claude-code-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0043-opencode-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0044-fx-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0045-smelt-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0046-codex-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0047-omp-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0048-pi-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0049-claude-code-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0050-fx-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0051-omp-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0052-opencode-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0053-pi-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0054-smelt-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0055-codex-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0056-codex-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0057-pi-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0058-opencode-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0059-fx-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0060-smelt-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0061-omp-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0062-claude-code-task-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0063-omp-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0064-codex-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0065-claude-code-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0066-fx-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0067-opencode-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0068-smelt-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0069-pi-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0070-omp-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0071-smelt-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0072-claude-code-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0073-opencode-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0074-pi-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0075-codex-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0076-fx-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0077-smelt-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0078-codex-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0079-fx-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0080-opencode-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0081-pi-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0082-claude-code-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0083-omp-task-tui-250",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0084-claude-code-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0085-opencode-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0086-smelt-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0087-pi-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0088-omp-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0089-fx-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0090-codex-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0091-opencode-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0092-omp-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0093-codex-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0094-pi-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0095-claude-code-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0096-fx-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0097-smelt-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0098-pi-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0099-opencode-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0100-omp-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0101-smelt-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0102-codex-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0103-claude-code-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0104-fx-task-headless-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0105-codex-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0106-omp-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0107-claude-code-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0108-pi-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0109-opencode-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0110-smelt-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0111-fx-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0112-omp-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0113-smelt-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0114-fx-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0115-claude-code-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0116-codex-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0117-pi-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0118-opencode-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0119-opencode-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0120-smelt-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0121-omp-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0122-codex-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0123-fx-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0124-claude-code-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0125-pi-task-tui-120",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0126-codex-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0127-claude-code-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0128-fx-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0129-omp-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0130-smelt-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0131-pi-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0132-opencode-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0133-smelt-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0134-claude-code-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0135-fx-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0136-omp-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0137-pi-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0138-opencode-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0139-codex-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0140-codex-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0141-fx-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0142-pi-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0143-opencode-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0144-claude-code-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0145-omp-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0146-smelt-task-tui-60",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0147-claude-code-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0148-fx-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0149-smelt-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0150-codex-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0151-opencode-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0152-pi-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0153-omp-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0154-claude-code-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0155-codex-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0156-omp-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0157-pi-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0158-smelt-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0159-fx-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0160-opencode-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0161-codex-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0162-opencode-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0163-pi-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0164-claude-code-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0165-smelt-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0166-omp-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0167-fx-task-tui-30",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0168-opencode-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0169-fx-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0170-smelt-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0171-codex-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0172-pi-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0173-claude-code-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0174-omp-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0175-pi-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0176-smelt-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0177-omp-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0178-opencode-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0179-codex-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0180-fx-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0181-claude-code-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0182-fx-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0183-omp-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0184-claude-code-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0185-smelt-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0186-codex-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0187-opencode-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0188-pi-long-session-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0189-smelt-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0190-fx-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0191-claude-code-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0192-omp-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0193-codex-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0194-opencode-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0195-pi-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0196-omp-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0197-claude-code-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0198-codex-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0199-fx-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0200-opencode-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0201-pi-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0202-smelt-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0203-pi-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0204-smelt-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0205-omp-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0206-claude-code-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0207-opencode-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0208-codex-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0209-fx-new-sessions-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0210-claude-code-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0211-smelt-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0212-opencode-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0213-pi-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0214-omp-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0215-fx-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0216-codex-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0217-fx-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0218-smelt-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0219-pi-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0220-omp-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0221-codex-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0222-claude-code-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0223-opencode-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0224-codex-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0225-omp-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0226-claude-code-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0227-smelt-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0228-fx-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0229-opencode-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "0230-pi-idle-tui-1000",
+      "status": "ok",
+      "error": null
+    }
+  ],
+  "groups": [
+    {
+      "agent": "claude-code",
+      "question": "idle",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 298283008,
+          "min": 288026624,
+          "max": 298381312
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.503942,
+          "min": 0.49742,
+          "max": 0.508249
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.004721366,
+          "min": 0.004638684,
+          "max": 0.004755823
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 119865,
+          "min": 115878,
+          "max": 119919
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.010000000000000009
+        },
+        "idle_cpu_seconds_after_0": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_120": {
+          "n": 3,
+          "median": 0.359014,
+          "min": 0.355885,
+          "max": 0.391761
+        },
+        "idle_cpu_seconds_after_30": {
+          "n": 3,
+          "median": 0.19997,
+          "min": 0.183436,
+          "max": 0.203595
+        },
+        "idle_cpu_seconds_after_300": {
+          "n": 3,
+          "median": 0.50407,
+          "min": 0.497556,
+          "max": 0.508266
+        },
+        "idle_cpu_seconds_after_60": {
+          "n": 3,
+          "median": 0.2188,
+          "min": 0.204583,
+          "max": 0.223003
+        },
+        "idle_pss_bytes_after_0": {
+          "n": 3,
+          "median": 351817728,
+          "min": 346517504,
+          "max": 354029568
+        },
+        "idle_pss_bytes_after_120": {
+          "n": 3,
+          "median": 284565504,
+          "min": 283594752,
+          "max": 285261824
+        },
+        "idle_pss_bytes_after_30": {
+          "n": 3,
+          "median": 325373952,
+          "min": 323543040,
+          "max": 327872512
+        },
+        "idle_pss_bytes_after_300": {
+          "n": 3,
+          "median": 283750400,
+          "min": 282767360,
+          "max": 284610560
+        },
+        "idle_pss_bytes_after_60": {
+          "n": 3,
+          "median": 325763072,
+          "min": 323534848,
+          "max": 327671808
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "long-session",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 64,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 541147136,
+          "min": 525832192,
+          "max": 559566848
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 127.838645,
+          "min": 125.884052,
+          "max": 128.134907
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.340782475,
+          "min": 0.340060227,
+          "max": 0.354204235
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 10635704,
+          "min": 10627847,
+          "max": 10642565
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.009999999999999995
+        },
+        "cpu_seconds_per_turn_16_32": {
+          "n": 3,
+          "median": 1.95637175,
+          "min": 1.9276089375,
+          "max": 1.96877475
+        },
+        "cpu_seconds_per_turn_1_4": {
+          "n": 3,
+          "median": 0.9056886666666667,
+          "min": 0.8897036666666667,
+          "max": 0.9196193333333333
+        },
+        "cpu_seconds_per_turn_32_64": {
+          "n": 3,
+          "median": 2.14689725,
+          "min": 2.110133125,
+          "max": 2.14831921875
+        },
+        "cpu_seconds_per_turn_4_16": {
+          "n": 3,
+          "median": 2.0342745,
+          "min": 2.0194158333333334,
+          "max": 2.044384583333333
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 278212608,
+          "min": 276889600,
+          "max": 279085056
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 479916032,
+          "min": 464543744,
+          "max": 482701312
+        },
+        "pss_bytes_after_32": {
+          "n": 3,
+          "median": 491995136,
+          "min": 484847616,
+          "max": 497123328
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 360054784,
+          "min": 347918336,
+          "max": 363929600
+        },
+        "pss_bytes_after_64": {
+          "n": 3,
+          "median": 520900608,
+          "min": 509337600,
+          "max": 534892544
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 1444329,
+          "min": 1444329,
+          "max": 1444330
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 7501500,
+          "min": 7499690,
+          "max": 7502013
+        },
+        "session_bytes_after_32": {
+          "n": 3,
+          "median": 15196453,
+          "min": 15193441,
+          "max": 15196966
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 1827785,
+          "min": 1827784,
+          "max": 1827786
+        },
+        "session_bytes_after_64": {
+          "n": 3,
+          "median": 31649569,
+          "min": 31642098,
+          "max": 31650077
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "new-sessions",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 16,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 419983360,
+          "min": 412786688,
+          "max": 427307008
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 26.73625,
+          "min": 26.734567,
+          "max": 27.012674
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.071303338,
+          "min": 0.071214156,
+          "max": 0.071489615
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 2200728,
+          "min": 2194391,
+          "max": 2203901
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_1_2": {
+          "n": 3,
+          "median": 1.882077,
+          "min": 1.805069,
+          "max": 1.897294
+        },
+        "cpu_seconds_per_turn_2_4": {
+          "n": 3,
+          "median": 0.509482,
+          "min": 0.486182,
+          "max": 0.5271785
+        },
+        "cpu_seconds_per_turn_4_8": {
+          "n": 3,
+          "median": 3.9530145,
+          "min": 3.8952985,
+          "max": 4.00798475
+        },
+        "cpu_seconds_per_turn_8_16": {
+          "n": 3,
+          "median": 0.940369,
+          "min": 0.929302,
+          "max": 0.9444015
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 277848064,
+          "min": 275808256,
+          "max": 278835200
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 416645120,
+          "min": 416419840,
+          "max": 445902848
+        },
+        "pss_bytes_after_2": {
+          "n": 3,
+          "median": 350285824,
+          "min": 349904896,
+          "max": 352862208
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 367800320,
+          "min": 365309952,
+          "max": 368955392
+        },
+        "pss_bytes_after_8": {
+          "n": 3,
+          "median": 458137600,
+          "min": 381812736,
+          "max": 460595200
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 1444329,
+          "min": 1444329,
+          "max": 1444330
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 10735662,
+          "min": 10735561,
+          "max": 10736207
+        },
+        "session_bytes_after_2": {
+          "n": 3,
+          "median": 1935901,
+          "min": 1935900,
+          "max": 1935903
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 2591029,
+          "min": 2591028,
+          "max": 2591032
+        },
+        "session_bytes_after_8": {
+          "n": 3,
+          "median": 7066821,
+          "min": 7066719,
+          "max": 7067365
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "start-memory",
+      "frontend": "headless",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "pss_bytes": {
+          "n": 3,
+          "median": 182394880,
+          "min": 182181888,
+          "max": 182603776
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "startup",
+      "frontend": "tui",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "input_ready_seconds": {
+          "n": 3,
+          "median": 0.2670590790003189,
+          "min": 0.26473186899966095,
+          "max": 0.269517905999237
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "task",
+      "frontend": "headless",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "first_request_seconds": {
+          "n": 3,
+          "median": 0.24420571327209473,
+          "min": 0.23749208450317383,
+          "max": 0.24944233894348145
+        },
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 153657344,
+          "min": 153120768,
+          "max": 154603520
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.406445,
+          "min": 1.387043,
+          "max": 1.558496
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 3.527461751559279,
+          "min": 3.427536596267998,
+          "max": 3.902376889017448
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 296398848,
+          "min": 293101568,
+          "max": 326717440
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.508761,
+          "min": 2.492812,
+          "max": 2.54686
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 43.2471545019575,
+          "min": 42.961798481862125,
+          "max": 43.55903284424934
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.004607096,
+          "min": 0.004563691,
+          "max": 0.004735127
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 116110,
+          "min": 115451,
+          "max": 119809
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 285048832,
+          "min": 282669056,
+          "max": 286781440
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 3.481716,
+          "min": 3.457913,
+          "max": 3.544816
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 8.592736859518128,
+          "min": 8.53267858477411,
+          "max": 8.738701292892525
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.011202273,
+          "min": 0.011095722,
+          "max": 0.0113311
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 308845,
+          "min": 307975,
+          "max": 309339
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 250,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 292810752,
+          "min": 285450240,
+          "max": 295862272
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.984673,
+          "min": 2.96297,
+          "max": 3.087398
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 14.94003064739457,
+          "min": 14.86094204979501,
+          "max": 15.444469355677034
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.008157763,
+          "min": 0.008101267,
+          "max": 0.008163045
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 221091,
+          "min": 220301,
+          "max": 221950
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 30,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 279019520,
+          "min": 278519808,
+          "max": 279982080
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 5.145053,
+          "min": 4.863906,
+          "max": 5.155123
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 3.252207366462751,
+          "min": 3.0740026503426803,
+          "max": 3.2578402905884203
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.014769485,
+          "min": 0.014542184,
+          "max": 0.015075787
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 369191,
+          "min": 368653,
+          "max": 369388
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "claude-code",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 60,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 281206784,
+          "min": 279814144,
+          "max": 283144192
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 4.336338,
+          "min": 4.326684,
+          "max": 4.353572
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 5.424878198233924,
+          "min": 5.414039702653227,
+          "max": 5.448039320695574
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.012565288,
+          "min": 0.012418427,
+          "max": 0.012575545
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 336261,
+          "min": 332639,
+          "max": 337629
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "idle",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 172449792,
+          "min": 171552768,
+          "max": 174088192
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.034384,
+          "min": 0.032769,
+          "max": 0.03443
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.012400882,
+          "min": 0.012044422,
+          "max": 0.012436971
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 371978,
+          "min": 357968,
+          "max": 372090
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_0": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_120": {
+          "n": 3,
+          "median": 0.017715,
+          "min": 0.016725,
+          "max": 0.018281
+        },
+        "idle_cpu_seconds_after_30": {
+          "n": 3,
+          "median": 0.00731,
+          "min": 0.007114,
+          "max": 0.008038
+        },
+        "idle_cpu_seconds_after_300": {
+          "n": 3,
+          "median": 0.034353,
+          "min": 0.032767,
+          "max": 0.034388
+        },
+        "idle_cpu_seconds_after_60": {
+          "n": 3,
+          "median": 0.01122,
+          "min": 0.010634,
+          "max": 0.011668
+        },
+        "idle_pss_bytes_after_0": {
+          "n": 3,
+          "median": 208687104,
+          "min": 207384576,
+          "max": 209866752
+        },
+        "idle_pss_bytes_after_120": {
+          "n": 3,
+          "median": 204996608,
+          "min": 204693504,
+          "max": 205209600
+        },
+        "idle_pss_bytes_after_30": {
+          "n": 3,
+          "median": 207699968,
+          "min": 206536704,
+          "max": 208388096
+        },
+        "idle_pss_bytes_after_300": {
+          "n": 3,
+          "median": 204652544,
+          "min": 204251136,
+          "max": 204881920
+        },
+        "idle_pss_bytes_after_60": {
+          "n": 3,
+          "median": 207175680,
+          "min": 205815808,
+          "max": 208080896
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "long-session",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 64,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 360136704,
+          "min": 358862848,
+          "max": 360370176
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 81.651881,
+          "min": 81.391936,
+          "max": 81.762152
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.68788555,
+          "min": 0.683848457,
+          "max": 0.6901664
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 19474027,
+          "min": 19417318,
+          "max": 19536948
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.010000000000000002
+        },
+        "cpu_seconds_per_turn_16_32": {
+          "n": 3,
+          "median": 1.319717875,
+          "min": 1.319010125,
+          "max": 1.3236904375
+        },
+        "cpu_seconds_per_turn_1_4": {
+          "n": 3,
+          "median": 0.4948793333333333,
+          "min": 0.4897303333333333,
+          "max": 0.496499
+        },
+        "cpu_seconds_per_turn_32_64": {
+          "n": 3,
+          "median": 1.31419440625,
+          "min": 1.30897971875,
+          "max": 1.3174215625
+        },
+        "cpu_seconds_per_turn_4_16": {
+          "n": 3,
+          "median": 1.3245164166666668,
+          "min": 1.3216015,
+          "max": 1.3287425
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 191680512,
+          "min": 191377408,
+          "max": 192696320
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 259006464,
+          "min": 258351104,
+          "max": 259903488
+        },
+        "pss_bytes_after_32": {
+          "n": 3,
+          "median": 282923008,
+          "min": 281362432,
+          "max": 283607040
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 216543232,
+          "min": 214880256,
+          "max": 217255936
+        },
+        "pss_bytes_after_64": {
+          "n": 3,
+          "median": 344989696,
+          "min": 342589440,
+          "max": 345116672
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 3508132,
+          "min": 3508131,
+          "max": 3508132
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 30922455,
+          "min": 30785922,
+          "max": 31750027
+        },
+        "session_bytes_after_32": {
+          "n": 3,
+          "median": 38990340,
+          "min": 38651905,
+          "max": 39615992
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 10906659,
+          "min": 10853100,
+          "max": 10919022
+        },
+        "session_bytes_after_64": {
+          "n": 3,
+          "median": 55097599,
+          "min": 54702167,
+          "max": 55188157
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "new-sessions",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 16,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 251203584,
+          "min": 249724928,
+          "max": 253374464
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 19.394262,
+          "min": 19.315403,
+          "max": 19.708059
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.123840464,
+          "min": 0.122512376,
+          "max": 0.123882494
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 3496784,
+          "min": 3472296,
+          "max": 3505289
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.009999999999999995,
+          "min": 0.0,
+          "max": 0.010000000000000009
+        },
+        "cpu_seconds_per_turn_1_2": {
+          "n": 3,
+          "median": 0.971907,
+          "min": 0.946081,
+          "max": 0.979689
+        },
+        "cpu_seconds_per_turn_2_4": {
+          "n": 3,
+          "median": 0.396961,
+          "min": 0.388983,
+          "max": 0.405523
+        },
+        "cpu_seconds_per_turn_4_8": {
+          "n": 3,
+          "median": 2.61355325,
+          "min": 2.5985175,
+          "max": 2.6497195
+        },
+        "cpu_seconds_per_turn_8_16": {
+          "n": 3,
+          "median": 0.768832625,
+          "min": 0.765225,
+          "max": 0.7815525
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 191819776,
+          "min": 191594496,
+          "max": 192606208
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 262422528,
+          "min": 260399104,
+          "max": 263266304
+        },
+        "pss_bytes_after_2": {
+          "n": 3,
+          "median": 215339008,
+          "min": 212709376,
+          "max": 216784896
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 226185216,
+          "min": 223854592,
+          "max": 227586048
+        },
+        "pss_bytes_after_8": {
+          "n": 3,
+          "median": 240746496,
+          "min": 237641728,
+          "max": 244355072
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 3487532,
+          "min": 3487530,
+          "max": 3487532
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 33060298,
+          "min": 32801288,
+          "max": 33105608
+        },
+        "session_bytes_after_2": {
+          "n": 3,
+          "median": 8882739,
+          "min": 8837426,
+          "max": 8882743
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 11811243,
+          "min": 11765932,
+          "max": 11819482
+        },
+        "session_bytes_after_8": {
+          "n": 3,
+          "median": 30872932,
+          "min": 30613909,
+          "max": 30909996
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "start-memory",
+      "frontend": "headless",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "pss_bytes": {
+          "n": 3,
+          "median": 132935680,
+          "min": 132124672,
+          "max": 152444928
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "startup",
+      "frontend": "tui",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "input_ready_seconds": {
+          "n": 3,
+          "median": 0.0758535530003428,
+          "min": 0.07552634900093835,
+          "max": 0.08064456899955985
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "task",
+      "frontend": "headless",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "first_request_seconds": {
+          "n": 3,
+          "median": 0.1101236343383789,
+          "min": 0.1083533763885498,
+          "max": 0.11543846130371094
+        },
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 154107904,
+          "min": 154099712,
+          "max": 154742784
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.652236,
+          "min": 1.605668,
+          "max": 1.666357
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 4.046605071022749,
+          "min": 3.9327576530785904,
+          "max": 4.081463945872152
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 172339200,
+          "min": 170979328,
+          "max": 216793088
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.036296,
+          "min": 1.999236,
+          "max": 2.070281
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 34.885119388391864,
+          "min": 34.252352447815476,
+          "max": 35.48006536221912
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.012521081,
+          "min": 0.012179934,
+          "max": 0.012642856
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 372407,
+          "min": 363227,
+          "max": 378747
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 172802048,
+          "min": 172138496,
+          "max": 173314048
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.591356,
+          "min": 2.590323,
+          "max": 2.613337
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 6.336816985282844,
+          "min": 6.333436841500312,
+          "max": 6.388513338864999
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.021937788,
+          "min": 0.021836007,
+          "max": 0.02201141
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 540623,
+          "min": 540224,
+          "max": 541528
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 250,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 172924928,
+          "min": 171253760,
+          "max": 173096960
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.25174,
+          "min": 2.241707,
+          "max": 2.262413
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 11.151541068159187,
+          "min": 11.11379262897957,
+          "max": 11.21575232070425
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.01713829,
+          "min": 0.017042102,
+          "max": 0.017213661
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 470755,
+          "min": 470207,
+          "max": 471452
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 30,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 170364928,
+          "min": 170274816,
+          "max": 171278336
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 4.725137,
+          "min": 4.719999,
+          "max": 4.743285
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 2.947681439592731,
+          "min": 2.944235180230347,
+          "max": 2.958740572489278
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.04614226,
+          "min": 0.04601,
+          "max": 0.046301788
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 861159,
+          "min": 860360,
+          "max": 861314
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "codex",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 60,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 169984000,
+          "min": 169873408,
+          "max": 170086400
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 3.299978,
+          "min": 3.299278,
+          "max": 3.322829
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 4.0905253381681845,
+          "min": 4.088452974043576,
+          "max": 4.118161071536966
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.029563861,
+          "min": 0.029416825,
+          "max": 0.029602884
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 629742,
+          "min": 629726,
+          "max": 629957
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "idle",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 11378688,
+          "min": 10637312,
+          "max": 12488704
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.848434,
+          "min": 0.845576,
+          "max": 0.849663
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.010847918,
+          "min": 0.010817516,
+          "max": 0.011033981
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 172905,
+          "min": 172694,
+          "max": 175938
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_0": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_120": {
+          "n": 3,
+          "median": 0.337272,
+          "min": 0.333422,
+          "max": 0.34014
+        },
+        "idle_cpu_seconds_after_30": {
+          "n": 3,
+          "median": 0.084925,
+          "min": 0.084148,
+          "max": 0.085425
+        },
+        "idle_cpu_seconds_after_300": {
+          "n": 3,
+          "median": 0.848638,
+          "min": 0.845735,
+          "max": 0.849847
+        },
+        "idle_cpu_seconds_after_60": {
+          "n": 3,
+          "median": 0.17031,
+          "min": 0.168836,
+          "max": 0.171311
+        },
+        "idle_pss_bytes_after_0": {
+          "n": 3,
+          "median": 15544320,
+          "min": 14524416,
+          "max": 16723968
+        },
+        "idle_pss_bytes_after_120": {
+          "n": 3,
+          "median": 15544320,
+          "min": 14524416,
+          "max": 16723968
+        },
+        "idle_pss_bytes_after_30": {
+          "n": 3,
+          "median": 15544320,
+          "min": 14524416,
+          "max": 16723968
+        },
+        "idle_pss_bytes_after_300": {
+          "n": 3,
+          "median": 15544320,
+          "min": 14524416,
+          "max": 16723968
+        },
+        "idle_pss_bytes_after_60": {
+          "n": 3,
+          "median": 15544320,
+          "min": 14524416,
+          "max": 16723968
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "long-session",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 64,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 326914048,
+          "min": 314736640,
+          "max": 357109760
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 364.215451,
+          "min": 364.136502,
+          "max": 364.911002
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.325998086,
+          "min": 0.323320387,
+          "max": 0.326062178
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 5631092,
+          "min": 5582999,
+          "max": 5646664
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_16_32": {
+          "n": 3,
+          "median": 5.2923915,
+          "min": 5.2715493125,
+          "max": 5.2934596875
+        },
+        "cpu_seconds_per_turn_1_4": {
+          "n": 3,
+          "median": 0.257247,
+          "min": 0.25508000000000003,
+          "max": 0.2574963333333333
+        },
+        "cpu_seconds_per_turn_32_64": {
+          "n": 3,
+          "median": 7.658008875,
+          "min": 7.64275734375,
+          "max": 7.6858626875
+        },
+        "cpu_seconds_per_turn_4_16": {
+          "n": 3,
+          "median": 2.814912916666667,
+          "min": 2.801949,
+          "max": 2.8382920833333336
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 10801152,
+          "min": 10797056,
+          "max": 10862592
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 80379904,
+          "min": 79036416,
+          "max": 84381696
+        },
+        "pss_bytes_after_32": {
+          "n": 3,
+          "median": 155439104,
+          "min": 153108480,
+          "max": 170418176
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 16805888,
+          "min": 16633856,
+          "max": 17166336
+        },
+        "pss_bytes_after_64": {
+          "n": 3,
+          "median": 265494528,
+          "min": 252977152,
+          "max": 295194624
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 54385,
+          "min": 54385,
+          "max": 54385
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 4652457,
+          "min": 4652448,
+          "max": 4652465
+        },
+        "session_bytes_after_32": {
+          "n": 3,
+          "median": 11346282,
+          "min": 11346275,
+          "max": 11346291
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 305906,
+          "min": 305906,
+          "max": 305906
+        },
+        "session_bytes_after_64": {
+          "n": 3,
+          "median": 24475879,
+          "min": 24475872,
+          "max": 24475888
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "new-sessions",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 16,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 81653760,
+          "min": 72114176,
+          "max": 82640896
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 17.505199,
+          "min": 17.103432,
+          "max": 17.683454
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.112021694,
+          "min": 0.111250183,
+          "max": 0.112399959
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 1920780,
+          "min": 1908471,
+          "max": 1925333
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_1_2": {
+          "n": 3,
+          "median": 0.46601,
+          "min": 0.45636,
+          "max": 0.471732
+        },
+        "cpu_seconds_per_turn_2_4": {
+          "n": 3,
+          "median": 0.13166,
+          "min": 0.1260335,
+          "max": 0.132838
+        },
+        "cpu_seconds_per_turn_4_8": {
+          "n": 3,
+          "median": 3.13235525,
+          "min": 3.06264125,
+          "max": 3.174257
+        },
+        "cpu_seconds_per_turn_8_16": {
+          "n": 3,
+          "median": 0.522112875,
+          "min": 0.510114125,
+          "max": 0.523238125
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 10825728,
+          "min": 10739712,
+          "max": 10915840
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 53305344,
+          "min": 45375488,
+          "max": 53420032
+        },
+        "pss_bytes_after_2": {
+          "n": 3,
+          "median": 13770752,
+          "min": 13385728,
+          "max": 14032896
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 14225408,
+          "min": 14118912,
+          "max": 15777792
+        },
+        "pss_bytes_after_8": {
+          "n": 3,
+          "median": 42348544,
+          "min": 32751616,
+          "max": 42524672
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 18377,
+          "min": 18377,
+          "max": 18378
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 4029515,
+          "min": 4029494,
+          "max": 4029547
+        },
+        "session_bytes_after_2": {
+          "n": 3,
+          "median": 178453,
+          "min": 178453,
+          "max": 178454
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 277523,
+          "min": 277523,
+          "max": 277524
+        },
+        "session_bytes_after_8": {
+          "n": 3,
+          "median": 2913213,
+          "min": 2913192,
+          "max": 2913230
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "start-memory",
+      "frontend": "headless",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "pss_bytes": {
+          "n": 3,
+          "median": 6107136,
+          "min": 6107136,
+          "max": 6111232
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "startup",
+      "frontend": "tui",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "input_ready_seconds": {
+          "n": 3,
+          "median": 0.006973494999328977,
+          "min": 0.006527486999402754,
+          "max": 0.0072449349991075
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "task",
+      "frontend": "headless",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "first_request_seconds": {
+          "n": 3,
+          "median": 0.0028488636016845703,
+          "min": 0.0028455257415771484,
+          "max": 0.0032563209533691406
+        },
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 8556544,
+          "min": 8482816,
+          "max": 8663040
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.197415,
+          "min": 0.195568,
+          "max": 0.202703
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 0.49283004317529044,
+          "min": 0.4882304268847215,
+          "max": 0.5060511792057888
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 12226560,
+          "min": 11771904,
+          "max": 23339008
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.577771,
+          "min": 0.577451,
+          "max": 0.582614
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 11.150261997813855,
+          "min": 11.146938803560193,
+          "max": 11.250700947435016
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.011009294,
+          "min": 0.011008993,
+          "max": 0.011153891
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 176039,
+          "min": 176019,
+          "max": 176059
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 11427840,
+          "min": 11001856,
+          "max": 11558912
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.851536,
+          "min": 1.826913,
+          "max": 1.852774
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 4.602548040917703,
+          "min": 4.54099662844588,
+          "max": 4.606140396932668
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.011245442,
+          "min": 0.011219437,
+          "max": 0.011294673
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 181129,
+          "min": 180964,
+          "max": 181179
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 250,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 11034624,
+          "min": 10551296,
+          "max": 11706368
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.107681,
+          "min": 1.09473,
+          "max": 1.112598
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 5.677559886163802,
+          "min": 5.609820125739072,
+          "max": 5.699729538300883
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.011111531,
+          "min": 0.011065604,
+          "max": 0.011204451
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 178224,
+          "min": 178088,
+          "max": 178590
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 30,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 11198464,
+          "min": 11022336,
+          "max": 11407360
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 6.218946,
+          "min": 6.179075,
+          "max": 6.228332
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 3.8995231803956925,
+          "min": 3.874544702488153,
+          "max": 3.9051751321425594
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.01171056,
+          "min": 0.011707557,
+          "max": 0.011738282
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 195621,
+          "min": 195596,
+          "max": 195696
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "fx",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 60,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 11608064,
+          "min": 10805248,
+          "max": 11841536
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 3.331958,
+          "min": 3.328083,
+          "max": 3.342681
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 4.165871740613571,
+          "min": 4.160532415567311,
+          "max": 4.17918064689654
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.011370862,
+          "min": 0.011330601,
+          "max": 0.011380841
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 186042,
+          "min": 185817,
+          "max": 186045
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.01
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "idle",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 417402880,
+          "min": 417247232,
+          "max": 422555648
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.785175,
+          "min": 0.783058,
+          "max": 0.870146
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.052957882,
+          "min": 0.052509424,
+          "max": 0.057341306
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 850806,
+          "min": 843384,
+          "max": 916002
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_0": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_120": {
+          "n": 3,
+          "median": 0.371027,
+          "min": 0.365159,
+          "max": 0.409912
+        },
+        "idle_cpu_seconds_after_30": {
+          "n": 3,
+          "median": 0.156614,
+          "min": 0.154665,
+          "max": 0.161066
+        },
+        "idle_cpu_seconds_after_300": {
+          "n": 3,
+          "median": 0.785357,
+          "min": 0.783058,
+          "max": 0.870146
+        },
+        "idle_cpu_seconds_after_60": {
+          "n": 3,
+          "median": 0.193074,
+          "min": 0.189852,
+          "max": 0.197318
+        },
+        "idle_pss_bytes_after_0": {
+          "n": 3,
+          "median": 374296576,
+          "min": 368861184,
+          "max": 376635392
+        },
+        "idle_pss_bytes_after_120": {
+          "n": 3,
+          "median": 313786368,
+          "min": 313643008,
+          "max": 317853696
+        },
+        "idle_pss_bytes_after_30": {
+          "n": 3,
+          "median": 349818880,
+          "min": 349732864,
+          "max": 350027776
+        },
+        "idle_pss_bytes_after_300": {
+          "n": 3,
+          "median": 308527104,
+          "min": 308285440,
+          "max": 313196544
+        },
+        "idle_pss_bytes_after_60": {
+          "n": 3,
+          "median": 347455488,
+          "min": 347242496,
+          "max": 347467776
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "long-session",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 64,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 608509952,
+          "min": 603078656,
+          "max": 637218816
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 54.922987,
+          "min": 54.586232,
+          "max": 54.939107
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 5.075554555,
+          "min": 5.06512904,
+          "max": 5.077421659
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 80185616,
+          "min": 80135256,
+          "max": 80281637
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_16_32": {
+          "n": 3,
+          "median": 0.8661295,
+          "min": 0.8498958125,
+          "max": 0.877501375
+        },
+        "cpu_seconds_per_turn_1_4": {
+          "n": 3,
+          "median": 0.42601833333333333,
+          "min": 0.421543,
+          "max": 0.42869766666666664
+        },
+        "cpu_seconds_per_turn_32_64": {
+          "n": 3,
+          "median": 0.87533675,
+          "min": 0.86018446875,
+          "max": 0.880946875
+        },
+        "cpu_seconds_per_turn_4_16": {
+          "n": 3,
+          "median": 0.904313,
+          "min": 0.9007049166666666,
+          "max": 0.9162801666666667
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 313315328,
+          "min": 310071296,
+          "max": 314114048
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 445841408,
+          "min": 434176000,
+          "max": 453513216
+        },
+        "pss_bytes_after_32": {
+          "n": 3,
+          "median": 454856704,
+          "min": 451452928,
+          "max": 467345408
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 386646016,
+          "min": 382590976,
+          "max": 389574656
+        },
+        "pss_bytes_after_64": {
+          "n": 3,
+          "median": 505339904,
+          "min": 498114560,
+          "max": 517570560
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 11944606,
+          "min": 11944599,
+          "max": 13021958
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 16535979,
+          "min": 16535967,
+          "max": 17613308
+        },
+        "session_bytes_after_32": {
+          "n": 3,
+          "median": 22097412,
+          "min": 22097404,
+          "max": 23174666
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 12298410,
+          "min": 12298393,
+          "max": 13375752
+        },
+        "session_bytes_after_64": {
+          "n": 3,
+          "median": 33247773,
+          "min": 33247735,
+          "max": 34324939
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "new-sessions",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 16,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 523182080,
+          "min": 485769216,
+          "max": 523747328
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 13.047782,
+          "min": 13.046673,
+          "max": 13.148896
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 1.080395767,
+          "min": 1.07330995,
+          "max": 1.083373361
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 17094165,
+          "min": 17030185,
+          "max": 17162881
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_1_2": {
+          "n": 3,
+          "median": 0.968354,
+          "min": 0.936281,
+          "max": 0.975215
+        },
+        "cpu_seconds_per_turn_2_4": {
+          "n": 3,
+          "median": 0.282933,
+          "min": 0.274755,
+          "max": 0.3268105
+        },
+        "cpu_seconds_per_turn_4_8": {
+          "n": 3,
+          "median": 1.798175,
+          "min": 1.7851965,
+          "max": 1.830605
+        },
+        "cpu_seconds_per_turn_8_16": {
+          "n": 3,
+          "median": 0.425016125,
+          "min": 0.4144065,
+          "max": 0.4258865
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 307593216,
+          "min": 306024448,
+          "max": 315715584
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 443256832,
+          "min": 436199424,
+          "max": 450723840
+        },
+        "pss_bytes_after_2": {
+          "n": 3,
+          "median": 368283648,
+          "min": 367132672,
+          "max": 376270848
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 364462080,
+          "min": 359456768,
+          "max": 365309952
+        },
+        "pss_bytes_after_8": {
+          "n": 3,
+          "median": 434540544,
+          "min": 431710208,
+          "max": 457646080
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 13021957,
+          "min": 11944599,
+          "max": 13091823
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 18060143,
+          "min": 16982815,
+          "max": 18130002
+        },
+        "session_bytes_after_2": {
+          "n": 3,
+          "median": 13263326,
+          "min": 12185980,
+          "max": 13333193
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 13482434,
+          "min": 12405085,
+          "max": 13552305
+        },
+        "session_bytes_after_8": {
+          "n": 3,
+          "median": 16299081,
+          "min": 15221721,
+          "max": 16368926
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "start-memory",
+      "frontend": "headless",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "pss_bytes": {
+          "n": 3,
+          "median": 298356736,
+          "min": 267911168,
+          "max": 323039232
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "startup",
+      "frontend": "tui",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "input_ready_seconds": {
+          "n": 3,
+          "median": 0.8222081860003527,
+          "min": 0.8217494149994309,
+          "max": 0.8231988780007669
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "task",
+      "frontend": "headless",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "first_request_seconds": {
+          "n": 3,
+          "median": 0.7597267627716064,
+          "min": 0.7261619567871094,
+          "max": 0.792388916015625
+        },
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 378527744,
+          "min": 375246848,
+          "max": 381091840
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.562595,
+          "min": 1.548008,
+          "max": 1.565637
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 3.866636176931077,
+          "min": 3.8304988110878555,
+          "max": 3.874242215330439
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 421396480,
+          "min": 421154816,
+          "max": 434753536
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.843216,
+          "min": 1.818631,
+          "max": 1.843333
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 33.732042271685316,
+          "min": 33.1853819106684,
+          "max": 33.93790736672371
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.054143765,
+          "min": 0.053113431,
+          "max": 0.054806819
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 861257,
+          "min": 846794,
+          "max": 878068
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 415023104,
+          "min": 414908416,
+          "max": 416448512
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.871525,
+          "min": 2.84712,
+          "max": 2.936328
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 7.071877048133118,
+          "min": 7.010909274236397,
+          "max": 7.23421444996744
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.141634158,
+          "min": 0.14148501,
+          "max": 0.141851833
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 2254808,
+          "min": 2250849,
+          "max": 2261968
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 250,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 414281728,
+          "min": 411598848,
+          "max": 419225600
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.393716,
+          "min": 2.381884,
+          "max": 2.398498
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 12.088257617053475,
+          "min": 12.063934048832415,
+          "max": 12.120546302356752
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.109350969,
+          "min": 0.108891043,
+          "max": 0.110091863
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 1756182,
+          "min": 1746313,
+          "max": 1767267
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 30,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 400257024,
+          "min": 396496896,
+          "max": 405508096
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 4.890659,
+          "min": 4.740595,
+          "max": 4.893234
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 2.981924577957365,
+          "min": 2.9381867309979537,
+          "max": 2.984529259174877
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.265615272,
+          "min": 0.257546516,
+          "max": 0.266461629
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 4025553,
+          "min": 4015619,
+          "max": 4033848
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "omp",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 60,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 410619904,
+          "min": 406245376,
+          "max": 413372416
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 3.558974,
+          "min": 3.535825,
+          "max": 3.564495
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 4.402326856520131,
+          "min": 4.374875198579183,
+          "max": 4.407030619794796
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.182709138,
+          "min": 0.18175696,
+          "max": 0.183086442
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 2888885,
+          "min": 2878219,
+          "max": 2893151
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "idle",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 589545472,
+          "min": 589242368,
+          "max": 598347776
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.217827,
+          "min": 1.173072,
+          "max": 2.358718
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.01195012,
+          "min": 0.011742748,
+          "max": 0.012018695
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 435077,
+          "min": 427480,
+          "max": 441688
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.009999999999999995
+        },
+        "idle_cpu_seconds_after_0": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_120": {
+          "n": 3,
+          "median": 0.798662,
+          "min": 0.751093,
+          "max": 0.977489
+        },
+        "idle_cpu_seconds_after_30": {
+          "n": 3,
+          "median": 0.389703,
+          "min": 0.375488,
+          "max": 0.538861
+        },
+        "idle_cpu_seconds_after_300": {
+          "n": 3,
+          "median": 1.217845,
+          "min": 1.173114,
+          "max": 2.362611
+        },
+        "idle_cpu_seconds_after_60": {
+          "n": 3,
+          "median": 0.453685,
+          "min": 0.435485,
+          "max": 0.60026
+        },
+        "idle_pss_bytes_after_0": {
+          "n": 3,
+          "median": 621555712,
+          "min": 618037248,
+          "max": 626081792
+        },
+        "idle_pss_bytes_after_120": {
+          "n": 3,
+          "median": 457977856,
+          "min": 457510912,
+          "max": 463867904
+        },
+        "idle_pss_bytes_after_30": {
+          "n": 3,
+          "median": 494190592,
+          "min": 490999808,
+          "max": 500633600
+        },
+        "idle_pss_bytes_after_300": {
+          "n": 3,
+          "median": 456089600,
+          "min": 455634944,
+          "max": 556982272
+        },
+        "idle_pss_bytes_after_60": {
+          "n": 3,
+          "median": 492027904,
+          "min": 489275392,
+          "max": 498397184
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "long-session",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 64,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 835432448,
+          "min": 813174784,
+          "max": 835743744
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 215.571607,
+          "min": 214.466463,
+          "max": 219.894253
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 1.014824596,
+          "min": 1.014745509,
+          "max": 1.019721767
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 39063862,
+          "min": 38867758,
+          "max": 39126819
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.009999999999999998
+        },
+        "cpu_seconds_per_turn_16_32": {
+          "n": 3,
+          "median": 2.9710075625,
+          "min": 2.9489715625,
+          "max": 3.0667009375
+        },
+        "cpu_seconds_per_turn_1_4": {
+          "n": 3,
+          "median": 1.0795693333333334,
+          "min": 1.0339833333333333,
+          "max": 1.093926
+        },
+        "cpu_seconds_per_turn_32_64": {
+          "n": 3,
+          "median": 4.1473085625,
+          "min": 4.13771315625,
+          "max": 4.2419718125
+        },
+        "cpu_seconds_per_turn_4_16": {
+          "n": 3,
+          "median": 2.600038666666667,
+          "min": 2.5888893333333334,
+          "max": 2.6127023333333335
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 569298944,
+          "min": 525963264,
+          "max": 576000000
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 600272896,
+          "min": 587100160,
+          "max": 621920256
+        },
+        "pss_bytes_after_32": {
+          "n": 3,
+          "median": 680796160,
+          "min": 672030720,
+          "max": 688934912
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 538693632,
+          "min": 532443136,
+          "max": 648441856
+        },
+        "pss_bytes_after_64": {
+          "n": 3,
+          "median": 752029696,
+          "min": 725360640,
+          "max": 778035200
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 23307834,
+          "min": 23299618,
+          "max": 23307834
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 25397056,
+          "min": 25388840,
+          "max": 25397056
+        },
+        "session_bytes_after_32": {
+          "n": 3,
+          "median": 27949713,
+          "min": 27941497,
+          "max": 27949714
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 23431563,
+          "min": 23423347,
+          "max": 23431563
+        },
+        "session_bytes_after_64": {
+          "n": 3,
+          "median": 32867857,
+          "min": 32859641,
+          "max": 32867858
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "new-sessions",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 16,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 620101632,
+          "min": 617816064,
+          "max": 642932736
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 33.69373,
+          "min": 33.513067,
+          "max": 33.973763
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.232062469,
+          "min": 0.231198257,
+          "max": 0.232222207
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 8880921,
+          "min": 8850595,
+          "max": 8892272
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_1_2": {
+          "n": 3,
+          "median": 2.19137,
+          "min": 2.129688,
+          "max": 2.263507
+        },
+        "cpu_seconds_per_turn_2_4": {
+          "n": 3,
+          "median": 0.9436705,
+          "min": 0.8748355,
+          "max": 0.946783
+        },
+        "cpu_seconds_per_turn_4_8": {
+          "n": 3,
+          "median": 4.78989575,
+          "min": 4.78741225,
+          "max": 4.880965
+        },
+        "cpu_seconds_per_turn_8_16": {
+          "n": 3,
+          "median": 1.222221625,
+          "min": 1.217826,
+          "max": 1.224296625
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 570753024,
+          "min": 547426304,
+          "max": 572899328
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 639283200,
+          "min": 625049600,
+          "max": 649076736
+        },
+        "pss_bytes_after_2": {
+          "n": 3,
+          "median": 633618432,
+          "min": 529801216,
+          "max": 633831424
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 544124928,
+          "min": 538755072,
+          "max": 544735232
+        },
+        "pss_bytes_after_8": {
+          "n": 3,
+          "median": 608223232,
+          "min": 603480064,
+          "max": 609689600
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 23299619,
+          "min": 23299618,
+          "max": 23299619
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 25369673,
+          "min": 25369672,
+          "max": 25369674
+        },
+        "session_bytes_after_2": {
+          "n": 3,
+          "median": 23310323,
+          "min": 23310322,
+          "max": 23310324
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 23423600,
+          "min": 23423599,
+          "max": 23423601
+        },
+        "session_bytes_after_8": {
+          "n": 3,
+          "median": 24739338,
+          "min": 24739337,
+          "max": 24739339
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "start-memory",
+      "frontend": "headless",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "pss_bytes": {
+          "n": 3,
+          "median": 451239936,
+          "min": 427769856,
+          "max": 451645440
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "startup",
+      "frontend": "tui",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "input_ready_seconds": {
+          "n": 3,
+          "median": 0.8197935230000439,
+          "min": 0.8189302209993912,
+          "max": 0.8996159089983848
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "task",
+      "frontend": "headless",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "first_request_seconds": {
+          "n": 3,
+          "median": 0.7226595878601074,
+          "min": 0.6906406879425049,
+          "max": 1.108663558959961
+        },
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 491630592,
+          "min": 483549184,
+          "max": 492847104
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.729613,
+          "min": 2.14009,
+          "max": 2.761298
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 6.523045108123739,
+          "min": 5.0710627828032075,
+          "max": 6.531714697853785
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 610660352,
+          "min": 576684032,
+          "max": 620568576
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.623693,
+          "min": 2.550514,
+          "max": 2.62688
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 48.19126164372305,
+          "min": 47.29629914271896,
+          "max": 48.2051303630251
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.012467767,
+          "min": 0.012170835,
+          "max": 0.012537639
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 456392,
+          "min": 441620,
+          "max": 457946
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 586719232,
+          "min": 544100352,
+          "max": 599564288
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 3.933151,
+          "min": 3.897693,
+          "max": 3.937201
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 9.724143255388464,
+          "min": 9.698683714563934,
+          "max": 9.765848838883985
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.039905462,
+          "min": 0.039469651,
+          "max": 0.0400005
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 1445316,
+          "min": 1440095,
+          "max": 1447395
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 250,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 584613888,
+          "min": 565116928,
+          "max": 598560768
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 3.24183,
+          "min": 3.235176,
+          "max": 3.992771
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 16.400540813374654,
+          "min": 16.35189088356675,
+          "max": 19.936163096476523
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.025028666,
+          "min": 0.024707566,
+          "max": 0.025052898
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 908840,
+          "min": 900893,
+          "max": 920375
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 30,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 550621184,
+          "min": 550412288,
+          "max": 608854016
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 5.946446,
+          "min": 5.906271,
+          "max": 5.956187
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 3.737578097320176,
+          "min": 3.7123304594021933,
+          "max": 3.7476487210292473
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.109605001,
+          "min": 0.109019342,
+          "max": 0.109982269
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 3895949,
+          "min": 3887199,
+          "max": 3900193
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "opencode",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 60,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 532058112,
+          "min": 521453568,
+          "max": 534220800
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 4.625237,
+          "min": 4.584754,
+          "max": 4.635484
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 5.7882986015897515,
+          "min": 5.734862997388304,
+          "max": 5.798226300764674
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.063040143,
+          "min": 0.062683365,
+          "max": 0.063503764
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 2272892,
+          "min": 2270911,
+          "max": 2278169
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "idle",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 101277696,
+          "min": 100999168,
+          "max": 102350848
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.088733,
+          "min": 0.088508,
+          "max": 0.116981
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.080457354,
+          "min": 0.080364151,
+          "max": 0.080469653
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 988604,
+          "min": 985368,
+          "max": 989596
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_0": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_120": {
+          "n": 3,
+          "median": 0.088733,
+          "min": 0.088508,
+          "max": 0.116981
+        },
+        "idle_cpu_seconds_after_30": {
+          "n": 3,
+          "median": 0.088626,
+          "min": 0.088393,
+          "max": 0.116877
+        },
+        "idle_cpu_seconds_after_300": {
+          "n": 3,
+          "median": 0.088733,
+          "min": 0.088508,
+          "max": 0.116981
+        },
+        "idle_cpu_seconds_after_60": {
+          "n": 3,
+          "median": 0.08868,
+          "min": 0.088448,
+          "max": 0.116924
+        },
+        "idle_pss_bytes_after_0": {
+          "n": 3,
+          "median": 150073344,
+          "min": 149274624,
+          "max": 150949888
+        },
+        "idle_pss_bytes_after_120": {
+          "n": 3,
+          "median": 114008064,
+          "min": 113827840,
+          "max": 114065408
+        },
+        "idle_pss_bytes_after_30": {
+          "n": 3,
+          "median": 114008064,
+          "min": 113827840,
+          "max": 114065408
+        },
+        "idle_pss_bytes_after_300": {
+          "n": 3,
+          "median": 114008064,
+          "min": 113827840,
+          "max": 114065408
+        },
+        "idle_pss_bytes_after_60": {
+          "n": 3,
+          "median": 114008064,
+          "min": 113827840,
+          "max": 114065408
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "long-session",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 64,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 215134208,
+          "min": 190779392,
+          "max": 217006080
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 55.978949,
+          "min": 55.421427,
+          "max": 55.988319
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 6.57237992,
+          "min": 6.558715611,
+          "max": 6.577627687
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 78504305,
+          "min": 78470799,
+          "max": 78568021
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_16_32": {
+          "n": 3,
+          "median": 0.9112799375,
+          "min": 0.89693825,
+          "max": 0.915312625
+        },
+        "cpu_seconds_per_turn_1_4": {
+          "n": 3,
+          "median": 0.25508766666666666,
+          "min": 0.252123,
+          "max": 0.25742766666666667
+        },
+        "cpu_seconds_per_turn_32_64": {
+          "n": 3,
+          "median": 0.92274271875,
+          "min": 0.91835425,
+          "max": 0.925075125
+        },
+        "cpu_seconds_per_turn_4_16": {
+          "n": 3,
+          "median": 0.9038600833333333,
+          "min": 0.8952953333333333,
+          "max": 0.9063040833333332
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 128589824,
+          "min": 128221184,
+          "max": 131084288
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 213991424,
+          "min": 203206656,
+          "max": 214065152
+        },
+        "pss_bytes_after_32": {
+          "n": 3,
+          "median": 220872704,
+          "min": 204148736,
+          "max": 221216768
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 152473600,
+          "min": 151621632,
+          "max": 153427968
+        },
+        "pss_bytes_after_64": {
+          "n": 3,
+          "median": 221368320,
+          "min": 211701760,
+          "max": 231280640
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 10793,
+          "min": 10793,
+          "max": 10793
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 1625160,
+          "min": 1625158,
+          "max": 1625162
+        },
+        "session_bytes_after_32": {
+          "n": 3,
+          "median": 3714221,
+          "min": 3714221,
+          "max": 3714225
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 123082,
+          "min": 123082,
+          "max": 123082
+        },
+        "session_bytes_after_64": {
+          "n": 3,
+          "median": 7715431,
+          "min": 7715430,
+          "max": 7715435
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "new-sessions",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 16,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 158904320,
+          "min": 157806592,
+          "max": 161124352
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 11.385777,
+          "min": 11.071564,
+          "max": 11.392489
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 1.355143883,
+          "min": 1.35247338,
+          "max": 1.360313922
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 16121550,
+          "min": 16097118,
+          "max": 16202807
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_1_2": {
+          "n": 3,
+          "median": 0.572857,
+          "min": 0.56763,
+          "max": 0.578645
+        },
+        "cpu_seconds_per_turn_2_4": {
+          "n": 3,
+          "median": 0.162796,
+          "min": 0.1593895,
+          "max": 0.1665585
+        },
+        "cpu_seconds_per_turn_4_8": {
+          "n": 3,
+          "median": 1.8480335,
+          "min": 1.79776525,
+          "max": 1.85676525
+        },
+        "cpu_seconds_per_turn_8_16": {
+          "n": 3,
+          "median": 0.361266125,
+          "min": 0.35156925,
+          "max": 0.36389975
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 130641920,
+          "min": 129449984,
+          "max": 131948544
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 181694464,
+          "min": 179179520,
+          "max": 186802176
+        },
+        "pss_bytes_after_2": {
+          "n": 3,
+          "median": 154337280,
+          "min": 153247744,
+          "max": 154554368
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 157536256,
+          "min": 156872704,
+          "max": 158048256
+        },
+        "pss_bytes_after_8": {
+          "n": 3,
+          "median": 191533056,
+          "min": 190320640,
+          "max": 199639040
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 10793,
+          "min": 10793,
+          "max": 10793
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 1703329,
+          "min": 1703328,
+          "max": 1703331
+        },
+        "session_bytes_after_2": {
+          "n": 3,
+          "median": 88536,
+          "min": 88536,
+          "max": 88536
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 140926,
+          "min": 140926,
+          "max": 140926
+        },
+        "session_bytes_after_8": {
+          "n": 3,
+          "median": 1143541,
+          "min": 1143541,
+          "max": 1143543
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "start-memory",
+      "frontend": "headless",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "pss_bytes": {
+          "n": 3,
+          "median": 105586688,
+          "min": 104927232,
+          "max": 105660416
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "startup",
+      "frontend": "tui",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "input_ready_seconds": {
+          "n": 3,
+          "median": 0.2878441280008701,
+          "min": 0.2843591029995878,
+          "max": 0.29017113800000516
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "task",
+      "frontend": "headless",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "first_request_seconds": {
+          "n": 3,
+          "median": 0.27662014961242676,
+          "min": 0.2759060859680176,
+          "max": 0.2800750732421875
+        },
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 76828672,
+          "min": 76726272,
+          "max": 77119488
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.50664,
+          "min": 0.506451,
+          "max": 0.50692
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 1.2661546310243599,
+          "min": 1.2641068537893514,
+          "max": 1.2696044119931404
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 102154240,
+          "min": 101707776,
+          "max": 105463808
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.73148,
+          "min": 0.726971,
+          "max": 0.734157
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 14.918808219937922,
+          "min": 14.825231578053607,
+          "max": 14.967675525667337
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.080662961,
+          "min": 0.08035123,
+          "max": 0.081091488
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 989540,
+          "min": 989054,
+          "max": 995336
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 92164096,
+          "min": 90791936,
+          "max": 97284096
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.360892,
+          "min": 1.358374,
+          "max": 1.361509
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 3.4513997768314217,
+          "min": 3.445059981219424,
+          "max": 3.45274369777627
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.116432963,
+          "min": 0.116430309,
+          "max": 0.117481674
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 1485613,
+          "min": 1485138,
+          "max": 1496585
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 250,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 104755200,
+          "min": 103895040,
+          "max": 105480192
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.047807,
+          "min": 1.043734,
+          "max": 1.053433
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 5.498498961209776,
+          "min": 5.474528172473358,
+          "max": 5.527040748573299
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.108506726,
+          "min": 0.10836334,
+          "max": 0.108933176
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 1354370,
+          "min": 1354190,
+          "max": 1354598
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 30,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 101404672,
+          "min": 99852288,
+          "max": 102068224
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.024971,
+          "min": 2.022826,
+          "max": 2.048462
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 1.2892025045103865,
+          "min": 1.2878184296157538,
+          "max": 1.3042584188915352
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.156954153,
+          "min": 0.156300126,
+          "max": 0.157917214
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 2188325,
+          "min": 2178071,
+          "max": 2189420
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "pi",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 60,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 86175744,
+          "min": 85692416,
+          "max": 86192128
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.610802,
+          "min": 1.604683,
+          "max": 1.617336
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 2.04842592595949,
+          "min": 2.040288601755956,
+          "max": 2.0566563199717356
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.13134213,
+          "min": 0.129843875,
+          "max": 0.132111665
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 1720685,
+          "min": 1716567,
+          "max": 1730393
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "idle",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 28262400,
+          "min": 28037120,
+          "max": 28663808
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.000454,
+          "min": 0.000449,
+          "max": 0.000462
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.019137201,
+          "min": 0.019088337,
+          "max": 0.01926541
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 420512,
+          "min": 417334,
+          "max": 421596
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_0": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "idle_cpu_seconds_after_120": {
+          "n": 3,
+          "median": 0.000261,
+          "min": 0.000239,
+          "max": 0.000271
+        },
+        "idle_cpu_seconds_after_30": {
+          "n": 3,
+          "median": 0.00017,
+          "min": 0.000155,
+          "max": 0.000185
+        },
+        "idle_cpu_seconds_after_300": {
+          "n": 3,
+          "median": 0.000453,
+          "min": 0.000451,
+          "max": 0.000463
+        },
+        "idle_cpu_seconds_after_60": {
+          "n": 3,
+          "median": 0.000198,
+          "min": 0.000183,
+          "max": 0.000214
+        },
+        "idle_pss_bytes_after_0": {
+          "n": 3,
+          "median": 51019776,
+          "min": 50843648,
+          "max": 51408896
+        },
+        "idle_pss_bytes_after_120": {
+          "n": 3,
+          "median": 50954240,
+          "min": 50778112,
+          "max": 51343360
+        },
+        "idle_pss_bytes_after_30": {
+          "n": 3,
+          "median": 50954240,
+          "min": 50778112,
+          "max": 51343360
+        },
+        "idle_pss_bytes_after_300": {
+          "n": 3,
+          "median": 50954240,
+          "min": 50778112,
+          "max": 51343360
+        },
+        "idle_pss_bytes_after_60": {
+          "n": 3,
+          "median": 50954240,
+          "min": 50778112,
+          "max": 51343360
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "long-session",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 64,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 100868096,
+          "min": 100216832,
+          "max": 101363712
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 58.96902,
+          "min": 58.95958,
+          "max": 59.301
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 1.053088823,
+          "min": 1.044407927,
+          "max": 1.061347694
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 24873321,
+          "min": 24859082,
+          "max": 24881588
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.010000000000000002
+        },
+        "cpu_seconds_per_turn_16_32": {
+          "n": 3,
+          "median": 0.9676698125,
+          "min": 0.9674034375,
+          "max": 0.978768125
+        },
+        "cpu_seconds_per_turn_1_4": {
+          "n": 3,
+          "median": 0.30998466666666663,
+          "min": 0.3063143333333333,
+          "max": 0.310697
+        },
+        "cpu_seconds_per_turn_32_64": {
+          "n": 3,
+          "median": 0.98733609375,
+          "min": 0.98678025,
+          "max": 0.99102096875
+        },
+        "cpu_seconds_per_turn_4_16": {
+          "n": 3,
+          "median": 0.91091275,
+          "min": 0.9084693333333332,
+          "max": 0.912009
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 38445056,
+          "min": 38379520,
+          "max": 38780928
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 89411584,
+          "min": 88825856,
+          "max": 89702400
+        },
+        "pss_bytes_after_32": {
+          "n": 3,
+          "median": 95219712,
+          "min": 93016064,
+          "max": 96288768
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 52023296,
+          "min": 51458048,
+          "max": 52068352
+        },
+        "pss_bytes_after_64": {
+          "n": 3,
+          "median": 106795008,
+          "min": 106053632,
+          "max": 107376640
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 460924,
+          "min": 460924,
+          "max": 460924
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 4031622,
+          "min": 4031622,
+          "max": 4031622
+        },
+        "session_bytes_after_32": {
+          "n": 3,
+          "median": 7457613,
+          "min": 7457613,
+          "max": 7457613
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 1479236,
+          "min": 1479236,
+          "max": 1479236
+        },
+        "session_bytes_after_64": {
+          "n": 3,
+          "median": 14321315,
+          "min": 14321315,
+          "max": 14378659
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "new-sessions",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 16,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 64983040,
+          "min": 64610304,
+          "max": 65257472
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 11.438704,
+          "min": 11.388902,
+          "max": 11.466795
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.251357669,
+          "min": 0.251071348,
+          "max": 0.252111291
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 5777915,
+          "min": 5773959,
+          "max": 5786759
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "cpu_seconds_per_turn_1_2": {
+          "n": 3,
+          "median": 0.684518,
+          "min": 0.664702,
+          "max": 0.688287
+        },
+        "cpu_seconds_per_turn_2_4": {
+          "n": 3,
+          "median": 0.1271875,
+          "min": 0.127011,
+          "max": 0.1295335
+        },
+        "cpu_seconds_per_turn_4_8": {
+          "n": 3,
+          "median": 1.80367325,
+          "min": 1.79415025,
+          "max": 1.8059565
+        },
+        "cpu_seconds_per_turn_8_16": {
+          "n": 3,
+          "median": 0.405870125,
+          "min": 0.402117875,
+          "max": 0.406239375
+        },
+        "pss_bytes_after_1": {
+          "n": 3,
+          "median": 38223872,
+          "min": 37769216,
+          "max": 38555648
+        },
+        "pss_bytes_after_16": {
+          "n": 3,
+          "median": 73314304,
+          "min": 72384512,
+          "max": 75763712
+        },
+        "pss_bytes_after_2": {
+          "n": 3,
+          "median": 48812032,
+          "min": 48746496,
+          "max": 49139712
+        },
+        "pss_bytes_after_4": {
+          "n": 3,
+          "median": 49881088,
+          "min": 49410048,
+          "max": 50708480
+        },
+        "pss_bytes_after_8": {
+          "n": 3,
+          "median": 76095488,
+          "min": 76009472,
+          "max": 76795904
+        },
+        "session_bytes_after_1": {
+          "n": 3,
+          "median": 460924,
+          "min": 460924,
+          "max": 460924
+        },
+        "session_bytes_after_16": {
+          "n": 3,
+          "median": 4037204,
+          "min": 4037204,
+          "max": 4045396
+        },
+        "session_bytes_after_2": {
+          "n": 3,
+          "median": 1368743,
+          "min": 1368743,
+          "max": 1368743
+        },
+        "session_bytes_after_4": {
+          "n": 3,
+          "median": 1430381,
+          "min": 1430381,
+          "max": 1430381
+        },
+        "session_bytes_after_8": {
+          "n": 3,
+          "median": 3135292,
+          "min": 3135292,
+          "max": 3135292
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "start-memory",
+      "frontend": "headless",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "pss_bytes": {
+          "n": 3,
+          "median": 20205568,
+          "min": 20103168,
+          "max": 20439040
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "startup",
+      "frontend": "tui",
+      "rate": 0,
+      "turns": 0,
+      "metrics": {
+        "input_ready_seconds": {
+          "n": 3,
+          "median": 0.03553059700061567,
+          "min": 0.034676794999541016,
+          "max": 0.03704369899969606
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "task",
+      "frontend": "headless",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "first_request_seconds": {
+          "n": 3,
+          "median": 0.01734614372253418,
+          "min": 0.016341209411621094,
+          "max": 0.01794266700744629
+        },
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 13271040,
+          "min": 13221888,
+          "max": 13438976
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.120569,
+          "min": 0.119899,
+          "max": 0.126725
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 0.301135693712741,
+          "min": 0.29352891936142217,
+          "max": 0.3182648674454601
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 1000,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 28745728,
+          "min": 28549120,
+          "max": 49909760
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 0.659607,
+          "min": 0.652219,
+          "max": 0.662599
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 13.209593133740734,
+          "min": 12.980293322500055,
+          "max": 13.240217487562447
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.019341759,
+          "min": 0.019131853,
+          "max": 0.019437851
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 419365,
+          "min": 417231,
+          "max": 422889
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 120,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 28467200,
+          "min": 28073984,
+          "max": 28987392
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.640383,
+          "min": 1.634659,
+          "max": 1.644257
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 4.098925018400759,
+          "min": 4.083179731726941,
+          "max": 4.1077124838402534
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.035096187,
+          "min": 0.034947552,
+          "max": 0.035190769
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 909883,
+          "min": 909684,
+          "max": 910460
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 250,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 28782592,
+          "min": 28626944,
+          "max": 29179904
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 1.3592,
+          "min": 1.357684,
+          "max": 1.364116
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 7.041416767571916,
+          "min": 7.0268329815133015,
+          "max": 7.045508355468156
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.027861605,
+          "min": 0.027683957,
+          "max": 0.0281968
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 657835,
+          "min": 656452,
+          "max": 657865
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 30,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 28037120,
+          "min": 28033024,
+          "max": 28217344
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 3.043544,
+          "min": 3.033035,
+          "max": 3.046119
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 1.9118246281687616,
+          "min": 1.9053447044717302,
+          "max": 1.9134777458364742
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.072896753,
+          "min": 0.072344796,
+          "max": 0.073033719
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 2250124,
+          "min": 2246243,
+          "max": 2250422
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "agent": "smelt",
+      "question": "task",
+      "frontend": "tui",
+      "rate": 60,
+      "turns": 1,
+      "metrics": {
+        "peak_memory_bytes": {
+          "n": 3,
+          "median": 28229632,
+          "min": 28073984,
+          "max": 28798976
+        },
+        "cpu_seconds": {
+          "n": 3,
+          "median": 2.13018,
+          "min": 2.12631,
+          "max": 2.140973
+        },
+        "active_cpu_percent": {
+          "n": 3,
+          "median": 2.6710411240059666,
+          "min": 2.6650730952135215,
+          "max": 2.683987175235174
+        },
+        "terminal_cpu_seconds": {
+          "n": 3,
+          "median": 0.047996905,
+          "min": 0.047868415,
+          "max": 0.048330823
+        },
+        "terminal_bytes": {
+          "n": 3,
+          "median": 1366741,
+          "min": 1366482,
+          "max": 1369178
+        },
+        "steal_seconds": {
+          "n": 3,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    }
+  ],
+  "remote_connections": {
+    "claude-code": [
+      "tcp 160.79.104.10:443",
+      "tcp 185.199.108.133:443",
+      "tcp 185.199.109.133:443",
+      "tcp 185.199.110.133:443",
+      "tcp 185.199.111.133:443",
+      "tcp 35.190.46.17:443"
+    ],
+    "codex": [
+      "tcp 104.18.32.47:443",
+      "tcp 20.250.119.67:443"
+    ],
+    "fx": [],
+    "omp": [
+      "tcp 104.18.10.160:443",
+      "tcp 104.18.11.160:443",
+      "tcp 104.18.28.226:443",
+      "tcp 104.18.29.226:443",
+      "tcp 104.26.10.114:443",
+      "tcp 104.26.11.114:443",
+      "tcp 104.26.8.108:443",
+      "tcp 104.26.9.108:443",
+      "tcp 160.79.104.10:443",
+      "tcp 162.159.140.245:443",
+      "tcp 172.217.208.121:443",
+      "tcp 172.66.0.243:443",
+      "tcp 172.67.69.147:443",
+      "tcp 172.67.75.165:443",
+      "tcp 43.106.123.215:443",
+      "tcp 43.98.246.135:443",
+      "tcp 64.239.123.129:443",
+      "tcp 64.239.123.193:443",
+      "tcp 64.239.123.1:443",
+      "tcp 64.239.123.65:443",
+      "tcp 74.125.29.121:443"
+    ],
+    "opencode": [
+      "tcp 104.20.32.17:443",
+      "tcp 172.66.173.149:443",
+      "tcp 185.199.108.133:443",
+      "tcp 185.199.109.133:443",
+      "tcp 185.199.110.133:443",
+      "tcp 185.199.111.133:443",
+      "tcp 20.250.119.67:443"
+    ],
+    "pi": [],
+    "smelt": []
+  }
+}

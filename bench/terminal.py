@@ -1,0 +1,337 @@
+"""The agent's terminal: a tmux pane of fixed size. tmux answers the agent's
+terminal queries and keeps its screen. The harness reads the pane's raw output,
+keeps it as a log, and types into the pane."""
+
+import os
+import re
+import select
+import shlex
+import subprocess
+import tempfile
+import threading
+import time
+from pathlib import Path
+
+COLUMNS, ROWS = 120, 40
+# How often startup types its probe, in seconds. This is the resolution of startup.
+PROBE_INTERVAL = 0.005
+# Escape sequences, to find text in the raw output.
+ANSI = re.compile(rb"\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)|\x1b\[[0-?]*[ -/]*[@-~]")
+# Scrollback that a turn's done marker is searched in when it is drawn in pieces.
+SCREEN_HISTORY = 1000
+# The tmux options of the agent's terminal, set once its session exists. The
+# window keeps its size when the harness attaches, and the pane stays after the
+# agent exits. tmux answers color queries with the pane's colors, a common dark
+# theme. All other options keep tmux's defaults.
+OPTIONS = (
+    ("status", "off"),
+    ("window-style", "fg=#d4d4d4,bg=#1e1e1e"),
+    ("window-size", "manual"),
+    ("remain-on-exit", "on"),
+)
+
+
+def settings():
+    """The terminal of every case, for the manifest."""
+    return {
+        "columns": COLUMNS,
+        "rows": ROWS,
+        "emulator": subprocess.check_output(["tmux", "-V"], text=True).strip(),
+        "options": {**dict(OPTIONS), "history-limit": SCREEN_HISTORY},
+    }
+
+
+# Replay each log this many times and keep the lowest CPU. Noise only adds CPU.
+REPLAYS = 5
+
+
+def server_cpu(pid):
+    """Nanoseconds of CPU that the tmux server used, when it stops working."""
+
+    def read():
+        return sum(
+            int((task / "schedstat").read_text().split()[0])
+            for task in Path(f"/proc/{pid}/task").iterdir()
+        )
+
+    last = read()
+    while True:
+        time.sleep(0.05)
+        now = read()
+        if now == last:
+            return now
+        last = now
+
+
+def replay_once(log, cpu, columns, lines):
+    """CPU seconds that a new tmux server on core `cpu` spends to parse `log`."""
+    # One server per replay. A server that is shutting down refuses new sessions.
+    socket = f"bench-replay-{os.getpid()}-{time.monotonic_ns()}"
+    tmux = ["tmux", "-L", socket, "-f", "/dev/null"]
+    script = (
+        f"tmux wait-for go; cat {shlex.quote(str(log))};"
+        " tmux wait-for -S replayed; sleep 600"
+    )
+    subprocess.run(
+        ["taskset", "-c", cpu, *tmux, "start-server", ";"]
+        + ["set", "-g", "history-limit", "1000000", ";"]
+        + ["new-session", "-d", "-x", str(columns), "-y", str(lines), script],
+        check=True,
+    )
+    try:
+        pid = subprocess.check_output(
+            [*tmux, "display", "-p", "#{pid}"], text=True
+        ).strip()
+        # Only the replay counts, not the server's start.
+        before = server_cpu(pid)
+        subprocess.run([*tmux, "wait-for", "-S", "go"], check=True)
+        subprocess.run([*tmux, "wait-for", "replayed"], check=True, timeout=600)
+        return (server_cpu(pid) - before) / 1e9
+    finally:
+        subprocess.run([*tmux, "kill-server"], check=False)
+
+
+def replay_cost(log, cpu, columns=COLUMNS, lines=ROWS):
+    """CPU time that a real terminal (tmux) spends to parse the recorded output
+    of an agent. The agent does not pay this cost, but the user's machine does."""
+    return {
+        "terminal_cpu_seconds": min(
+            replay_once(log, cpu, columns, lines) for _ in range(REPLAYS)
+        ),
+        "terminal_bytes": log.stat().st_size,
+    }
+
+
+class Terminal:
+    """Runs `podman start --attach` for `container` in a new tmux server."""
+
+    def __init__(self, container, log):
+        self.folder = Path(tempfile.mkdtemp(prefix="harness-terminal-"))
+        self.tmux = ["tmux", "-L", f"bench-{os.getpid()}-{time.monotonic_ns()}"]
+        self.target = "bench:0.0"
+        self.tail = b""
+        self.marks = b""
+        self.received = 0
+        self.launch_time = None
+        # The wall clock when a headless supervisor started the agent.
+        self.exec_time = None
+        self.watches = {}
+        self.errors = []
+        self.log = Path(log).open("wb")  # noqa: SIM115 - owned until close()
+        self.stop_event = threading.Event()
+        # The pane waits until the harness reads its output, then runs podman in
+        # raw mode, as a terminal emulator would.
+        go = shlex.join([*self.tmux, "wait-for", "go"])
+        attach = shlex.join(["podman", "start", "--attach", "--interactive", container])
+        options = [
+            arg for key, value in OPTIONS for arg in (";", "set", "-g", key, value)
+        ]
+        subprocess.run(
+            [*self.tmux, "-f", "/dev/null", "start-server", ";"]
+            + ["set", "-g", "history-limit", str(SCREEN_HISTORY), ";"]
+            + ["new-session", "-d", "-s", "bench", "-x", str(COLUMNS)]
+            + ["-y", str(ROWS), f"stty raw -echo; {go}; exec {attach}", *options],
+            check=True,
+        )
+        output = self.folder / "output"
+        os.mkfifo(output)
+        self.run(
+            "pipe-pane", "-O", "-t", self.target, f"cat > {shlex.quote(str(output))}"
+        )
+        self.output = os.open(output, os.O_RDONLY)
+        self.pid = int(self.query("#{pane_pid}"))
+        # One control client types for the harness. It gets no pane output.
+        self.control = subprocess.Popen(
+            [*self.tmux, "-C", "attach-session", "-t", "bench"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+        )
+        self.command("refresh-client -f no-output")
+        self.threads = [
+            threading.Thread(target=self.drain, daemon=True),
+            threading.Thread(target=self.listen, daemon=True),
+        ]
+        for thread in self.threads:
+            thread.start()
+        self.run("wait-for", "-S", "go")
+
+    def run(self, *args):
+        subprocess.run([*self.tmux, *args], check=True, stdout=subprocess.DEVNULL)
+
+    def query(self, format):
+        return subprocess.check_output(
+            [*self.tmux, "display", "-p", "-t", self.target, format], text=True
+        ).strip()
+
+    def command(self, line):
+        self.control.stdin.write(line.encode() + b"\n")
+        self.control.stdin.flush()
+
+    def listen(self):
+        """Keep the control client's replies flowing and remember its errors."""
+        reply = []
+        for line in self.control.stdout:
+            if line.startswith(b"%begin"):
+                reply = []
+            elif line.startswith(b"%error"):
+                self.errors.append(b" ".join(reply).decode("utf-8", "replace"))
+            elif not line.startswith(b"%"):
+                reply.append(line.strip())
+
+    def drain(self):
+        while not self.stop_event.is_set():
+            if not select.select([self.output], [], [], 0.05)[0]:
+                continue
+            data = os.read(self.output, 65536)
+            if not data:
+                return
+            self.log.write(data)
+            self.log.flush()
+            self.tail = (self.tail + data)[-512_000:]
+            self.received += len(data)
+            marks = self.marks + data
+            if self.launch_time is None:
+                match = re.search(rb"BENCH_LAUNCH=(\d+)\x07", marks)
+                if match:
+                    self.launch_time = int(match[1]) / 1e9
+            if self.exec_time is None:
+                match = re.search(rb"BENCH_EXEC=(\d+\.\d+)\x07", marks)
+                if match:
+                    self.exec_time = float(match[1])
+            self.marks = marks[-256:]
+            if self.watches:
+                text = self.text()
+                for token in tuple(self.watches):
+                    if self.watches[token] is None and token in text:
+                        self.watches[token] = time.monotonic()
+
+    def exited(self):
+        """Whether podman, and so the agent, has exited."""
+        try:
+            os.kill(self.pid, 0)
+        except ProcessLookupError:
+            return True
+        return False
+
+    def check(self):
+        if self.errors:
+            raise RuntimeError(f"tmux: {self.errors[0]}")
+
+    def text(self):
+        return ANSI.sub(b"", self.tail).decode("utf-8", "replace")
+
+    def screen(self):
+        """The pane as tmux draws it, with recent scrollback."""
+        return subprocess.check_output(
+            [*self.tmux, "capture-pane", "-p", "-t", self.target]
+            + ["-S", str(-SCREEN_HISTORY)],
+            text=True,
+            errors="replace",
+        )
+
+    def type(self, keys):
+        self.command(f"send-keys -t {self.target} -l -- {shlex.quote(keys)}")
+
+    def send(self, value):
+        """Paste `value` and press Enter. tmux brackets the paste when the agent
+        asks for it."""
+        path = self.folder / "paste"
+        path.write_text(value)
+        self.command(f"load-buffer -b prompt {shlex.quote(str(path))}")
+        self.command(f"paste-buffer -p -d -b prompt -t {self.target}")
+        # Keep Enter out of paste-burst detection in interactive editors. Under
+        # load, fx drops keys that arrive within about 50 ms of a paste.
+        self.stop_event.wait(0.2)
+        self.command(f"send-keys -t {self.target} Enter")
+        self.check()
+
+    def settle(self, quiet=1.0, timeout=30):
+        """Wait until the agent has drawn its screen and stopped writing."""
+        deadline = time.monotonic() + timeout
+        received, changed = self.received, time.monotonic()
+        while time.monotonic() < deadline:
+            if self.exited():
+                raise RuntimeError(
+                    "Agent exited before its first prompt; see terminal.log"
+                )
+            if self.received != received:
+                received, changed = self.received, time.monotonic()
+            elif received and time.monotonic() - changed >= quiet:
+                return
+            self.stop_event.wait(0.05)
+        raise TimeoutError("Agent screen did not settle; see terminal.log")
+
+    def input_ready(self, timeout=30):
+        token = "zvqx7319"
+        self.watches[token] = None
+        deadline = time.monotonic() + timeout
+        next_probe = 0
+        while time.monotonic() < deadline:
+            if self.exited():
+                raise RuntimeError(
+                    "Agent exited before accepting input; see terminal.log"
+                )
+            if self.watches[token] is not None:
+                if self.launch_time is None:
+                    raise RuntimeError("Missing process exec timestamp")
+                return {
+                    "input_ready_seconds": self.watches[token] - self.launch_time,
+                    "launch_time": self.launch_time,
+                    "input_observed_time": self.watches[token],
+                    "probe_interval_seconds": PROBE_INTERVAL,
+                    "screen": self.text()[-12000:],
+                }
+            now = time.monotonic()
+            if self.launch_time is not None and now >= next_probe:
+                self.type(token)
+                next_probe = now + PROBE_INTERVAL
+            self.stop_event.wait(0.001)
+        raise TimeoutError(
+            "Agent did not render typed probe within 30 seconds; see terminal.log"
+        )
+
+    def wait(self, token, model, timeout=300):
+        deadline = time.monotonic() + timeout
+        received, changed, rendered = self.received, time.monotonic(), None
+        while time.monotonic() < deadline:
+            if model.error:
+                raise RuntimeError(model.error)
+            self.check()
+            text = self.text()
+            if token in text:
+                return
+            # Diff renderers can draw a token across frames, with cursor moves
+            # and other cells between its characters. So when output stops,
+            # also check the screen.
+            if self.received != received:
+                received, changed = self.received, time.monotonic()
+            elif rendered != received and time.monotonic() - changed >= 1:
+                rendered = received
+                if token in self.screen():
+                    return
+            if "BENCH_EXIT_" in text:
+                raise RuntimeError(
+                    f"Headless agent exited before {token}; see terminal.log"
+                )
+            if self.exited():
+                raise RuntimeError(f"Agent exited before {token}; see terminal.log")
+            self.stop_event.wait(0.05)
+        raise TimeoutError(f"Timed out waiting for {token}; see terminal.log")
+
+    def close(self):
+        self.stop_event.set()
+        subprocess.run(
+            [*self.tmux, "kill-server"],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        self.control.wait(timeout=5)
+        for thread in self.threads:
+            thread.join(timeout=2)
+        os.close(self.output)
+        self.log.close()
+        for path in self.folder.iterdir():
+            path.unlink()
+        self.folder.rmdir()

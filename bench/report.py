@@ -1,0 +1,173 @@
+"""Summaries of a run, the terminal replay, and the run that the site shows."""
+
+import json
+import statistics
+import subprocess
+from itertools import pairwise
+from pathlib import Path
+
+from agents import AGENTS
+from case import save
+from host import AGENT_CPUS
+from plan import IDLE_MARKS
+from terminal import REPLAYS, replay_cost
+
+# Results live at the root of the repository, beside the harness and the site.
+RESULTS = Path(__file__).resolve().parent.parent / "results"
+# Names the run that the site shows.
+PUBLISHED = RESULTS / "published.json"
+METRICS = (
+    "input_ready_seconds",
+    "first_request_seconds",
+    "pss_bytes",
+    "peak_memory_bytes",
+    "cpu_seconds",
+    "active_cpu_percent",
+    "terminal_cpu_seconds",
+    "terminal_bytes",
+    "steal_seconds",
+)
+# Long-session and new-sessions runs also report `pss_bytes_after_N` and
+# `session_bytes_after_N` at each checkpoint, and `cpu_seconds_per_turn_A_B`
+# between consecutive checkpoints. In new-sessions, N counts sessions. Idle runs
+# report the CPU since the agent went idle and its memory at each idle mark.
+CHECKPOINT_METRICS = (
+    "pss_bytes_after_",
+    "session_bytes_after_",
+    "cpu_seconds_per_turn_",
+    "idle_cpu_seconds_after_",
+    "idle_pss_bytes_after_",
+)
+# What makes cases repeats of one another.
+GROUP = ("agent", "question", "frontend", "rate", "turns")
+
+
+def cpu_per_turn(start, end):
+    seconds = (end["cpu_usec"] - start["cpu_usec"]) / 1e6
+    return seconds / (end["completed_turns"] - start["completed_turns"])
+
+
+def derived(result, case):
+    """The checkpoint metrics of one finished case, from its raw checkpoints."""
+    points = result["checkpoints"]
+    if case["question"] in ("long-session", "new-sessions"):
+        for point in points:
+            turns = point["completed_turns"]
+            result[f"pss_bytes_after_{turns}"] = point["pss_bytes"]
+            result[f"session_bytes_after_{turns}"] = point["session_bytes"]
+        for start, end in pairwise(points):
+            span = f"{start['completed_turns']}_{end['completed_turns']}"
+            result[f"cpu_seconds_per_turn_{span}"] = cpu_per_turn(start, end)
+    if case["question"] == "idle":
+        # Idle CPU covers the idle interval only.
+        result.update(result["idle"])
+        start = result["idle"]["sampling_started_monotonic"]
+
+        def at(seconds):
+            return min(points, key=lambda c: abs(c["time"] - start - seconds))
+
+        base = at(0)
+        for seconds in IDLE_MARKS:
+            if seconds <= case["idle_seconds"]:
+                point = at(seconds)
+                cpu = (point["cpu_usec"] - base["cpu_usec"]) / 1e6
+                result[f"idle_cpu_seconds_after_{seconds}"] = cpu
+                result[f"idle_pss_bytes_after_{seconds}"] = point["pss_bytes"]
+    return result
+
+
+def stats(results):
+    """The count, median and range of each metric over repeated cases."""
+    metrics = {}
+    checkpoint_metrics = sorted(
+        {k for r in results for k in r if k.startswith(CHECKPOINT_METRICS)}
+    )
+    for metric in (*METRICS, *checkpoint_metrics):
+        values = [r[metric] for r in results if r.get(metric) is not None]
+        if values:
+            metrics[metric] = {
+                "n": len(values),
+                "median": statistics.median(values),
+                "min": min(values),
+                "max": max(values),
+            }
+    return metrics
+
+
+def report(out):
+    """Write `summary.json` with the median and range of the runs, per agent,
+    question and setting. Return whether every planned case passed."""
+    manifest = json.loads((out / "manifest.json").read_text())
+    planned = manifest["config"]["plan"]
+    runs, groups, remotes = [], {}, {}
+    for case in planned:
+        path = out / "cases" / case["id"] / "result.json"
+        if not path.exists():
+            continue
+        result = json.loads(path.read_text())
+        runs.append(
+            {"id": case["id"], "status": result["status"], "error": result.get("error")}
+        )
+        remotes.setdefault(case["agent"], set()).update(
+            f"{r['protocol']} {r['address']}:{r['port']}"
+            for r in result.get("remote_connections", [])
+        )
+        if result["status"] == "ok":
+            key = tuple(case[k] for k in GROUP)
+            groups.setdefault(key, []).append(derived(result, case))
+    complete = len(runs) == len(planned) and all(r["status"] == "ok" for r in runs)
+    save(
+        out / "summary.json",
+        {
+            "planned": len(planned),
+            "finished": len(runs),
+            "complete": complete,
+            "runs": runs,
+            "groups": [
+                dict(zip(GROUP, key), metrics=stats(results))
+                for key, results in sorted(groups.items(), key=lambda kv: str(kv[0]))
+            ],
+            # Addresses outside the host that each agent connected to.
+            "remote_connections": {a: sorted(r) for a, r in sorted(remotes.items())},
+        },
+    )
+    return complete
+
+
+def replay(out):
+    """Add the cost of the terminal to every TUI case. Replay its log into tmux
+    on the first of the agent's CPUs."""
+    manifest = json.loads((out / "manifest.json").read_text())
+    cpu = AGENT_CPUS.split(",")[0]
+    for case in manifest["config"]["plan"]:
+        if case["frontend"] != "tui" or case["question"] == "startup":
+            continue
+        path = out / "cases" / case["id"] / "result.json"
+        result = json.loads(path.read_text())
+        if result["status"] != "ok":
+            continue
+        result.update(replay_cost(path.parent / "terminal.log", cpu))
+        save(path, result)
+        print(f"REPLAYED {case['id']} {result['terminal_cpu_seconds']:.3f}", flush=True)
+    tmux = subprocess.check_output(["tmux", "-V"], text=True).strip()
+    manifest["replay"] = {"tmux": tmux, "cpu": cpu, "replays": REPLAYS}
+    save(out / "manifest.json", manifest)
+    return report(out)
+
+
+def publish():
+    """Point the site at the newest complete run of all agents. Only one run is
+    shown, so every agent was measured in the same session."""
+    complete = []
+    for path in RESULTS.glob("*/summary.json"):
+        out = path.parent
+        if not json.loads(path.read_text())["complete"]:
+            continue
+        manifest = json.loads((out / "manifest.json").read_text())
+        if manifest["config"]["versions"].keys() == AGENTS.keys():
+            complete.append((manifest["started_utc"], out.name))
+    if not complete:
+        raise RuntimeError(f"No complete run of all agents in {RESULTS}")
+    _, run = max(complete)
+    save(PUBLISHED, {"run": run})
+    print(f"PUBLISHED {run}", flush=True)

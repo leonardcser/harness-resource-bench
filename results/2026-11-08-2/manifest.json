@@ -1,0 +1,3237 @@
+{
+  "config": {
+    "smoke": false,
+    "source_sha256": "c49dc72804e21bd0596cccc4d63314699e5d41b7b475e2f2f294f14d296f3807",
+    "versions": {
+      "smelt": "0.8.0",
+      "pi": "1.5.0",
+      "codex": "0.167.0",
+      "claude-code": "2.1.319",
+      "opencode": "2.2.6",
+      "fx": "0.0.16",
+      "omp": "18.18.0"
+    },
+    "images": {
+      "base_image_id": "f96a18b08c357e94065bf4c338be6af5a38695bfb3d91789ed3cce7364a5d26c",
+      "agents": {
+        "smelt": {
+          "agent": "smelt",
+          "version": "0.8.0",
+          "measured_version": "smelt v0.8.0",
+          "executable_sha256": "2f764976afec74daccb5ce5b0a79a38b6fb0c396c7dd764f77df51c849074994",
+          "install_bytes": 49111040,
+          "image_id": "5acc9e44f658347ef65acc40c6c7e8dacf5031959ef40bc9e5f3aa125b752aa2",
+          "install_command": "RUN curl -fsSL http://127.0.0.1:33129/smelt.sh | SMELT_VERSION=v0.8.0 sh",
+          "installer_sha256": "fde8dbe9037bfd5bdfb1f9ff9d10cd13281b19ae8a0d6b47843f2cf64eec1191",
+          "dockerfile_sha256": "f71ac9cb8c28db640a3a97df807b2e07d6e2070cdf4010ff86129c750855aeba"
+        },
+        "pi": {
+          "agent": "pi",
+          "version": "1.5.0",
+          "measured_version": "1.5.0",
+          "executable_sha256": "da0c6a49fe94aadc9765cc7afc6ba6b17e553eed0247d0385c160bc188f5cfbb",
+          "install_bytes": 403152896,
+          "image_id": "d051be00f75fe3bfd6f62d544370764a066a6a35c18f9144ec2712aed72a9828",
+          "install_command": "RUN curl -fsSL https://nodejs.org/dist/v22.23.4/node-v22.23.4-linux-x64.tar.xz -o /tmp/node-v22.23.4-linux-x64.tar.xz && curl -fsSL https://nodejs.org/dist/v22.23.4/SHASUMS256.txt -o /tmp/node-sums && (cd /tmp && grep ' node-v22.23.4-linux-x64.tar.xz$' node-sums | sha256sum -c -) && tar -xJf /tmp/node-v22.23.4-linux-x64.tar.xz -C /usr/local --strip-components=1 && rm /tmp/node-v22.23.4-linux-x64.tar.xz /tmp/node-sums && curl -fsSL http://127.0.0.1:33129/pi.sh | PI_INSTALLER_API_BASE=http://127.0.0.1:33129/pi sh",
+          "installer_sha256": "ff4ed7b1ea1c058f33249a44093863b50cf95224ab4ff654e722fcbbbdaa31df",
+          "dockerfile_sha256": "99954bc3e7142580ac818d363974327c02cc2224a77c43fc9be6c487d12e7e17",
+          "node_version": "v22.23.4"
+        },
+        "codex": {
+          "agent": "codex",
+          "version": "0.167.0",
+          "measured_version": "codex-cli 0.167.0",
+          "executable_sha256": "cdcb45aaa01d0f14e298985e09465aebccd47f64ecd298aea44814af7b62bbda",
+          "install_bytes": 540721152,
+          "image_id": "fa8ab9fbbb92c3f640a2c7f37cfbc5a337f92174e5591656779cb80f66d581a7",
+          "install_command": "RUN curl -fsSL http://127.0.0.1:33129/codex.sh | CODEX_NON_INTERACTIVE=1 sh -s -- --release 0.167.0",
+          "installer_sha256": "44ac252c1b9a68c02bdf0de8e1c6cbfde36fc1afa8684624962eae7d4c461e70",
+          "dockerfile_sha256": "5481b1aefca0e0160c5988266ea07b69b968d7e508947c59c0d01a4ecd3f5360"
+        },
+        "claude-code": {
+          "agent": "claude-code",
+          "version": "2.1.319",
+          "measured_version": "2.1.319 (Claude Code)",
+          "executable_sha256": "dabafec82ca1319fa43d8be36a10fc61b1d11821cb98ad5df04ad95e199b8eed",
+          "install_bytes": 340299776,
+          "image_id": "47b159e4beb8f4323cdcb7dc34892362c7f3dabf87f5391d7b5c793a657470c8",
+          "install_command": "RUN curl -fsSL http://127.0.0.1:33129/claude-code.sh | bash -s -- 2.1.319",
+          "installer_sha256": "3a68d3406cf674e17bed1733a4dcf37805e2e47d87417700007d7e1aa766a944",
+          "dockerfile_sha256": "250a125f47b8e342273f4c95df21a5da8711beefa822609f8cc7977824bb6a8e"
+        },
+        "opencode": {
+          "agent": "opencode",
+          "version": "2.2.6",
+          "measured_version": "opencode v2.2.6",
+          "executable_sha256": "50503d24577fa4117a7c95ee85b2cd679606a87eacf20ca54ed5db5c9e1cf895",
+          "install_bytes": 258838528,
+          "image_id": "1eb4222a118fb37217a6ed25e92a1782c148882686594174575625997f7d9cc9",
+          "install_command": "RUN curl -fsSL http://127.0.0.1:33129/opencode.sh | bash -s -- --version 2.2.6",
+          "installer_sha256": "bbc4584fd6a888bcd14623b8a63afa0f1b4075a2e84a2c3518cd509b446b3135",
+          "dockerfile_sha256": "7f331e6ff299c11838b52bf6c8eede62dc1e991ef4a92922802b7892bf761c97"
+        },
+        "fx": {
+          "agent": "fx",
+          "version": "0.0.16",
+          "measured_version": "0.0.16",
+          "executable_sha256": "b8670dcc121b4289e2bdcd2a3e226fd64e3def53c976c42b42de72ee69f66cae",
+          "install_bytes": 12824576,
+          "image_id": "32ed0d27f21368067973ba0e43be3754c34b93242a61b45831fe7bee891d403c",
+          "install_command": "RUN curl -fsSL http://127.0.0.1:33129/fx.sh | bash -s -- v0.0.16",
+          "installer_sha256": "254c2d4410678aa28acb17941f5447b34b312f829893d4261bb4d713508f924f",
+          "dockerfile_sha256": "8b13244cf3cc9073e8a9681068e9c5b8b5ff7ec676b69716bc7edb9b46d2a9b8"
+        },
+        "omp": {
+          "agent": "omp",
+          "version": "18.18.0",
+          "measured_version": "omp/18.18.0",
+          "executable_sha256": "ec271e0d7df4c0f57acb6a7a28f8585d46bd050bcef8494f6d33db8a6c0dfbba",
+          "install_bytes": 284667904,
+          "image_id": "6c09f9fa94c00df5749aec73bfdef8ddef756117c3e48180a2a3e718a51a4c27",
+          "install_command": "RUN curl -fsSL http://127.0.0.1:33129/omp.sh | sh -s -- --binary --ref v18.18.0",
+          "installer_sha256": "cd8f77920da58c6f56b5851c841b61d5e30b4ba8f4cab683afba1f8274b56a06",
+          "dockerfile_sha256": "5bb68a433900c67a542c10935b9344372712c9d8602b01a759123717fecae100"
+        }
+      }
+    },
+    "seed": 20261103,
+    "cpus": "2,3,4,5",
+    "memory": "4g",
+    "terminal": {
+      "columns": 120,
+      "rows": 40,
+      "emulator": "tmux 3.6",
+      "options": {
+        "status": "off",
+        "window-style": "fg=#d4d4d4,bg=#1e1e1e",
+        "window-size": "manual",
+        "remain-on-exit": "on",
+        "history-limit": 1000
+      }
+    },
+    "plan": [
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0000-opencode-startup-tui-0"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0001-fx-startup-tui-0"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0002-smelt-startup-tui-0"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0003-omp-startup-tui-0"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0004-claude-code-startup-tui-0"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0005-codex-startup-tui-0"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0006-pi-startup-tui-0"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0007-codex-startup-tui-0"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0008-omp-startup-tui-0"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0009-pi-startup-tui-0"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0010-claude-code-startup-tui-0"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0011-opencode-startup-tui-0"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0012-fx-startup-tui-0"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0013-smelt-startup-tui-0"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0014-opencode-startup-tui-0"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0015-omp-startup-tui-0"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0016-smelt-startup-tui-0"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0017-codex-startup-tui-0"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0018-claude-code-startup-tui-0"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0019-pi-startup-tui-0"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "startup",
+        "frontend": "tui",
+        "id": "0020-fx-startup-tui-0"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0021-opencode-start-memory-headless-0"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0022-claude-code-start-memory-headless-0"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0023-codex-start-memory-headless-0"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0024-smelt-start-memory-headless-0"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0025-fx-start-memory-headless-0"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0026-pi-start-memory-headless-0"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0027-omp-start-memory-headless-0"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0028-pi-start-memory-headless-0"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0029-omp-start-memory-headless-0"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0030-codex-start-memory-headless-0"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0031-smelt-start-memory-headless-0"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0032-claude-code-start-memory-headless-0"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0033-fx-start-memory-headless-0"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0034-opencode-start-memory-headless-0"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0035-opencode-start-memory-headless-0"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0036-smelt-start-memory-headless-0"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0037-omp-start-memory-headless-0"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0038-claude-code-start-memory-headless-0"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0039-fx-start-memory-headless-0"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0040-codex-start-memory-headless-0"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "rate": 0,
+        "turns": 0,
+        "calls": 0,
+        "checkpoints": [],
+        "question": "start-memory",
+        "frontend": "headless",
+        "id": "0041-pi-start-memory-headless-0"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0042-claude-code-task-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0043-opencode-task-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0044-fx-task-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0045-smelt-task-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0046-codex-task-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0047-omp-task-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0048-pi-task-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0049-claude-code-task-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0050-fx-task-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0051-omp-task-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0052-opencode-task-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0053-pi-task-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0054-smelt-task-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0055-codex-task-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0056-codex-task-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0057-pi-task-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0058-opencode-task-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0059-fx-task-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0060-smelt-task-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0061-omp-task-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 1000,
+        "id": "0062-claude-code-task-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0063-omp-task-tui-250"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0064-codex-task-tui-250"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0065-claude-code-task-tui-250"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0066-fx-task-tui-250"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0067-opencode-task-tui-250"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0068-smelt-task-tui-250"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0069-pi-task-tui-250"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0070-omp-task-tui-250"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0071-smelt-task-tui-250"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0072-claude-code-task-tui-250"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0073-opencode-task-tui-250"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0074-pi-task-tui-250"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0075-codex-task-tui-250"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0076-fx-task-tui-250"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0077-smelt-task-tui-250"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0078-codex-task-tui-250"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0079-fx-task-tui-250"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0080-opencode-task-tui-250"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0081-pi-task-tui-250"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0082-claude-code-task-tui-250"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 250,
+        "id": "0083-omp-task-tui-250"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0084-claude-code-task-headless-120"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0085-opencode-task-headless-120"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0086-smelt-task-headless-120"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0087-pi-task-headless-120"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0088-omp-task-headless-120"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0089-fx-task-headless-120"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0090-codex-task-headless-120"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0091-opencode-task-headless-120"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0092-omp-task-headless-120"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0093-codex-task-headless-120"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0094-pi-task-headless-120"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0095-claude-code-task-headless-120"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0096-fx-task-headless-120"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0097-smelt-task-headless-120"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0098-pi-task-headless-120"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0099-opencode-task-headless-120"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0100-omp-task-headless-120"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0101-smelt-task-headless-120"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0102-codex-task-headless-120"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0103-claude-code-task-headless-120"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "headless",
+        "rate": 120,
+        "id": "0104-fx-task-headless-120"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0105-codex-task-tui-120"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0106-omp-task-tui-120"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0107-claude-code-task-tui-120"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0108-pi-task-tui-120"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0109-opencode-task-tui-120"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0110-smelt-task-tui-120"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0111-fx-task-tui-120"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0112-omp-task-tui-120"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0113-smelt-task-tui-120"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0114-fx-task-tui-120"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0115-claude-code-task-tui-120"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0116-codex-task-tui-120"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0117-pi-task-tui-120"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0118-opencode-task-tui-120"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0119-opencode-task-tui-120"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0120-smelt-task-tui-120"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0121-omp-task-tui-120"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0122-codex-task-tui-120"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0123-fx-task-tui-120"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0124-claude-code-task-tui-120"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 120,
+        "id": "0125-pi-task-tui-120"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0126-codex-task-tui-60"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0127-claude-code-task-tui-60"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0128-fx-task-tui-60"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0129-omp-task-tui-60"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0130-smelt-task-tui-60"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0131-pi-task-tui-60"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0132-opencode-task-tui-60"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0133-smelt-task-tui-60"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0134-claude-code-task-tui-60"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0135-fx-task-tui-60"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0136-omp-task-tui-60"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0137-pi-task-tui-60"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0138-opencode-task-tui-60"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0139-codex-task-tui-60"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0140-codex-task-tui-60"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0141-fx-task-tui-60"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0142-pi-task-tui-60"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0143-opencode-task-tui-60"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0144-claude-code-task-tui-60"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0145-omp-task-tui-60"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 60,
+        "id": "0146-smelt-task-tui-60"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0147-claude-code-task-tui-30"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0148-fx-task-tui-30"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0149-smelt-task-tui-30"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0150-codex-task-tui-30"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0151-opencode-task-tui-30"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0152-pi-task-tui-30"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0153-omp-task-tui-30"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0154-claude-code-task-tui-30"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0155-codex-task-tui-30"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0156-omp-task-tui-30"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0157-pi-task-tui-30"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0158-smelt-task-tui-30"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0159-fx-task-tui-30"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0160-opencode-task-tui-30"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0161-codex-task-tui-30"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0162-opencode-task-tui-30"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0163-pi-task-tui-30"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0164-claude-code-task-tui-30"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0165-smelt-task-tui-30"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0166-omp-task-tui-30"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "task",
+        "turns": 1,
+        "calls": 24,
+        "checkpoints": [
+          1
+        ],
+        "frontend": "tui",
+        "rate": 30,
+        "id": "0167-fx-task-tui-30"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0168-opencode-long-session-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0169-fx-long-session-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0170-smelt-long-session-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0171-codex-long-session-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0172-pi-long-session-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0173-claude-code-long-session-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0174-omp-long-session-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0175-pi-long-session-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0176-smelt-long-session-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0177-omp-long-session-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0178-opencode-long-session-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0179-codex-long-session-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0180-fx-long-session-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0181-claude-code-long-session-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0182-fx-long-session-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0183-omp-long-session-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0184-claude-code-long-session-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0185-smelt-long-session-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0186-codex-long-session-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0187-opencode-long-session-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "long-session",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 64,
+        "calls": null,
+        "checkpoints": [
+          1,
+          4,
+          16,
+          32,
+          64
+        ],
+        "id": "0188-pi-long-session-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0189-smelt-new-sessions-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0190-fx-new-sessions-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0191-claude-code-new-sessions-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0192-omp-new-sessions-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0193-codex-new-sessions-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0194-opencode-new-sessions-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0195-pi-new-sessions-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0196-omp-new-sessions-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0197-claude-code-new-sessions-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0198-codex-new-sessions-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0199-fx-new-sessions-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0200-opencode-new-sessions-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0201-pi-new-sessions-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0202-smelt-new-sessions-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0203-pi-new-sessions-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0204-smelt-new-sessions-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0205-omp-new-sessions-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0206-claude-code-new-sessions-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0207-opencode-new-sessions-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0208-codex-new-sessions-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "new-sessions",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 16,
+        "calls": null,
+        "checkpoints": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "id": "0209-fx-new-sessions-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 0,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0210-claude-code-idle-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 0,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0211-smelt-idle-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 0,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0212-opencode-idle-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 0,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0213-pi-idle-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 0,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0214-omp-idle-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 0,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0215-fx-idle-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 0,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0216-codex-idle-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 1,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0217-fx-idle-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 1,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0218-smelt-idle-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 1,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0219-pi-idle-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 1,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0220-omp-idle-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 1,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0221-codex-idle-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 1,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0222-claude-code-idle-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 1,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0223-opencode-idle-tui-1000"
+      },
+      {
+        "agent": "codex",
+        "repeat": 2,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0224-codex-idle-tui-1000"
+      },
+      {
+        "agent": "omp",
+        "repeat": 2,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0225-omp-idle-tui-1000"
+      },
+      {
+        "agent": "claude-code",
+        "repeat": 2,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0226-claude-code-idle-tui-1000"
+      },
+      {
+        "agent": "smelt",
+        "repeat": 2,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0227-smelt-idle-tui-1000"
+      },
+      {
+        "agent": "fx",
+        "repeat": 2,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0228-fx-idle-tui-1000"
+      },
+      {
+        "agent": "opencode",
+        "repeat": 2,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0229-opencode-idle-tui-1000"
+      },
+      {
+        "agent": "pi",
+        "repeat": 2,
+        "question": "idle",
+        "frontend": "tui",
+        "rate": 1000,
+        "turns": 1,
+        "calls": 24,
+        "idle_seconds": 300,
+        "checkpoints": [
+          1
+        ],
+        "id": "0230-pi-idle-tui-1000"
+      }
+    ]
+  },
+  "machine": {
+    "hostname": "bench",
+    "cpu": "AMD Ryzen 9 7900X 12-Core Processor",
+    "kernel": "7.0.0-43-generic",
+    "python": "3.13.15",
+    "podman": "podman version 5.7.0",
+    "cpu_topology": "# The following is the parsable format, which can be fed to other\n# programs. Each different item in every column has an unique ID\n# starting usually from zero.\n# CPU,Core,Socket,Online\n0,0,0,Y\n1,1,0,Y\n2,2,0,Y\n3,3,0,Y\n4,4,0,Y\n5,5,0,Y\n6,6,0,Y\n7,7,0,Y\n8,8,0,Y\n9,9,0,Y\n10,10,0,Y\n11,11,0,Y\n"
+  },
+  "started_utc": "2026-11-08T20:41:20Z",
+  "replay": {
+    "tmux": "tmux 3.6",
+    "cpu": "2",
+    "replays": 5
+  }
+}

@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfa;
+  --fg: #1f1f1e;
+  --muted: #76756f;
+  --faint: #a8a7a1;
+  --line: #e9e8e4;
+  --soft: #f2f1ee;
+  --bar: #4a4a47;
+  --accent: #2a78d6;
+  --remove: #b3261e;
+  /* Each agent's brand color for line charts, adjusted to stay distinct and
+     readable. */
+  --agent-claude-code: #d97757;
+  --agent-codex: #1f1f1e;
+  --agent-fx: #9a9995;
+  --agent-omp: #8b5cf6;
+  --agent-opencode: #4f69dd;
+  --agent-pi: #d29a2e;
+  --agent-smelt: #c4321f;
+  /* Tool call kinds on the methodology page. */
+  --kind-shell: #8a8984;
+  --kind-read: #2a78d6;
+  --kind-search: #1b9e8a;
+  --kind-edit: #d29a2e;
+  --kind-write: #8a63d2;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #161615;
+  --fg: #d9d8d3;
+  --muted: #8f8e88;
+  --faint: #5f5e59;
+  --line: #2a2a28;
+  --soft: #1f1f1d;
+  --bar: #a9a8a2;
+  --accent: #5a9be8;
+  --remove: #d9695d;
+  --agent-claude-code: #e3896b;
+  --agent-codex: #cfcec8;
+  --agent-fx: #7e7d78;
+  --agent-omp: #a78bfa;
+  --agent-opencode: #7189f8;
+  --agent-pi: #f1be58;
+  --agent-smelt: #ef5f4b;
+  --kind-shell: #6f6e69;
+  --kind-read: #5a9be8;
+  --kind-search: #3cb8a3;
+  --kind-edit: #e9b552;
+  --kind-write: #a88be6;
+}
+
+@theme inline {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-soft: var(--soft);
+  --color-bar: var(--bar);
+  --color-accent: var(--accent);
+  --color-remove: var(--remove);
+}
+
+body {
+  @apply bg-bg font-sans text-fg antialiased;
+}

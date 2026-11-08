@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+node_modules/
+# Git keeps a run's manifest, summary and profile, not its raw cases.
+results/*/*
+!results/*/manifest.json
+!results/*/summary.json
+!results/*/profile.json
+web/dist/
+web/.svelte-check/
+web/public/data/
+web/public/og.png
