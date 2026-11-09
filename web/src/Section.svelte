@@ -17,7 +17,7 @@
 
 <section
   class={[
-    "grid gap-x-12 gap-y-6 border-t border-line py-14",
+    "grid gap-x-12 gap-y-6 border-t border-line py-10 sm:py-14",
     !wide && "lg:grid-cols-[13rem_1fr]",
   ]}
 >

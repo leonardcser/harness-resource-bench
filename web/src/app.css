@@ -10,18 +10,19 @@
   color-scheme: light;
   --bg: #fbfbfa;
   --fg: #1f1f1e;
-  --muted: #76756f;
-  --faint: #a8a7a1;
+  --muted: #63625d;
+  --faint: #75746f;
   --line: #e9e8e4;
   --soft: #f2f1ee;
   --bar: #4a4a47;
-  --accent: #2a78d6;
+  --accent: #2170cc;
   --remove: #b3261e;
   /* Each agent's brand color for line charts, adjusted to stay distinct and
-     readable. */
+     visible. Names stay in the text color, as some brand colors are too light
+     for text. */
   --agent-claude-code: #d97757;
   --agent-codex: #1f1f1e;
-  --agent-fx: #9a9995;
+  --agent-fx: #868580;
   --agent-omp: #8b5cf6;
   --agent-opencode: #4f69dd;
   --agent-pi: #d29a2e;
@@ -38,8 +39,8 @@
   color-scheme: dark;
   --bg: #161615;
   --fg: #d9d8d3;
-  --muted: #8f8e88;
-  --faint: #5f5e59;
+  --muted: #a5a49e;
+  --faint: #87867f;
   --line: #2a2a28;
   --soft: #1f1f1d;
   --bar: #a9a8a2;
@@ -47,7 +48,7 @@
   --remove: #d9695d;
   --agent-claude-code: #e3896b;
   --agent-codex: #cfcec8;
-  --agent-fx: #7e7d78;
+  --agent-fx: #8a8984;
   --agent-omp: #a78bfa;
   --agent-opencode: #7189f8;
   --agent-pi: #f1be58;

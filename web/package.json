@@ -8,7 +8,7 @@
     "dev": "bun run data && bun run og && vite",
     "build": "bun run data && bun run og && vite build",
     "preview": "vite preview",
-    "check": "rm -rf .svelte-check && svelte-check --tsgo",
+    "check": "bun run data && rm -rf .svelte-check && svelte-check --tsgo",
     "format": "prettier --write .",
     "lint": "prettier --check . && bun run check"
   },

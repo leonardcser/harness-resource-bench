@@ -1,7 +1,10 @@
 <script lang="ts">
+  import { Icon } from "svelte-icons-pack";
+  import { BsChevronDown } from "svelte-icons-pack/bs";
   import Logo from "./Logo.svelte";
   import {
     agentsOf,
+    nameOf,
     pick,
     single,
     versionOf,
@@ -163,8 +166,18 @@
   const columns = $derived(groups.flatMap((g) => g.columns));
   const value = (column: Column, agent: string) => column.stat(agent)?.median;
 
+  type Key = number | "leads";
   // A column index, or "leads": the number of columns an agent clearly leads.
-  let sortBy = $state<number | "leads">("leads");
+  // Each sort starts with the best first, and a second click reverses it.
+  let sortBy = $state<Key>("leads");
+  let reversed = $state(false);
+  // Narrow screens show one column, which the reader picks.
+  let shown = $state(0);
+  const sort = (key: Key) => {
+    reversed = sortBy === key && !reversed;
+    sortBy = key;
+    if (key !== "leads") shown = key;
+  };
   // Only agents with results appear.
   const measured = $derived(
     agents.filter((a) => columns.some((c) => value(c, a) !== undefined)),
@@ -197,11 +210,17 @@
   // Agents stay in alphabetical order within a tie: no other rule decides it.
   const byLeads = $derived([...measured].sort((a, b) => count(b) - count(a)));
   const sorted = $derived.by(() => {
-    if (sortBy === "leads") return byLeads;
+    const sign = reversed ? -1 : 1;
+    if (sortBy === "leads")
+      return [...measured].sort((a, b) => sign * (count(b) - count(a)));
     const column = columns[sortBy];
-    return [...measured].sort(
-      (a, b) => (value(column, a) ?? Infinity) - (value(column, b) ?? Infinity),
-    );
+    // Agents without a value stay last.
+    return [...measured].sort((a, b) => {
+      const [va, vb] = [value(column, a), value(column, b)];
+      if (va === undefined || vb === undefined)
+        return (va === undefined ? 1 : 0) - (vb === undefined ? 1 : 0);
+      return sign * (va - vb);
+    });
   });
   /** An agent's rank by leads. Agents with as many leads share a rank. */
   const rank = (agent: string) =>
@@ -210,11 +229,59 @@
     Math.max(...measured.map((a) => value(column, a) ?? 0));
 </script>
 
+{#snippet sorter(key: Key, label: string, title?: string)}
+  <button
+    class={[
+      "whitespace-nowrap transition-colors",
+      sortBy === key ? "font-medium text-fg" : "text-muted hover:text-fg",
+    ]}
+    {title}
+    onclick={() => sort(key)}
+  >
+    {label}<span
+      class={["ml-0.5 inline-block w-2", sortBy !== key && "invisible"]}
+      >{reversed ? "↑" : "↓"}</span
+    >
+  </button>
+{/snippet}
+
+<label class="mb-4 flex items-center gap-3 text-sm md:hidden">
+  <span class="text-muted">Show</span>
+  <span class="relative min-w-0 flex-1">
+    <select
+      class="w-full appearance-none border border-line bg-bg py-1.5 pr-8 pl-2.5 text-base"
+      value={shown}
+      onchange={(e) => {
+        reversed = false;
+        sortBy = shown = Number(e.currentTarget.value);
+      }}
+    >
+      {#each groups as group (group.label)}
+        <optgroup label={group.label}>
+          {#each group.columns as column (column.name)}
+            {@const i = columns.indexOf(column)}
+            <option value={i}
+              >{column.name[0].toUpperCase()}{column.name.slice(1)}</option
+            >
+          {/each}
+        </optgroup>
+      {/each}
+    </select>
+    <span
+      class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-muted"
+      aria-hidden="true"
+    >
+      <Icon src={BsChevronDown} size={12} />
+    </span>
+  </span>
+</label>
+<!-- Medium screens scroll the table, with the rank and agent fixed. -->
 <div class="overflow-x-auto">
   <table class="w-full text-sm tabular-nums">
     <thead>
-      <tr class="text-xs text-faint">
-        <th colspan="3"></th>
+      <tr class="text-xs text-faint max-md:hidden">
+        <th colspan="2" class="sticky left-0 bg-bg"></th>
+        <th></th>
         {#each groups as group (group.label)}
           <th
             colspan={group.columns.length}
@@ -225,43 +292,31 @@
         {/each}
       </tr>
       <tr class="border-b border-line text-xs">
-        <th class="w-8 py-2 text-left font-normal text-faint">#</th>
-        <th class="py-2 pr-4 text-left font-normal text-muted">Agent</th>
+        <th
+          class="sticky left-0 w-8 min-w-8 bg-bg py-2 text-left font-normal text-faint"
+        >
+          #
+        </th>
+        <th
+          class="sticky left-8 bg-bg py-2 pr-4 text-left font-normal text-muted"
+        >
+          Agent
+        </th>
         <th class="py-2 pr-3 text-right font-normal">
-          <button
-            class={[
-              "whitespace-nowrap transition-colors",
-              sortBy === "leads"
-                ? "font-medium text-fg"
-                : "text-muted hover:text-fg",
-            ]}
-            title="The columns where the agent is clearly lowest: all its runs beat all runs of the next agent, by at least 10%. Agents with as many leads share a rank."
-            onclick={() => (sortBy = "leads")}
-          >
-            Leads<span
-              class={[
-                "ml-0.5 inline-block w-2",
-                sortBy !== "leads" && "invisible",
-              ]}>↓</span
-            >
-          </button>
+          {@render sorter(
+            "leads",
+            "Leads",
+            "The columns where the agent is clearly lowest: all its runs beat all runs of the next agent, by at least 10%. Agents with as many leads share a rank.",
+          )}
         </th>
         {#each columns as column, i (i)}
-          <th class="px-3 py-2 text-right font-normal">
-            <button
-              class={[
-                "whitespace-nowrap transition-colors",
-                sortBy === i
-                  ? "font-medium text-fg"
-                  : "text-muted hover:text-fg",
-              ]}
-              onclick={() => (sortBy = i)}
-            >
-              {column.label}<span
-                class={["ml-0.5 inline-block w-2", sortBy !== i && "invisible"]}
-                >↓</span
-              >
-            </button>
+          <th
+            class={[
+              "px-3 py-2 text-right font-normal",
+              i !== shown && "max-md:hidden",
+            ]}
+          >
+            {@render sorter(i, column.label)}
           </th>
         {/each}
       </tr>
@@ -269,13 +324,17 @@
     <tbody>
       {#each sorted as agent (agent)}
         <tr
-          class="border-b border-line transition-colors last:border-0 hover:bg-soft"
+          class="border-b border-line bg-bg transition-colors last:border-0 hover:bg-soft"
         >
-          <td class="py-3 font-mono text-xs text-faint">{rank(agent)}</td>
-          <td class="py-3 pr-4 whitespace-nowrap">
+          <td
+            class="sticky left-0 bg-inherit py-3 font-mono text-xs text-faint"
+          >
+            {rank(agent)}
+          </td>
+          <td class="sticky left-8 bg-inherit py-3 pr-4 whitespace-nowrap">
             <div class="flex items-center gap-2">
               <Logo {agent} />
-              <span class="text-xs text-faint"
+              <span class="text-xs text-faint max-sm:hidden"
                 >{versionOf(manifest, agent)}</span
               >
             </div>
@@ -284,7 +343,12 @@
           {#each columns as column, i (i)}
             {@const own = value(column, agent)}
             {@const lead = leader(column) === agent}
-            <td class="px-3 py-3 text-right whitespace-nowrap">
+            <td
+              class={[
+                "px-3 py-3 text-right whitespace-nowrap",
+                i !== shown && "max-md:hidden",
+              ]}
+            >
               {#if own === undefined}
                 <span class="text-faint">-</span>
               {:else}
@@ -308,8 +372,9 @@
 
 <ul class="mt-6 max-w-3xl space-y-2 text-sm leading-relaxed">
   {#each byLeads.filter((a) => count(a) > 0) as agent (agent)}
-    <li class="flex flex-wrap items-center gap-x-2">
-      <Logo {agent} />
+    <li>
+      <span class="mr-1 align-[-3px]"><Logo {agent} name={false} /></span>
+      {nameOf(agent)}
       <span class="text-muted"
         >is clearly lowest on {sentence(led(agent))}.</span
       >

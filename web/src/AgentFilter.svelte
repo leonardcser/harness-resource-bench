@@ -30,7 +30,7 @@
     aria-haspopup="true"
   >
     <Icon src={BsFunnel} size={14} />
-    <span class="tabular-nums">
+    <span class={["tabular-nums", count === AGENTS.length && "max-sm:sr-only"]}>
       {count === AGENTS.length ? "All agents" : `${count} of ${AGENTS.length}`}
     </span>
   </button>

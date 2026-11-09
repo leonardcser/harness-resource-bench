@@ -107,7 +107,9 @@
   <p class="mt-6 text-xs leading-relaxed text-muted">
     The agents do not all do the same things, and an agent with fewer features
     can cost less.
-    <a href="#/agents" class="text-accent hover:underline"
+    <a
+      href="#/agents"
+      class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
       >Compare their features</a
     >.
   </p>
@@ -117,7 +119,7 @@
   title="Start"
   description="How fast each agent starts, and how much memory and disk it needs."
 >
-  <div class="grid gap-x-10 gap-y-12 xl:grid-cols-2">
+  <div class="grid grid-cols-1 gap-x-10 gap-y-12 xl:grid-cols-2">
     <Figure
       title="Startup"
       note="Time from launch until a typed key shows on screen. Log scale."
@@ -147,7 +149,7 @@
   title="A coding task"
   description="One task with 24 tool calls. The model streams 120 tokens per second."
 >
-  <div class="grid gap-x-10 gap-y-12 xl:grid-cols-2">
+  <div class="grid grid-cols-1 gap-x-10 gap-y-12 xl:grid-cols-2">
     <Figure
       title="CPU time, TUI"
       note="CPU time of all the agent's processes during the task."
@@ -187,7 +189,7 @@
   title="A long session"
   description={`One session of ${turns} turns. Each turn has as many tool calls as a real one. Each agent compacts its history when it gets near the context limit.`}
 >
-  <div class="grid gap-y-12">
+  <div class="grid grid-cols-1 gap-y-12">
     <Figure title="Memory" note="Memory after each checkpoint.">
       <Lines
         series={series(growth, "pss_bytes_after_")}
@@ -235,7 +237,7 @@
 </Section>
 
 <Section title="Idle" description="An open session, left alone after a task.">
-  <div class="grid gap-y-12">
+  <div class="grid grid-cols-1 gap-y-12">
     <Figure title="CPU time" note="CPU time since the agent went idle.">
       <Lines
         series={series(idle, "idle_cpu_seconds_after_")}

@@ -1,4 +1,8 @@
-// The files the benchmark writes, as the data step copies them.
+// The files the benchmark writes, as the data step copies them. The site
+// bundles them, so they are there on the first frame.
+import manifest from "../data/manifest.json";
+import profile from "../data/profile.json";
+import summary from "../data/summary.json";
 
 export const REPO = "https://github.com/leonardcser/harness-resource-bench";
 
@@ -59,19 +63,11 @@ export type Row = { agent: string; stat: Stat };
 export type Point = { x: number; stat: Stat };
 export type Series = { agent: string; points: Point[] };
 
-export async function json<T>(path: string): Promise<T> {
-  const response = await fetch(`data/${path}`);
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json();
-}
-
-export async function load(): Promise<Run> {
-  const [manifest, summary] = await Promise.all([
-    json<Manifest>("manifest.json"),
-    json<Summary>("summary.json"),
-  ]);
-  return { manifest, summary };
-}
+export const RUN: Run = {
+  manifest: manifest as unknown as Manifest,
+  summary: summary as unknown as Summary,
+};
+export const PROFILE = profile as unknown as Profile;
 
 const NAMES: Record<string, string> = {
   "claude-code": "Claude Code",

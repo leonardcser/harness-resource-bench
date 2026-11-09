@@ -8,5 +8,5 @@ results/*/*
 !results/*/profile.json
 web/dist/
 web/.svelte-check/
-web/public/data/
+web/src/data/
 web/public/og.png

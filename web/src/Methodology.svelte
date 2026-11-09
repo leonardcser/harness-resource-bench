@@ -1,10 +1,9 @@
 <script lang="ts">
   import Kinds from "./charts/Kinds.svelte";
-  import { json, REPO, type Profile } from "./lib/data";
+  import { PROFILE as profile, REPO, type Profile } from "./lib/data";
   import { count } from "./lib/format";
   import Section from "./Section.svelte";
 
-  const profile = json<Profile>("profile.json");
   const calls = (profile: Profile, p: number) =>
     Math.round(profile.turn.calls[profile.points.indexOf(p)]);
   const QUESTIONS = [
@@ -158,40 +157,38 @@
     </ol>
   </Section>
 
-  {#await profile then profile}
-    <Section
-      title="Workload"
-      description="Generated work with the shape of real sessions."
-    >
-      <div class="max-w-2xl space-y-3 text-sm leading-relaxed">
-        <p>
-          I measured {count(profile.source.turns)} turns and {count(
-            profile.source.steps,
-          )} tool calls from my own coding sessions. The benchmark keeps only numbers
-          from them, such as how many tool calls a turn makes, which tools they use,
-          and how large their arguments and results are. It keeps no text.
-        </p>
-        <p>
-          From those numbers, the benchmark generates new work with a fixed
-          seed. So every agent gets the same work. Half of the turns make {calls(
-            profile,
-            0.5,
-          )} tool calls or fewer. One turn in ten makes {calls(profile, 0.9)} or more,
-          and the largest 1% make {calls(profile, 0.99)} or more. The text in the
-          work is generated filler.
-        </p>
-      </div>
+  <Section
+    title="Workload"
+    description="Generated work with the shape of real sessions."
+  >
+    <div class="max-w-2xl space-y-3 text-sm leading-relaxed">
+      <p>
+        I measured {count(profile.source.turns)} turns and {count(
+          profile.source.steps,
+        )} tool calls from my own coding sessions. The benchmark keeps only numbers
+        from them, such as how many tool calls a turn makes, which tools they use,
+        and how large their arguments and results are. It keeps no text.
+      </p>
+      <p>
+        From those numbers, the benchmark generates new work with a fixed seed.
+        So every agent gets the same work. Half of the turns make {calls(
+          profile,
+          0.5,
+        )} tool calls or fewer. One turn in ten makes {calls(profile, 0.9)} or more,
+        and the largest 1% make {calls(profile, 0.99)} or more. The text in the work
+        is generated filler.
+      </p>
+    </div>
 
-      <figure class="mt-10 max-w-2xl">
-        <h3 class="mb-3 text-sm font-medium">Tool calls by kind</h3>
-        <Kinds {profile} />
-        <figcaption class="mt-3 text-xs leading-relaxed text-muted">
-          Typical size is the median. For shell, read and search, it is the size
-          of the result. For edit and write, it is the size of the change.
-        </figcaption>
-      </figure>
-    </Section>
-  {/await}
+    <figure class="mt-10 max-w-2xl">
+      <h3 class="mb-3 text-sm font-medium">Tool calls by kind</h3>
+      <Kinds {profile} />
+      <figcaption class="mt-3 text-xs leading-relaxed text-muted">
+        Typical size is the median. For shell, read and search, it is the size
+        of the result. For edit and write, it is the size of the change.
+      </figcaption>
+    </figure>
+  </Section>
 
   <Section title="Limits" description="What these numbers do not tell you.">
     <ul
@@ -213,8 +210,11 @@
       <li>
         I wrote the benchmark, and I also build smelt. The setup of each agent
         is in the
-        <a href={REPO} class="text-accent hover:underline">repository</a>. If
-        one is set up unfairly, please open an issue.
+        <a
+          href={REPO}
+          class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
+          >repository</a
+        >. If one is set up unfairly, please open an issue.
       </li>
     </ul>
   </Section>
@@ -222,7 +222,9 @@
 
 <p class="border-t border-line pt-6 text-xs leading-relaxed text-muted">
   The
-  <a href="{REPO}/blob/main/bench/README.md" class="text-accent hover:underline"
+  <a
+    href="{REPO}/blob/main/bench/README.md"
+    class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
     >benchmark README</a
   > has the full details, such as how results are checked and how the cost of the
   terminal is measured.

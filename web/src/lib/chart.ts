@@ -61,3 +61,11 @@ export function pointer(
  * free for the value label. */
 export const span = (fraction: number): string =>
   `calc((100% - 4.5rem) * ${fraction})`;
+
+const measure = document.createElement("canvas").getContext("2d")!;
+
+/** Width in pixels of chart text, which is 11px in the page's font. */
+export function textWidth(text: string): number {
+  measure.font = `11px ${getComputedStyle(document.body).fontFamily}`;
+  return measure.measureText(text).width;
+}

@@ -59,7 +59,7 @@
 
 <div
   bind:this={box}
-  class="relative grid grid-cols-[8.5rem_1fr] gap-x-3 text-sm"
+  class="relative grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-2 text-sm sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-x-3"
 >
   {#if zones.length}
     <div></div>

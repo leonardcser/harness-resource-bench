@@ -1,4 +1,4 @@
 bun.lock
 dist/
-public/data/
+src/data/
 .svelte-check/
