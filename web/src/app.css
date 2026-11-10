@@ -33,6 +33,12 @@
   --kind-search: #1b9e8a;
   --kind-edit: #d29a2e;
   --kind-write: #8a63d2;
+  /* Parts of a stacked bar, in stack order. Neighbors stay distinct with
+     color vision deficiency. */
+  --part-1: #2a78d6;
+  --part-2: #d29a2e;
+  --part-3: #1b9e8a;
+  --part-4: #8a63d2;
 }
 
 .dark {
@@ -58,6 +64,10 @@
   --kind-search: #3cb8a3;
   --kind-edit: #e9b552;
   --kind-write: #a88be6;
+  --part-1: #4a8ad8;
+  --part-2: #bb8b2c;
+  --part-3: #26a08c;
+  --part-4: #9478dc;
 }
 
 @theme inline {

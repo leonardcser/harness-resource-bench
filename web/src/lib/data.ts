@@ -134,6 +134,18 @@ export function series(groups: Map<string, Group>, prefix: string): Series[] {
   }));
 }
 
+/** The sorted numbers N of the metrics named `prefix` N in any group. */
+export function marks(groups: Iterable<Group>, prefix: string): number[] {
+  const pattern = new RegExp(`^${prefix}(\\d+)$`);
+  const found = new Set<number>();
+  for (const group of groups)
+    for (const name of Object.keys(group.metrics)) {
+      const match = name.match(pattern);
+      if (match) found.add(Number(match[1]));
+    }
+  return [...found].sort((a, b) => a - b);
+}
+
 export const single = (value: number): Stat => ({
   n: 1,
   median: value,

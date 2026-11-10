@@ -5,7 +5,14 @@
     title,
     note = "",
     children,
-  }: { title: string; note?: string; children: Snippet } = $props();
+    more,
+  }: {
+    title: string;
+    note?: string;
+    children: Snippet;
+    /** More to read after the note, such as the causes behind the chart. */
+    more?: Snippet;
+  } = $props();
 </script>
 
 <figure>
@@ -16,4 +23,5 @@
     >
       {note}
     </figcaption>{/if}
+  {@render more?.()}
 </figure>

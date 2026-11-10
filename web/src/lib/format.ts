@@ -11,6 +11,7 @@ export function bytes(value: number): string {
 }
 
 export function seconds(value: number): string {
+  if (value === 0) return "0 s";
   if (value < 1) return `${(value * 1000).toFixed(value < 0.01 ? 1 : 0)} ms`;
   return `${value.toFixed(value < 10 ? 2 : value < 100 ? 1 : 0)} s`;
 }

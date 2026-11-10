@@ -1,0 +1,141 @@
+// Bars split into parts: the parts, and the rows of each chart from a run.
+
+import type { Group, Manifest } from "./data";
+import { marks } from "./data";
+
+export type Part = {
+  id: string;
+  label: string;
+  color: string;
+  /** Parts with the same scale share it in a chart of columns. */
+  scale?: string;
+};
+
+export type StackRow = {
+  agent: string;
+  pieces: { part: string; value: number; items?: string[] }[];
+};
+
+/** A curated piece. Without a value, it takes the rest of the total. */
+export type Piece = { part: string; value?: number; items?: string[] };
+
+export const INSTALL_PARTS: Part[] = [
+  { id: "code", label: "Agent code", color: "var(--part-1)" },
+  { id: "runtime", label: "Runtime", color: "var(--part-2)" },
+  { id: "bytecode", label: "Bytecode copy", color: "var(--part-3)" },
+  { id: "extra", label: "Extra binaries and data", color: "var(--part-4)" },
+  { id: "other", label: "Other", color: "var(--faint)" },
+];
+
+/** Session files by format, as the bench names them. */
+export const SESSION_PARTS: Part[] = [
+  { id: "jsonl", label: "JSONL", color: "var(--part-1)" },
+  { id: "sqlite", label: "SQLite", color: "var(--part-2)" },
+  { id: "wal", label: "SQLite WAL", color: "var(--part-3)" },
+  { id: "json", label: "JSON", color: "var(--part-4)" },
+  { id: "other", label: "Other", color: "var(--faint)" },
+];
+
+export const MEMORY_PARTS: Part[] = [
+  { id: "code", label: "Code and mapped files", color: "var(--part-1)" },
+  { id: "heap", label: "Heap and data", color: "var(--part-2)" },
+];
+
+export const TASK_PARTS: Part[] = [
+  { id: "work", label: "Headless", color: "var(--part-1)", scale: "agent" },
+  { id: "tui", label: "+ TUI", color: "var(--part-2)", scale: "agent" },
+  { id: "terminal", label: "+ Terminal", color: "var(--part-3)" },
+];
+
+const median = (group: Group | undefined, metric: string) =>
+  group?.metrics[metric]?.median;
+
+export function installRows(
+  manifest: Manifest,
+  pieces: Record<string, Piece[]>,
+): StackRow[] {
+  return Object.entries(manifest.config.images.agents).map(([agent, image]) => {
+    const own = pieces[agent] ?? [{ part: "other" }];
+    const known = own.reduce((n, p) => n + (p.value ?? 0), 0);
+    return {
+      agent,
+      pieces: own.map((p) => ({
+        ...p,
+        value: p.value ?? Math.max(0, image.install_bytes - known),
+      })),
+    };
+  });
+}
+
+export function taskRows(
+  tui: Map<string, Group>,
+  headless: Map<string, Group>,
+): StackRow[] {
+  return [...tui].flatMap(([agent, group]) => {
+    const own = median(group, "cpu_seconds");
+    const work = median(headless.get(agent), "cpu_seconds");
+    if (own === undefined || work === undefined) return [];
+    return [
+      {
+        agent,
+        pieces: [
+          { part: "work", value: Math.min(work, own) },
+          { part: "tui", value: Math.max(0, own - work) },
+          {
+            part: "terminal",
+            value: median(group, "terminal_cpu_seconds") ?? 0,
+          },
+        ],
+      },
+    ];
+  });
+}
+
+export function memoryRows(idle: Map<string, Group>, mark: number): StackRow[] {
+  return [...idle].flatMap(([agent, group]) => {
+    const total = median(group, `idle_pss_bytes_after_${mark}`);
+    const code = median(group, `idle_pss_file_bytes_after_${mark}`);
+    if (total === undefined || code === undefined) return [];
+    return [
+      {
+        agent,
+        pieces: [
+          { part: "code", value: code },
+          { part: "heap", value: total - code },
+        ],
+      },
+    ];
+  });
+}
+
+export function sessionRows(
+  growth: Map<string, Group>,
+  turns: number,
+): StackRow[] {
+  return [...growth].flatMap(([agent, group]) => {
+    const pieces = SESSION_PARTS.flatMap(({ id }) => {
+      const value = median(group, `session_${id}_bytes_after_${turns}`);
+      return value === undefined ? [] : [{ part: id, value }];
+    });
+    return pieces.length ? [{ agent, pieces }] : [];
+  });
+}
+
+/** Wake-ups and CPU seconds per second of idle. CPU skips the first mark,
+ * while the agent settles. */
+export function idleRates(
+  idle: Map<string, Group>,
+): Map<string, { wakeups: number; cpu: number }> {
+  const at = marks(idle.values(), "idle_cpu_seconds_after_");
+  const [from, to] = [at.find((m) => m > 0), at.at(-1)];
+  const rates = new Map<string, { wakeups: number; cpu: number }>();
+  if (from === undefined || to === undefined || to <= from) return rates;
+  for (const [agent, group] of idle) {
+    const wakeups = median(group, "idle_wakeups_per_second");
+    const a = median(group, `idle_cpu_seconds_after_${from}`);
+    const b = median(group, `idle_cpu_seconds_after_${to}`);
+    if (wakeups === undefined || a === undefined || b === undefined) continue;
+    rates.set(agent, { wakeups, cpu: Math.max(0, b - a) / (to - from) });
+  }
+  return rates;
+}

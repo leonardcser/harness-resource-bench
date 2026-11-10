@@ -190,6 +190,28 @@
     </figure>
   </Section>
 
+  <Section title="Causes" description="Where the Why under a chart comes from.">
+    <div class="max-w-2xl space-y-3 text-sm leading-relaxed">
+      <p>
+        The timed runs measure the split of memory, the session files by format,
+        and the idle wake-ups. The causes behind them come from separate runs
+        with profilers, never the timed ones: perf for CPU time, strace for
+        timers, and the files that the agent saves. Then I found the code behind
+        each result in the agent's source, at the version in the benchmark, and
+        linked the line.
+      </p>
+      <p>
+        Claude Code is closed source, so its causes come from traces only. The
+        split of install size comes from the installed files.
+        <a
+          href="{REPO}/blob/main/bench/ANALYSIS.md"
+          class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
+          >ANALYSIS.md</a
+        > tells how to find each cause again.
+      </p>
+    </div>
+  </Section>
+
   <Section title="Limits" description="What these numbers do not tell you.">
     <ul
       class="max-w-2xl list-disc space-y-2 pl-5 text-sm leading-relaxed marker:text-faint"

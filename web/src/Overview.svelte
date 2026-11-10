@@ -4,6 +4,7 @@
   import Logo from "./Logo.svelte";
   import {
     agentsOf,
+    marks,
     nameOf,
     pick,
     single,
@@ -43,15 +44,10 @@
     };
   };
   const lastIdle = $derived(
-    Math.max(
-      0,
-      ...summary.groups
-        .filter((g) => g.question === "idle")
-        .flatMap((g) => Object.keys(g.metrics))
-        .map((k) =>
-          Number(k.match(/^idle_cpu_seconds_after_(\d+)$/)?.[1] ?? 0),
-        ),
-    ),
+    marks(
+      summary.groups.filter((g) => g.question === "idle"),
+      "idle_cpu_seconds_after_",
+    ).at(-1) ?? 0,
   );
   const groups: { label: string; columns: Column[] }[] = $derived([
     {
