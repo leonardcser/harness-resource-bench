@@ -6,6 +6,10 @@ import summary from "../data/summary.json";
 
 export const REPO = "https://github.com/leonardcser/harness-resource-bench";
 
+/** The clock of the benchmark VM's reserved cores, in GHz, which the host
+ * hook in bench/proxmox sets. */
+export const CLOCK_GHZ = 4.7;
+
 export type Stat = { n: number; median: number; min: number; max: number };
 
 export type Group = {
@@ -17,7 +21,12 @@ export type Group = {
   metrics: Record<string, Stat>;
 };
 
-export type Summary = { planned: number; groups: Group[] };
+export type Summary = {
+  planned: number;
+  groups: Group[];
+  /** The fixed job before every case, if the run has one. */
+  canary?: Stat | null;
+};
 
 export type Image = {
   version: string;

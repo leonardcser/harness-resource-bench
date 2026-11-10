@@ -11,7 +11,7 @@ from contextlib import ExitStack
 from pathlib import Path
 
 from agents import AGENTS, ENV, ROOT
-from host import AGENT_CPUS, steal
+from host import AGENT_CPUS, canary, steal
 from measure import (
     Connections,
     Sampler,
@@ -156,6 +156,7 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
         "status": "failed",
         "checkpoints": [],
         "workload_sha256": digest(case["turns"], case["calls"]),
+        "canary_seconds": canary(),
     }
     stolen = steal()
     try:

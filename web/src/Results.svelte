@@ -19,7 +19,16 @@
   } from "./findings";
   import Overview from "./Overview.svelte";
   import Section from "./Section.svelte";
-  import { agentsOf, marks, pick, rows, series, type Run } from "./lib/data";
+  import {
+    CLOCK_GHZ,
+    agentsOf,
+    marks,
+    pick,
+    rows,
+    series,
+    type Run,
+  } from "./lib/data";
+  import { repeats } from "./lib/measures";
   import {
     INSTALL_PARTS,
     MEMORY_PARTS,
@@ -84,12 +93,19 @@
       .find((v) => v !== undefined),
   );
   const idleRate = $derived(idleRates(idle));
+  const runs = $derived.by(() => {
+    const { fewest, most } = repeats(run);
+    return fewest === most ? `${most}` : `${fewest} to ${most}`;
+  });
   const facts = $derived([
     ["Run", manifest.started_utc.slice(0, 10)],
-    ["Agents", String(agents.length)],
-    ["Cases", count(summary.planned)],
-    ["Machine", manifest.machine.cpu.replace(/ \d+-Core Processor$/, "")],
-    ["Per agent", "2 CPU cores, 4 GiB memory"],
+    [
+      "Machine",
+      `${manifest.machine.cpu.replace(/ \d+-Core Processor$/, "")}, fixed ${CLOCK_GHZ} GHz`,
+    ],
+    ["Per agent", "2 reserved cores, 4 GiB"],
+    ["Repeats", `${runs} per case, shuffled`],
+    ["Cases", `${count(summary.planned)}, all checked`],
   ]);
   const ZONES = [
     { from: 0.01, label: "feels instant" },
@@ -144,6 +160,7 @@
   <p class="mt-4 leading-relaxed text-muted">
     How much each coding agent costs your machine. Every agent does the same
     scripted work in the same container. Lower is better.
+    <a href="#/methodology" class="link">How the numbers stay fair</a>.
   </p>
 </div>
 <dl class="mt-8 mb-14 grid grid-cols-2 gap-x-8 gap-y-4 text-sm sm:grid-cols-5">
@@ -164,11 +181,7 @@
   <p class="mt-6 text-xs leading-relaxed text-muted">
     The agents do not all do the same things, and an agent with fewer features
     can cost less.
-    <a
-      href="#/agents"
-      class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
-      >Compare their features</a
-    >.
+    <a href="#/agents" class="link">Compare their features</a>.
   </p>
 </Section>
 
@@ -198,7 +211,9 @@
         title="Memory at start"
         note="Memory after the first request, with a cold file cache."
       >
-        <Bars rows={rows(cold, "pss_bytes")} format={bytes} />
+        <div class="xl:pt-5">
+          <Bars rows={rows(cold, "pss_bytes")} format={bytes} />
+        </div>
       </Figure>
     </div>
     <div class="xl:col-span-2">
@@ -355,7 +370,6 @@
 </Section>
 
 <p class="border-t border-line pt-6 text-xs leading-relaxed text-muted">
-  Values are medians of the runs. Whiskers and bands show the range. {manifest
-    .machine.cpu}, kernel
+  Values are medians of the runs. Whiskers and bands show the range. Kernel
   {manifest.machine.kernel}, {manifest.machine.podman}.
 </p>

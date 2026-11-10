@@ -10,6 +10,9 @@ TUI_RATE = 120
 # Streaming rates for the coding task in the TUI, in tokens per second.
 STREAM_RATES = (30, 60, TUI_RATE, 250, 1000)
 REPETITIONS = 3
+# Startup and memory at start take seconds and vary the most, so they repeat
+# more often.
+START_REPETITIONS = 10
 # Tool calls of the coding task.
 CODING_CALLS = 24
 # Tool calls of the coding task in a setup check: the fewest that use every
@@ -33,15 +36,19 @@ def plan(selected, smoke=False):
     """Every case, short questions first. Each repeat shuffles the agents."""
     calls = SMOKE_CALLS if smoke else CODING_CALLS
     cases = []
-    for repeat in range(1 if smoke else REPETITIONS):
+    for repeat in range(1 if smoke else START_REPETITIONS):
         block = []
         for agent in selected:
             common = {"agent": agent, "repeat": repeat}
             launch = dict(common, rate=0, turns=0, calls=0, checkpoints=[])
-            task = dict(common, question="task", turns=1, calls=calls, checkpoints=[1])
             block += [
                 dict(launch, question="startup", frontend="tui"),
                 dict(launch, question="start-memory", frontend="headless"),
+            ]
+            if repeat >= REPETITIONS:
+                continue
+            task = dict(common, question="task", turns=1, calls=calls, checkpoints=[1])
+            block += [
                 dict(task, frontend="headless", rate=TUI_RATE),
                 *(dict(task, frontend="tui", rate=rate) for rate in STREAM_RATES),
             ]

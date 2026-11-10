@@ -2,165 +2,16 @@
   import { Icon } from "svelte-icons-pack";
   import { BsChevronDown } from "svelte-icons-pack/bs";
   import Logo from "./Logo.svelte";
-  import {
-    agentsOf,
-    marks,
-    nameOf,
-    pick,
-    single,
-    versionOf,
-    type Run,
-    type Stat,
-  } from "./lib/data";
-  import { bytes, percent, seconds } from "./lib/format";
+  import { agentsOf, nameOf, versionOf, type Run, type Stat } from "./lib/data";
+  import { measures, type Measure } from "./lib/measures";
 
   let { run }: { run: Run } = $props();
 
-  type Column = {
-    label: string;
-    /** The column in a sentence, such as "startup time". */
-    name: string;
-    format: (v: number) => string;
-    /** The smallest difference that counts as a win, in the column's unit. */
-    floor: number;
-    stat: (agent: string) => Stat | undefined;
-  };
-  const MS = 0.005;
-  const MIB = 2 ** 20;
-  const POINT = 0.5;
-
-  const { summary, manifest } = $derived(run);
+  const { manifest } = $derived(run);
   const agents = $derived(agentsOf(manifest));
-  const metric = (
-    question: string,
-    frontend: string,
-    rate: number,
-    name: (turns: number) => string,
-  ) => {
-    const groups = pick(summary, question, frontend, rate);
-    return (agent: string) => {
-      const group = groups.get(agent);
-      return group?.metrics[name(group.turns)];
-    };
-  };
-  const lastIdle = $derived(
-    marks(
-      summary.groups.filter((g) => g.question === "idle"),
-      "idle_cpu_seconds_after_",
-    ).at(-1) ?? 0,
-  );
-  const groups: { label: string; columns: Column[] }[] = $derived([
-    {
-      label: "Start",
-      columns: [
-        {
-          label: "Startup",
-          name: "startup time",
-          format: seconds,
-          floor: MS,
-          stat: metric("startup", "tui", 0, () => "input_ready_seconds"),
-        },
-        {
-          label: "Memory",
-          name: "memory at start",
-          format: bytes,
-          floor: MIB,
-          stat: metric("start-memory", "headless", 0, () => "pss_bytes"),
-        },
-        {
-          label: "Install",
-          name: "install size",
-          format: bytes,
-          floor: MIB,
-          stat: (a) => {
-            const value = manifest.config.images.agents[a]?.install_bytes;
-            return value === undefined ? undefined : single(value);
-          },
-        },
-      ],
-    },
-    {
-      label: "Coding task",
-      columns: [
-        {
-          label: "CPU, TUI",
-          name: "CPU in the TUI",
-          format: seconds,
-          floor: MS,
-          stat: metric("task", "tui", 120, () => "cpu_seconds"),
-        },
-        {
-          label: "CPU, headless",
-          name: "headless CPU",
-          format: seconds,
-          floor: MS,
-          stat: metric("task", "headless", 120, () => "cpu_seconds"),
-        },
-        {
-          label: "Terminal",
-          name: "terminal CPU",
-          format: seconds,
-          floor: MS,
-          stat: metric("task", "tui", 120, () => "terminal_cpu_seconds"),
-        },
-        {
-          label: "CPU use",
-          name: "CPU use while working",
-          format: percent,
-          floor: POINT,
-          stat: metric("task", "tui", 120, () => "active_cpu_percent"),
-        },
-      ],
-    },
-    {
-      label: "Long session",
-      columns: [
-        {
-          label: "Memory",
-          name: "memory in a long session",
-          format: bytes,
-          floor: MIB,
-          stat: metric(
-            "long-session",
-            "tui",
-            1000,
-            (t) => `pss_bytes_after_${t}`,
-          ),
-        },
-        {
-          label: "Disk",
-          name: "session data on disk",
-          format: bytes,
-          floor: MIB,
-          stat: metric(
-            "long-session",
-            "tui",
-            1000,
-            (t) => `session_bytes_after_${t}`,
-          ),
-        },
-      ],
-    },
-    {
-      label: "Idle",
-      columns: [
-        {
-          label: "CPU",
-          name: "CPU when idle",
-          format: seconds,
-          floor: MS,
-          stat: metric(
-            "idle",
-            "tui",
-            1000,
-            () => `idle_cpu_seconds_after_${lastIdle}`,
-          ),
-        },
-      ],
-    },
-  ]);
-  const columns = $derived(groups.flatMap((g) => g.columns));
-  const value = (column: Column, agent: string) => column.stat(agent)?.median;
+  const groups = $derived(measures(run));
+  const columns = $derived(groups.flatMap((g) => g.measures));
+  const value = (column: Measure, agent: string) => column.stat(agent)?.median;
 
   type Key = number | "leads";
   // A column index, or "leads": the number of columns an agent clearly leads.
@@ -181,7 +32,7 @@
   /** The agent that is clearly lowest in a column, if any. Its worst run must
    * beat the runner-up's best run, by 10% and by the column's floor. Smaller
    * differences can be noise, or too small to notice. */
-  const leader = (column: Column): string | undefined => {
+  const leader = (column: Measure): string | undefined => {
     const ranked = measured
       .map((agent) => ({ agent, stat: column.stat(agent) }))
       .filter((r): r is { agent: string; stat: Stat } => r.stat !== undefined)
@@ -221,7 +72,7 @@
   /** An agent's rank by leads. Agents with as many leads share a rank. */
   const rank = (agent: string) =>
     1 + measured.filter((a) => count(a) > count(agent)).length;
-  const highest = (column: Column) =>
+  const highest = (column: Measure) =>
     Math.max(...measured.map((a) => value(column, a) ?? 0));
 </script>
 
@@ -254,7 +105,7 @@
     >
       {#each groups as group (group.label)}
         <optgroup label={group.label}>
-          {#each group.columns as column (column.name)}
+          {#each group.measures as column (column.name)}
             {@const i = columns.indexOf(column)}
             <option value={i}
               >{column.name[0].toUpperCase()}{column.name.slice(1)}</option
@@ -280,7 +131,7 @@
         <th></th>
         {#each groups as group (group.label)}
           <th
-            colspan={group.columns.length}
+            colspan={group.measures.length}
             class="px-3 pb-1 text-right font-normal"
           >
             <div class="border-b border-line pb-1">{group.label}</div>

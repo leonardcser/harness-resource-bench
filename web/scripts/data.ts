@@ -34,7 +34,7 @@ const TRIM: Record<string, (o: Json) => Json> = {
     machine: pick(m.machine, "cpu", "kernel", "podman"),
     started_utc: m.started_utc,
   }),
-  "summary.json": (s) => pick(s, "planned", "groups"),
+  "summary.json": (s) => pick(s, "planned", "groups", "canary"),
   "profile.json": (p) => p,
 };
 

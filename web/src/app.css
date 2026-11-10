@@ -84,6 +84,10 @@
   --color-remove: var(--remove);
 }
 
+@utility link {
+  @apply text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent;
+}
+
 body {
   @apply bg-bg font-sans text-fg antialiased;
 }

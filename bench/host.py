@@ -11,6 +11,7 @@ import os
 import platform
 import shutil
 import subprocess
+import sys
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -18,6 +19,18 @@ HARNESS_CPUS = {0, 1}
 # Two physical cores, with both threads of each, as podman's --cpuset-cpus
 # takes them. Agents that use threads behave as they do for users.
 AGENT_CPUS = "2,3,4,5"
+# A fixed amount of CPU work, which prints its own CPU time. It hashes a 4 MiB
+# buffer, more than a core's L2 cache, so both the clock and the L3 cache show
+# in its time. The hash runs in C: a pure Python loop varies by 5% to 10% from
+# one process to the next, with the memory layout.
+CANARY = """
+import hashlib, time
+data = bytes(range(256)) * (1 << 14)
+start = time.process_time()
+for _ in range(64):
+    hashlib.blake2b(data).digest()
+print(time.process_time() - start)
+"""
 # Ticks of /proc/stat per second.
 USER_HZ = os.sysconf("SC_CLK_TCK")
 
@@ -75,6 +88,19 @@ def exclusive():
 def stay_on_harness_core():
     """Keep the calling process and its threads off the agent's CPUs."""
     os.sched_setaffinity(0, HARNESS_CPUS)
+
+
+def canary():
+    """CPU seconds of a fixed job on the agent's first CPU. Over a run, its
+    spread shows whether the clock and the isolation held."""
+    cpu = int(AGENT_CPUS.split(",")[0])
+    return float(
+        subprocess.check_output(
+            [sys.executable, "-c", CANARY],
+            preexec_fn=lambda: os.sched_setaffinity(0, {cpu}),
+            text=True,
+        )
+    )
 
 
 def steal():

@@ -93,8 +93,18 @@ def derived(result, case):
     return result
 
 
+def stat(values):
+    """The count, median and range of `values`."""
+    return {
+        "n": len(values),
+        "median": statistics.median(values),
+        "min": min(values),
+        "max": max(values),
+    }
+
+
 def stats(results):
-    """The count, median and range of each metric over repeated cases."""
+    """The stat of each metric over repeated cases."""
     metrics = {}
     checkpoint_metrics = sorted(
         {k for r in results for k in r if k.startswith(CHECKPOINT_METRICS)}
@@ -102,12 +112,7 @@ def stats(results):
     for metric in (*METRICS, *checkpoint_metrics):
         values = [r[metric] for r in results if r.get(metric) is not None]
         if values:
-            metrics[metric] = {
-                "n": len(values),
-                "median": statistics.median(values),
-                "min": min(values),
-                "max": max(values),
-            }
+            metrics[metric] = stat(values)
     return metrics
 
 
@@ -116,7 +121,7 @@ def report(out):
     question and setting. Return whether every planned case passed."""
     manifest = json.loads((out / "manifest.json").read_text())
     planned = manifest["config"]["plan"]
-    runs, groups, remotes = [], {}, {}
+    runs, groups, remotes, canaries = [], {}, {}, []
     for case in planned:
         path = out / "cases" / case["id"] / "result.json"
         if not path.exists():
@@ -129,6 +134,8 @@ def report(out):
             f"{r['protocol']} {r['address']}:{r['port']}"
             for r in result.get("remote_connections", [])
         )
+        if "canary_seconds" in result:
+            canaries.append(result["canary_seconds"])
         if result["status"] == "ok":
             key = tuple(case[k] for k in GROUP)
             groups.setdefault(key, []).append(derived(result, case))
@@ -144,6 +151,8 @@ def report(out):
                 dict(zip(GROUP, key), metrics=stats(results))
                 for key, results in sorted(groups.items(), key=lambda kv: str(kv[0]))
             ],
+            # The fixed job before every case: the same work over the whole run.
+            "canary": stat(canaries) if canaries else None,
             # Addresses outside the host that each agent connected to.
             "remote_connections": {a: sorted(r) for a, r in sorted(remotes.items())},
         },

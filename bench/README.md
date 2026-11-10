@@ -45,8 +45,9 @@ Agents: smelt, pi, omp, codex, Claude Code, opencode and fx.
 
 - TUI cases also measure the CPU time that a real terminal (tmux) spends to
   parse the agent's output.
-- Every case runs 3 times, one container at a time, with the agents in random
-  order. Results show the median and the range.
+- Every case runs 3 times, and startup and memory at start 10 times. One
+  container runs at a time, with the agents in random order. Results show the
+  median and the range.
 
 ## Run it
 
@@ -54,8 +55,8 @@ Requirements: Linux, rootless podman, cgroup v2 with `cpu`, `cpuset`, `memory`
 and `pids` delegated to the user, tmux, [uv](https://docs.astral.sh/uv/), and
 CPUs 0 to 5. `run` checks the host first and tells you what is missing.
 
-The host for published results is the benchmark VM (`bench` in the
-remote-configs repo). Its cores are reserved for it and run at a fixed 4.7 GHz.
+The host for published results is the benchmark VM. While it runs, a Proxmox
+hook reserves its cores on the host (see [The benchmark VM](#the-benchmark-vm)).
 On another host, use an idle machine.
 
 ```sh
@@ -119,6 +120,7 @@ knows no agent.
 | `case.py`             | Runs one case: container, terminal, model and sampler     |
 | `report.py`           | Summaries, the terminal replay and publishing             |
 | `host.py`             | Host checks, CPUs, steal time and machine info            |
+| `proxmox/`            | The hook that reserves the benchmark VM's cores           |
 | `agents/NAME.py`      | Version, install, config, tool calls and request texts    |
 | `model/server.py`     | The mock model server and its checks                      |
 | `model/requests.py`   | What a request holds: history, results, compaction        |
@@ -149,11 +151,34 @@ Reference material, to check the method or change the harness.
   terminal run on CPUs 0 and 1. One case runs at a time: in a test with 4
   neighbours on the same CCD, the agents used 6% to 8% more CPU, against under
   1% of noise alone.
+- **Order:** each repeat shuffles the agents, with a fixed seed.
 - **Defaults:** each agent runs with its defaults. Only telemetry, error
   reporting and automatic updates are off (`ENV` in `agents/__init__.py`). Other
   default requests stay on, such as session titles and catalog downloads.
 - **Context window:** 200k tokens for every agent.
 - **Warmup:** one practice task per agent and frontend, which does not count.
+
+### The benchmark VM
+
+The published runs come from a VM with 12 vCPUs on a Proxmox host with an AMD
+Ryzen 9 7900X: 12 cores in two CCDs, each with its own L3 cache. The hook
+`proxmox/bench-isolate` runs when the VM starts and stops. While the VM runs:
+
+- **Reserved cores:** the VM's cgroup is an isolated cpuset partition with the
+  whole second CCD (host threads 6 to 11 and 18 to 23). The kernel takes these
+  threads away from every other guest and host service, also from guests that
+  start later.
+- **Own L3:** no other work shares the cache of that CCD.
+- **Pinning:** each vCPU runs on one host thread, and each pair 2k, 2k+1 is one
+  physical core. QEMU's own threads share the core of vCPUs 0 and 1, so the
+  harness runs there and the agent does not.
+- **Fixed clock:** the reserved cores are held at 4.7 GHz, the base clock, so
+  boost does not change the speed between runs.
+- **Interrupts:** hardware interrupts go to the other host threads. NVMe queues
+  that the kernel manages keep their affinity, and fire there only for the VM's
+  own I/O.
+- **Updates:** the VM has no automatic updates, so packages do not change during
+  or between runs.
 
 ### Workload
 
@@ -284,6 +309,9 @@ These live in each agent's file in `agents/`.
 - `idle_wakeups_per_second`: voluntary context switches of all the agent's
   threads, per second of idle.
 - `peak_memory_bytes` is the cgroup's own peak, with file cache.
+- `canary_seconds` is the CPU time of a fixed hash of a 4 MiB buffer on CPU 2,
+  just before the case. `summary.json` gives its spread over the whole run under
+  `canary`. A change of clock or a neighbour on the agent's cores shows there.
 - `steal_seconds` is the time that the hypervisor ran something else on the
   agent's CPUs during the case. On the benchmark VM it stays near zero.
 - `active_cpu_percent` is the CPU of the coding task divided by the time from

@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+"""Proxmox hookscript that reserves host cores for the benchmark VM while it runs.
+
+On start the VM's cgroup becomes an isolated cpuset partition: the kernel takes
+the reserved threads away from every other guest and host service, including
+guests started later. Each vCPU is then pinned to one reserved thread and the
+reserved cores are held at a fixed clock, and hardware interrupts are steered
+to the remaining host threads. On stop everything is released.
+"""
+
+import json
+import os
+import socket
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+VMID = "111"
+# Guest vCPU i runs on BENCH_THREADS[i]: the whole second CCD, so no other task
+# shares its L3. Each vCPU pair 2k, 2k+1 is the two threads of one physical
+# core. QEMU's own threads share the core of vCPUs 0-1, the housekeeping core.
+BENCH_THREADS = [6, 18, 7, 19, 8, 20, 9, 21, 10, 22, 11, 23]
+FREQUENCY_KHZ = 4_700_000
+
+SLICE = Path("/sys/fs/cgroup/qemu.slice")
+CPU_SYSFS = Path("/sys/devices/system/cpu")
+QEMU_RUN = Path("/var/run/qemu-server")
+IRQ_ROOT = Path("/proc/irq")
+
+
+def format_cpus(cpus):
+    return ",".join(str(cpu) for cpu in sorted(cpus))
+
+
+def set_allowed_cpus(cpus):
+    # systemd only enables the cpuset controller for scopes that request CPUs.
+    subprocess.run(
+        [
+            "systemctl",
+            "set-property",
+            "--runtime",
+            f"{VMID}.scope",
+            f"AllowedCPUs={cpus}",
+        ],
+        check=True,
+    )
+
+
+def partition():
+    cpus = format_cpus(BENCH_THREADS)
+    scope = SLICE / f"{VMID}.scope"
+    set_allowed_cpus(cpus)
+    (SLICE / "cpuset.cpus.exclusive").write_text(cpus)
+    (scope / "cpuset.cpus.exclusive").write_text(cpus)
+    (scope / "cpuset.cpus.partition").write_text("isolated")
+    state = (scope / "cpuset.cpus.partition").read_text().strip()
+    if state != "isolated":
+        raise SystemExit(f"Bench cpuset partition is {state!r}")
+
+
+def unpartition():
+    scope = SLICE / f"{VMID}.scope"
+    if scope.exists():
+        (scope / "cpuset.cpus.partition").write_text("member")
+        (scope / "cpuset.cpus.exclusive").write_text("\n")
+        set_allowed_cpus("")
+    (SLICE / "cpuset.cpus.exclusive").write_text("\n")
+
+
+def vcpu_threads():
+    deadline = time.monotonic() + 10
+    while True:
+        try:
+            with socket.socket(socket.AF_UNIX) as qmp:
+                qmp.connect(str(QEMU_RUN / f"{VMID}.qmp"))
+                stream = qmp.makefile("rw")
+                stream.readline()
+                for command in ("qmp_capabilities", "query-cpus-fast"):
+                    stream.write(json.dumps({"execute": command}) + "\n")
+                    stream.flush()
+                    reply = json.loads(stream.readline())
+                cpus = sorted(reply["return"], key=lambda cpu: cpu["cpu-index"])
+                return [cpu["thread-id"] for cpu in cpus]
+        except (OSError, KeyError, ValueError):
+            if time.monotonic() > deadline:
+                raise
+            time.sleep(0.5)
+
+
+def pin():
+    threads = vcpu_threads()
+    if len(threads) != len(BENCH_THREADS):
+        raise SystemExit(
+            f"VM {VMID} has {len(threads)} vCPUs, expected {len(BENCH_THREADS)}"
+        )
+    for thread, cpu in zip(threads, BENCH_THREADS):
+        os.sched_setaffinity(thread, {cpu})
+    pid = (QEMU_RUN / f"{VMID}.pid").read_text().strip()
+    for task in Path(f"/proc/{pid}/task").iterdir():
+        if int(task.name) not in threads:
+            os.sched_setaffinity(int(task.name), set(BENCH_THREADS[:2]))
+
+
+def parse_cpus(text):
+    cpus = set()
+    for part in text.strip().split(","):
+        first, _, last = part.partition("-")
+        cpus.update(range(int(first), int(last or first) + 1))
+    return cpus
+
+
+def set_interrupts(reserved):
+    cpus = parse_cpus((CPU_SYSFS / "online").read_text())
+    if reserved:
+        cpus -= set(BENCH_THREADS)
+    (IRQ_ROOT / "default_smp_affinity").write_text(f"{sum(1 << cpu for cpu in cpus):x}")
+    # Kernel-managed queues (NVMe) refuse new affinities; they only fire on a
+    # reserved thread for I/O that the bench VM submits there itself.
+    for affinity in IRQ_ROOT.glob("*/smp_affinity_list"):
+        try:
+            affinity.write_text(format_cpus(cpus))
+        except OSError:
+            pass
+
+
+def set_frequency(khz):
+    """Hold the reserved threads at `khz`, or give them back their full range.
+    The lowest default is the lowest efficient clock, as amd-pstate sets it."""
+    for cpu in BENCH_THREADS:
+        policy = CPU_SYSFS / f"cpu{cpu}" / "cpufreq"
+        lowest = policy / "amd_pstate_lowest_nonlinear_freq"
+        if not lowest.exists():
+            lowest = policy / "cpuinfo_min_freq"
+        low = khz or int(lowest.read_text())
+        high = khz or int((policy / "cpuinfo_max_freq").read_text())
+        # The kernel refuses a minimum above the maximum.
+        if low > int((policy / "scaling_max_freq").read_text()):
+            (policy / "scaling_max_freq").write_text(f"{high}\n")
+        (policy / "scaling_min_freq").write_text(f"{low}\n")
+        (policy / "scaling_max_freq").write_text(f"{high}\n")
+
+
+def reserve():
+    try:
+        partition()
+        pin()
+        set_frequency(FREQUENCY_KHZ)
+        set_interrupts(reserved=True)
+    except BaseException:
+        release()
+        raise
+
+
+def release():
+    unpartition()
+    set_frequency(None)
+    set_interrupts(reserved=False)
+
+
+def main(argv):
+    vmid, phase = argv[1:3]
+    if vmid == VMID and phase == "post-start":
+        reserve()
+    elif vmid == VMID and phase == "post-stop":
+        release()
+
+
+if __name__ == "__main__":
+    main(sys.argv)
