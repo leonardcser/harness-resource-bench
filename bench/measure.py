@@ -28,13 +28,17 @@ def cgroup_for(pid):
     return path
 
 
-def pss(cgroup):
-    pids = set()
+def pids(cgroup):
+    found = set()
     for file in cgroup.rglob("cgroup.procs"):
-        pids.update(file.read_text().split())
+        found.update(file.read_text().split())
+    return found
+
+
+def pss(cgroup):
     total, processes = 0, 0
     components = {"Pss_Anon:": 0, "Pss_File:": 0, "Pss_Shmem:": 0}
-    for pid in pids:
+    for pid in pids(cgroup):
         try:
             lines = Path(f"/proc/{pid}/smaps_rollup").read_text().splitlines()
         except (ProcessLookupError, FileNotFoundError):
@@ -62,27 +66,80 @@ def pss(cgroup):
     }
 
 
+def wakeups(cgroup):
+    """Voluntary context switches of all threads in the cgroup. An exited
+    thread's count is lost."""
+    total = 0
+    for pid in pids(cgroup):
+        try:
+            tasks = list(Path(f"/proc/{pid}/task").iterdir())
+        except FileNotFoundError:
+            continue
+        for task in tasks:
+            try:
+                status = (task / "status").read_text()
+            except (FileNotFoundError, ProcessLookupError):
+                continue
+            total += int(status.split("voluntary_ctxt_switches:")[1].split()[0])
+    return total
+
+
+# Session file formats.
+SESSION_KINDS = ("sqlite", "wal", "jsonl", "json", "other")
+
+
+def kind(file):
+    if file.name.endswith(("-wal", "-shm", "-journal")):
+        return "wal"
+    if file.suffix in (".jsonl", ".ndjson"):
+        return "jsonl"
+    if file.suffix == ".json":
+        return "json"
+    try:
+        with open(file, "rb") as handle:
+            if handle.read(16) == b"SQLite format 3\0":
+                return "sqlite"
+    except OSError:
+        pass
+    return "other"
+
+
 def disk(path, assets=(), depth=3):
     """Apparent size of the files under `path`. The host reads them without
     following links, so the container runs no helper. `session_bytes` does not
-    include the `assets` directories. `disk_dirs` sums each directory up to
-    `depth` levels down."""
-    total, session, dirs = 0, 0, {}
+    include the `assets` directories; `session_files` and `session_<kind>_bytes`
+    split it. `disk_dirs` sums each directory up to `depth` levels down."""
+    total, session, files_count, dirs = 0, 0, 0, {}
+    kinds = dict.fromkeys(SESSION_KINDS, 0)
     for directory, _, files in os.walk(path):
+        parts = Path(directory).relative_to(path).parts
+        is_session = not any(
+            parts[: len(Path(a).parts)] == Path(a).parts for a in assets
+        )
         size = 0
         for name in files:
+            file = Path(directory, name)
             try:
-                size += os.lstat(os.path.join(directory, name)).st_size
+                bytes_ = os.lstat(file).st_size
             except FileNotFoundError:
                 continue
+            size += bytes_
+            if is_session:
+                kinds[kind(file)] += bytes_
+                files_count += 1
         total += size
-        parts = Path(directory).relative_to(path).parts
-        if not any(parts[: len(Path(a).parts)] == Path(a).parts for a in assets):
+        if is_session:
             session += size
         for level in range(1, min(len(parts), depth) + 1):
             key = "/".join(parts[:level])
             dirs[key] = dirs.get(key, 0) + size
-    return {"disk_bytes": total, "session_bytes": session, "disk_dirs": dirs}
+    return {
+        "disk_bytes": total,
+        "session_bytes": session,
+        "session_files": files_count,
+        **{f"session_{k}_bytes": v for k, v in kinds.items()},
+        "disk_dirs": dirs,
+    }
 
 
 class Sampler:
@@ -201,10 +258,7 @@ class Connections:
         self.thread = threading.Thread(target=self.run, daemon=True)
 
     def poll(self):
-        pids = set()
-        for file in self.cgroup.rglob("cgroup.procs"):
-            pids.update(file.read_text().split())
-        for remote in remote_sockets(sorted(pids)):
+        for remote in remote_sockets(sorted(pids(self.cgroup))):
             self.first_seen.setdefault(remote, time.monotonic() - self.started)
 
     def run(self):

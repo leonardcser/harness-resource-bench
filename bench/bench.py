@@ -107,8 +107,9 @@ def images_of(out, selected, local):
     return images
 
 
-def run(out, selected, images, smoke):
-    """Every case of the plan in `out`, one at a time, resuming finished ones."""
+def run(out, selected, images, smoke, keep_homes=False):
+    """Every case of the plan in `out`, one at a time, resuming finished ones.
+    With `keep_homes`, each case keeps the agent's HOME for analysis."""
     cases = plan(selected, smoke)
     config = {
         "smoke": smoke,
@@ -147,7 +148,7 @@ def run(out, selected, images, smoke):
         else:
             print(f"START {case['id']}", flush=True)
             image_id = images["agents"][case["agent"]]["image_id"]
-            result = execute(case, path.parent, image_id, smoke)
+            result = execute(case, path.parent, image_id, smoke, keep_homes)
             print(
                 f"{result['status'].upper()} {case['id']} {result.get('error', '')}",
                 flush=True,
@@ -186,6 +187,11 @@ def main():
             metavar="AGENT=PATH",
             help="install a local build of an agent that ships as one binary",
         )
+        bench.add_argument(
+            "--keep-homes",
+            action="store_true",
+            help="copy each case's HOME to cases/ID/home, for ANALYSIS.md",
+        )
     commands.add_parser("publish", help="publish the newest complete run")
     commands.add_parser("transcript", help="print the work that the model sends")
     args = parser.parse_args()
@@ -210,10 +216,10 @@ def main():
         out = folder(selected, local)
         print(f"{'RESUME' if out.exists() else 'NEW'} {out}", flush=True)
         images = images_of(out, selected, local)
-        run(out / "smoke", selected, images, smoke=True)
+        run(out / "smoke", selected, images, smoke=True, keep_homes=args.keep_homes)
         if args.command == "check":
             return
-        run(out, selected, images, smoke=False)
+        run(out, selected, images, smoke=False, keep_homes=args.keep_homes)
         if len(selected) == len(AGENTS):
             publish()
 

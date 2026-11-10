@@ -9,8 +9,10 @@ from pathlib import Path
 from agents import AGENTS
 from case import save
 from host import AGENT_CPUS
+from measure import SESSION_KINDS
 from plan import IDLE_MARKS
 from terminal import REPLAYS, replay_cost
+from workload import text_bytes
 
 # Results live at the root of the repository, beside the harness and the site.
 RESULTS = Path(__file__).resolve().parent.parent / "results"
@@ -27,16 +29,20 @@ METRICS = (
     "terminal_bytes",
     "steal_seconds",
 )
-# Long-session and new-sessions runs also report `pss_bytes_after_N` and
-# `session_bytes_after_N` at each checkpoint, and `cpu_seconds_per_turn_A_B`
-# between consecutive checkpoints. In new-sessions, N counts sessions. Idle runs
-# report the CPU since the agent went idle and its memory at each idle mark.
+# Long-session and new-sessions runs also report memory, session data and the
+# text of the session at each checkpoint (`..._after_N`, N in turns or
+# sessions), and `cpu_seconds_per_turn_A_B` between checkpoints. Idle runs
+# report CPU and memory at each idle mark, and `idle_wakeups_per_second`.
 CHECKPOINT_METRICS = (
     "pss_bytes_after_",
-    "session_bytes_after_",
+    "session_",
     "cpu_seconds_per_turn_",
-    "idle_cpu_seconds_after_",
-    "idle_pss_bytes_after_",
+    "idle_",
+)
+SESSION_SPLIT = (
+    "session_bytes",
+    "session_files",
+    *(f"session_{k}_bytes" for k in SESSION_KINDS),
 )
 # What makes cases repeats of one another.
 GROUP = ("agent", "question", "frontend", "rate", "turns")
@@ -54,7 +60,11 @@ def derived(result, case):
         for point in points:
             turns = point["completed_turns"]
             result[f"pss_bytes_after_{turns}"] = point["pss_bytes"]
-            result[f"session_bytes_after_{turns}"] = point["session_bytes"]
+            for name in SESSION_SPLIT:
+                result[f"{name}_after_{turns}"] = point[name]
+            result[f"session_text_bytes_after_{turns}"] = text_bytes(
+                turns, case["calls"]
+            )
         for start, end in pairwise(points):
             span = f"{start['completed_turns']}_{end['completed_turns']}"
             result[f"cpu_seconds_per_turn_{span}"] = cpu_per_turn(start, end)
@@ -73,6 +83,13 @@ def derived(result, case):
                 cpu = (point["cpu_usec"] - base["cpu_usec"]) / 1e6
                 result[f"idle_cpu_seconds_after_{seconds}"] = cpu
                 result[f"idle_pss_bytes_after_{seconds}"] = point["pss_bytes"]
+                result[f"idle_pss_anon_bytes_after_{seconds}"] = point["pss_anon_bytes"]
+                result[f"idle_pss_file_bytes_after_{seconds}"] = point["pss_file_bytes"]
+        last = max(points, key=lambda c: c["time"])
+        if last is not base:
+            result["idle_wakeups_per_second"] = (last["wakeups"] - base["wakeups"]) / (
+                last["time"] - base["time"]
+            )
     return result
 
 

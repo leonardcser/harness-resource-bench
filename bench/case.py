@@ -2,6 +2,7 @@
 sampler. The host measures the container from outside."""
 
 import json
+import shutil
 import subprocess
 import tempfile
 import time
@@ -18,6 +19,7 @@ from measure import (
     disk,
     pss,
     summarize,
+    wakeups,
     write_samples,
 )
 from model import Model
@@ -115,6 +117,7 @@ def checkpoint(sampler, turn, model, home, assets):
     sample = sampler.sample()
     sample.update(pss(sampler.cgroup))
     sample.update(disk(home, assets))
+    sample["wakeups"] = wakeups(sampler.cgroup)
     sample["completed_turns"] = turn + 1
     sample["request_bytes"] = model.events[-1]["request_bytes"]
     sample["request_history_turns"] = model.events[-1]["history_turns"]
@@ -138,8 +141,9 @@ def container_pid(container, terminal):
     raise RuntimeError("Container failed to start")
 
 
-def execute(case, folder, image_id, smoke=False):
-    """Measure `case` and save its result in `folder`."""
+def execute(case, folder, image_id, smoke=False, keep_home=False):
+    """Measure `case` and save its result in `folder`. With `keep_home`, copy
+    the agent's HOME to `folder/home` once the container is gone."""
     folder.mkdir(parents=True, exist_ok=True)
     question = case["question"]
     agent = AGENTS[case["agent"]]
@@ -166,6 +170,11 @@ def execute(case, folder, image_id, smoke=False):
                     (root / name).parent.mkdir(parents=True, exist_ok=True)
                     (root / name).write_text(content)
             model.workspace = root / "workspace"
+            if keep_home:
+                # Runs after the container is removed, before the folder is.
+                kept = folder / "home"
+                shutil.rmtree(kept, ignore_errors=True)
+                resources.callback(shutil.copytree, root / "home", kept, symlinks=True)
             container = create(case, root, model.port, image_id, PROMPT.format(turn=0))
             resources.callback(
                 subprocess.run,

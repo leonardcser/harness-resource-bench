@@ -84,6 +84,8 @@ Good to know:
   starts a new run.
 - **Failures:** a failed case stops the run and stays in `cases/ID/` for you to
   examine. Delete that folder to run the case again.
+- **Kept homes:** `--keep-homes` copies each case's HOME to `cases/ID/home`, for
+  [ANALYSIS.md](ANALYSIS.md). Never commit it.
 - **Local build:** for an agent that ships as one binary, add
   `--local-binary AGENT=PATH`.
 
@@ -277,7 +279,10 @@ These live in each agent's file in `agents/`.
 - CPU seconds come from cgroup deltas. 100% is one core.
 - Memory is PSS: the sum over all processes in the cgroup, with shared pages
   split between them.
-- TUI cases record PSS at checkpoints, after 2 seconds of settle time.
+- TUI cases record PSS at checkpoints, after 2 seconds of settle time. Idle runs
+  split it into file-backed (mostly code) and anonymous (heap) pages.
+- `idle_wakeups_per_second`: voluntary context switches of all the agent's
+  threads, per second of idle.
 - `peak_memory_bytes` is the cgroup's own peak, with file cache.
 - `steal_seconds` is the time that the hypervisor ran something else on the
   agent's CPUs during the case. On the benchmark VM it stays near zero.
@@ -306,6 +311,10 @@ pane's screen.
 - `session_bytes`: the same without each agent's `assets` in `agents/`. These
   are plugins, grammars and bundled files that the agent downloads or unpacks in
   every session. The long session reports `session_bytes_after_N`.
+- `session_files` counts those files, and `session_<kind>_bytes` splits them by
+  format: `sqlite`, `wal` (SQLite `-wal`, `-shm`, `-journal`), `jsonl`, `json`
+  and `other`. `session_text_bytes` is the text of the session itself: tool
+  calls, tool output and answers.
 - The excluded folders have a fixed size that does not grow with the session,
   and `disk_bytes` still counts them:
 

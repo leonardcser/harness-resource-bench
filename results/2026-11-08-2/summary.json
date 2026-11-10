@@ -1227,6 +1227,36 @@
           "min": 0.204583,
           "max": 0.223003
         },
+        "idle_pss_anon_bytes_after_0": {
+          "n": 3,
+          "median": 252899328,
+          "min": 247660544,
+          "max": 254705664
+        },
+        "idle_pss_anon_bytes_after_120": {
+          "n": 3,
+          "median": 184778752,
+          "min": 183808000,
+          "max": 185229312
+        },
+        "idle_pss_anon_bytes_after_30": {
+          "n": 3,
+          "median": 226017280,
+          "min": 223846400,
+          "max": 228515840
+        },
+        "idle_pss_anon_bytes_after_300": {
+          "n": 3,
+          "median": 183963648,
+          "min": 182980608,
+          "max": 184578048
+        },
+        "idle_pss_anon_bytes_after_60": {
+          "n": 3,
+          "median": 226197504,
+          "min": 223629312,
+          "max": 228106240
+        },
         "idle_pss_bytes_after_0": {
           "n": 3,
           "median": 351817728,
@@ -1256,6 +1286,36 @@
           "median": 325763072,
           "min": 323534848,
           "max": 327671808
+        },
+        "idle_pss_file_bytes_after_0": {
+          "n": 3,
+          "median": 98918400,
+          "min": 98856960,
+          "max": 99323904
+        },
+        "idle_pss_file_bytes_after_120": {
+          "n": 3,
+          "median": 99786752,
+          "min": 99786752,
+          "max": 100032512
+        },
+        "idle_pss_file_bytes_after_30": {
+          "n": 3,
+          "median": 99356672,
+          "min": 99356672,
+          "max": 99696640
+        },
+        "idle_pss_file_bytes_after_300": {
+          "n": 3,
+          "median": 99786752,
+          "min": 99786752,
+          "max": 100032512
+        },
+        "idle_pss_file_bytes_after_60": {
+          "n": 3,
+          "median": 99565568,
+          "min": 99565568,
+          "max": 99905536
         }
       }
     },
@@ -1878,6 +1938,36 @@
           "min": 0.010634,
           "max": 0.011668
         },
+        "idle_pss_anon_bytes_after_0": {
+          "n": 3,
+          "median": 47878144,
+          "min": 47046656,
+          "max": 49516544
+        },
+        "idle_pss_anon_bytes_after_120": {
+          "n": 3,
+          "median": 43806720,
+          "min": 43749376,
+          "max": 44081152
+        },
+        "idle_pss_anon_bytes_after_30": {
+          "n": 3,
+          "median": 46891008,
+          "min": 46198784,
+          "max": 48037888
+        },
+        "idle_pss_anon_bytes_after_300": {
+          "n": 3,
+          "median": 43413504,
+          "min": 43307008,
+          "max": 43737088
+        },
+        "idle_pss_anon_bytes_after_60": {
+          "n": 3,
+          "median": 45772800,
+          "min": 44871680,
+          "max": 47165440
+        },
         "idle_pss_bytes_after_0": {
           "n": 3,
           "median": 208687104,
@@ -1907,6 +1997,36 @@
           "median": 207175680,
           "min": 205815808,
           "max": 208080896
+        },
+        "idle_pss_file_bytes_after_0": {
+          "n": 3,
+          "median": 160153600,
+          "min": 160141312,
+          "max": 160612352
+        },
+        "idle_pss_file_bytes_after_120": {
+          "n": 3,
+          "median": 160747520,
+          "min": 160718848,
+          "max": 161206272
+        },
+        "idle_pss_file_bytes_after_30": {
+          "n": 3,
+          "median": 160153600,
+          "min": 160141312,
+          "max": 160612352
+        },
+        "idle_pss_file_bytes_after_300": {
+          "n": 3,
+          "median": 160747520,
+          "min": 160718848,
+          "max": 161271808
+        },
+        "idle_pss_file_bytes_after_60": {
+          "n": 3,
+          "median": 160747520,
+          "min": 160718848,
+          "max": 161206272
         }
       }
     },
@@ -2529,6 +2649,36 @@
           "min": 0.168836,
           "max": 0.171311
         },
+        "idle_pss_anon_bytes_after_0": {
+          "n": 3,
+          "median": 5771264,
+          "min": 4751360,
+          "max": 6950912
+        },
+        "idle_pss_anon_bytes_after_120": {
+          "n": 3,
+          "median": 5771264,
+          "min": 4751360,
+          "max": 6950912
+        },
+        "idle_pss_anon_bytes_after_30": {
+          "n": 3,
+          "median": 5771264,
+          "min": 4751360,
+          "max": 6950912
+        },
+        "idle_pss_anon_bytes_after_300": {
+          "n": 3,
+          "median": 5771264,
+          "min": 4751360,
+          "max": 6950912
+        },
+        "idle_pss_anon_bytes_after_60": {
+          "n": 3,
+          "median": 5771264,
+          "min": 4751360,
+          "max": 6950912
+        },
         "idle_pss_bytes_after_0": {
           "n": 3,
           "median": 15544320,
@@ -2558,6 +2708,36 @@
           "median": 15544320,
           "min": 14524416,
           "max": 16723968
+        },
+        "idle_pss_file_bytes_after_0": {
+          "n": 3,
+          "median": 9773056,
+          "min": 9773056,
+          "max": 9773056
+        },
+        "idle_pss_file_bytes_after_120": {
+          "n": 3,
+          "median": 9773056,
+          "min": 9773056,
+          "max": 9773056
+        },
+        "idle_pss_file_bytes_after_30": {
+          "n": 3,
+          "median": 9773056,
+          "min": 9773056,
+          "max": 9773056
+        },
+        "idle_pss_file_bytes_after_300": {
+          "n": 3,
+          "median": 9773056,
+          "min": 9773056,
+          "max": 9773056
+        },
+        "idle_pss_file_bytes_after_60": {
+          "n": 3,
+          "median": 9773056,
+          "min": 9773056,
+          "max": 9773056
         }
       }
     },
@@ -3180,6 +3360,36 @@
           "min": 0.189852,
           "max": 0.197318
         },
+        "idle_pss_anon_bytes_after_0": {
+          "n": 3,
+          "median": 244465664,
+          "min": 238977024,
+          "max": 246779904
+        },
+        "idle_pss_anon_bytes_after_120": {
+          "n": 3,
+          "median": 183902208,
+          "min": 183812096,
+          "max": 187998208
+        },
+        "idle_pss_anon_bytes_after_30": {
+          "n": 3,
+          "median": 219987968,
+          "min": 219848704,
+          "max": 220172288
+        },
+        "idle_pss_anon_bytes_after_300": {
+          "n": 3,
+          "median": 178577408,
+          "min": 178388992,
+          "max": 183275520
+        },
+        "idle_pss_anon_bytes_after_60": {
+          "n": 3,
+          "median": 217612288,
+          "min": 217358336,
+          "max": 217624576
+        },
         "idle_pss_bytes_after_0": {
           "n": 3,
           "median": 374296576,
@@ -3209,6 +3419,36 @@
           "median": 347455488,
           "min": 347242496,
           "max": 347467776
+        },
+        "idle_pss_file_bytes_after_0": {
+          "n": 3,
+          "median": 91262976,
+          "min": 91238400,
+          "max": 91291648
+        },
+        "idle_pss_file_bytes_after_120": {
+          "n": 3,
+          "median": 91262976,
+          "min": 91238400,
+          "max": 91291648
+        },
+        "idle_pss_file_bytes_after_30": {
+          "n": 3,
+          "median": 91262976,
+          "min": 91238400,
+          "max": 91291648
+        },
+        "idle_pss_file_bytes_after_300": {
+          "n": 3,
+          "median": 91328512,
+          "min": 91303936,
+          "max": 91357184
+        },
+        "idle_pss_file_bytes_after_60": {
+          "n": 3,
+          "median": 91262976,
+          "min": 91238400,
+          "max": 91291648
         }
       }
     },
@@ -3831,6 +4071,36 @@
           "min": 0.435485,
           "max": 0.60026
         },
+        "idle_pss_anon_bytes_after_0": {
+          "n": 3,
+          "median": 497831936,
+          "min": 494231552,
+          "max": 502493184
+        },
+        "idle_pss_anon_bytes_after_120": {
+          "n": 3,
+          "median": 334057472,
+          "min": 333717504,
+          "max": 340148224
+        },
+        "idle_pss_anon_bytes_after_30": {
+          "n": 3,
+          "median": 370462720,
+          "min": 367194112,
+          "max": 377044992
+        },
+        "idle_pss_anon_bytes_after_300": {
+          "n": 3,
+          "median": 332296192,
+          "min": 331714560,
+          "max": 433278976
+        },
+        "idle_pss_anon_bytes_after_60": {
+          "n": 3,
+          "median": 368300032,
+          "min": 365469696,
+          "max": 374808576
+        },
         "idle_pss_bytes_after_0": {
           "n": 3,
           "median": 621555712,
@@ -3860,6 +4130,36 @@
           "median": 492027904,
           "min": 489275392,
           "max": 498397184
+        },
+        "idle_pss_file_bytes_after_0": {
+          "n": 3,
+          "median": 123691008,
+          "min": 123555840,
+          "max": 123772928
+        },
+        "idle_pss_file_bytes_after_120": {
+          "n": 3,
+          "median": 123760640,
+          "min": 123686912,
+          "max": 123887616
+        },
+        "idle_pss_file_bytes_after_30": {
+          "n": 3,
+          "median": 123695104,
+          "min": 123555840,
+          "max": 123772928
+        },
+        "idle_pss_file_bytes_after_300": {
+          "n": 3,
+          "median": 123760640,
+          "min": 123670528,
+          "max": 123887616
+        },
+        "idle_pss_file_bytes_after_60": {
+          "n": 3,
+          "median": 123695104,
+          "min": 123555840,
+          "max": 123772928
         }
       }
     },
@@ -4482,6 +4782,36 @@
           "min": 0.088448,
           "max": 0.116924
         },
+        "idle_pss_anon_bytes_after_0": {
+          "n": 3,
+          "median": 96690176,
+          "min": 96018432,
+          "max": 97615872
+        },
+        "idle_pss_anon_bytes_after_120": {
+          "n": 3,
+          "median": 60674048,
+          "min": 60571648,
+          "max": 60682240
+        },
+        "idle_pss_anon_bytes_after_30": {
+          "n": 3,
+          "median": 60674048,
+          "min": 60571648,
+          "max": 60682240
+        },
+        "idle_pss_anon_bytes_after_300": {
+          "n": 3,
+          "median": 60674048,
+          "min": 60571648,
+          "max": 60682240
+        },
+        "idle_pss_anon_bytes_after_60": {
+          "n": 3,
+          "median": 60674048,
+          "min": 60571648,
+          "max": 60682240
+        },
         "idle_pss_bytes_after_0": {
           "n": 3,
           "median": 150073344,
@@ -4511,6 +4841,36 @@
           "median": 114008064,
           "min": 113827840,
           "max": 114065408
+        },
+        "idle_pss_file_bytes_after_0": {
+          "n": 3,
+          "median": 53334016,
+          "min": 53256192,
+          "max": 53383168
+        },
+        "idle_pss_file_bytes_after_120": {
+          "n": 3,
+          "median": 53334016,
+          "min": 53256192,
+          "max": 53383168
+        },
+        "idle_pss_file_bytes_after_30": {
+          "n": 3,
+          "median": 53334016,
+          "min": 53256192,
+          "max": 53383168
+        },
+        "idle_pss_file_bytes_after_300": {
+          "n": 3,
+          "median": 53334016,
+          "min": 53256192,
+          "max": 53383168
+        },
+        "idle_pss_file_bytes_after_60": {
+          "n": 3,
+          "median": 53334016,
+          "min": 53256192,
+          "max": 53383168
         }
       }
     },
@@ -5133,6 +5493,36 @@
           "min": 0.000183,
           "max": 0.000214
         },
+        "idle_pss_anon_bytes_after_0": {
+          "n": 3,
+          "median": 21258240,
+          "min": 21147648,
+          "max": 21471232
+        },
+        "idle_pss_anon_bytes_after_120": {
+          "n": 3,
+          "median": 21192704,
+          "min": 21082112,
+          "max": 21405696
+        },
+        "idle_pss_anon_bytes_after_30": {
+          "n": 3,
+          "median": 21192704,
+          "min": 21082112,
+          "max": 21405696
+        },
+        "idle_pss_anon_bytes_after_300": {
+          "n": 3,
+          "median": 21192704,
+          "min": 21082112,
+          "max": 21405696
+        },
+        "idle_pss_anon_bytes_after_60": {
+          "n": 3,
+          "median": 21192704,
+          "min": 21082112,
+          "max": 21405696
+        },
         "idle_pss_bytes_after_0": {
           "n": 3,
           "median": 51019776,
@@ -5162,6 +5552,36 @@
           "median": 50954240,
           "min": 50778112,
           "max": 51343360
+        },
+        "idle_pss_file_bytes_after_0": {
+          "n": 3,
+          "median": 29839360,
+          "min": 29552640,
+          "max": 29904896
+        },
+        "idle_pss_file_bytes_after_120": {
+          "n": 3,
+          "median": 29839360,
+          "min": 29552640,
+          "max": 29904896
+        },
+        "idle_pss_file_bytes_after_30": {
+          "n": 3,
+          "median": 29839360,
+          "min": 29552640,
+          "max": 29904896
+        },
+        "idle_pss_file_bytes_after_300": {
+          "n": 3,
+          "median": 29839360,
+          "min": 29552640,
+          "max": 29904896
+        },
+        "idle_pss_file_bytes_after_60": {
+          "n": 3,
+          "median": 29839360,
+          "min": 29552640,
+          "max": 29904896
         }
       }
     },

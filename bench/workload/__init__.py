@@ -327,6 +327,17 @@ def transcript(turns, calls=None, seed=SEED):
     ]
 
 
+def text_bytes(turns, calls=None, seed=SEED):
+    """Bytes of the tool calls, tool output and answers over `turns` turns."""
+    return sum(
+        len(value.encode())
+        for turn in transcript(turns, calls, seed)
+        for part in (*turn["steps"], turn["final"])
+        for key, value in part.items()
+        if key != "kind" and isinstance(value, str)
+    )
+
+
 def digest(turns, calls):
     payload = json.dumps(transcript(turns, calls), sort_keys=True)
     return hashlib.sha256(payload.encode()).hexdigest()
