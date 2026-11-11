@@ -12,6 +12,7 @@ import platform
 import shutil
 import subprocess
 import sys
+import time
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -33,6 +34,12 @@ print(time.process_time() - start)
 """
 # Ticks of /proc/stat per second.
 USER_HZ = os.sysconf("SC_CLK_TCK")
+# Fields of a CPU line in /proc/stat: busy time (user, nice, system, irq,
+# softirq) and steal time.
+BUSY = (0, 1, 2, 5, 6)
+STEAL = (7,)
+# The window in which the agent's CPUs must stay idle before a case.
+QUIET_SECONDS = 0.5
 
 
 def check():
@@ -103,15 +110,35 @@ def canary():
     )
 
 
+def ticks(fields):
+    """The sum of `fields` of /proc/stat over the agent's CPUs, in ticks."""
+    total = 0
+    for line in Path("/proc/stat").read_text().splitlines():
+        name, *values = line.split()
+        if name.removeprefix("cpu") in AGENT_CPUS.split(","):
+            total += sum(int(values[i]) for i in fields)
+    return total
+
+
 def steal():
     """Seconds that the hypervisor ran something else on the agent's CPUs,
     since boot. On a VM with reserved cores, this stays near zero."""
-    total = 0
-    for line in Path("/proc/stat").read_text().splitlines():
-        name, *fields = line.split()
-        if name.removeprefix("cpu") in AGENT_CPUS.split(","):
-            total += int(fields[7])
-    return total / USER_HZ
+    return ticks(STEAL) / USER_HZ
+
+
+def quiet(timeout=30):
+    """Wait until the agent's CPUs are idle, so that work left from the last
+    case, such as the kernel freeing its memory, does not run into the next.
+    Return the seconds waited."""
+    start = time.monotonic()
+    before = ticks(BUSY)
+    while time.monotonic() - start < timeout:
+        time.sleep(QUIET_SECONDS)
+        now = ticks(BUSY)
+        if now - before <= 1:
+            break
+        before = now
+    return time.monotonic() - start
 
 
 def machine():

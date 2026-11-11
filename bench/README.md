@@ -299,6 +299,8 @@ These live in each agent's file in `agents/`.
   split it into file pages (mostly code) and anonymous pages (heap).
 - `idle_wakeups_per_second`: voluntary context switches of all the agent's
   threads, per second of idle.
+- `quiet_seconds`: how long the host waited before the case for the agent's CPUs
+  to stay idle for 0.5 s, at most 30 s.
 - `peak_memory_bytes`: the cgroup's own peak, with file cache.
 - `canary_seconds`: the CPU time of a fixed hash of 4 MiB on CPU 2, just before
   the case. `summary.json` gives its spread under `canary`. A clock change or a
