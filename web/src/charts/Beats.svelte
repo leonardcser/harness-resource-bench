@@ -37,7 +37,9 @@
         perSecond: wakeups,
         timers: timers[agent] ?? [],
         load: cpu,
-        each: wakeups ? cpu / wakeups : 0,
+        // A count of zero or less means no usable count: the ticks keep the
+        // timers from the source, at the lowest height.
+        each: wakeups > 0 ? cpu / wakeups : 0,
       }))
       .sort(
         (a, b) =>
@@ -64,7 +66,8 @@
       return out;
     });
   };
-  const rate = (v: number) => (v < 10 ? v.toFixed(1) : String(Math.round(v)));
+  const rate = (v: number) =>
+    v <= 0 ? "-" : v < 10 ? v.toFixed(1) : String(Math.round(v));
   const every = (ms: number) => (ms < 1000 ? `${ms} ms` : `${ms / 1000} s`);
   const load = (v: number) => (v < FLOOR ? "< 0.01 ms" : seconds(v));
   const micro = (v: number) => `${Math.round(v * 1e6)} µs`;
@@ -130,7 +133,7 @@
     <span class="text-muted">CPU time</span>
     <span class="tabular-nums">{load(row.load)}/s</span>
   </div>
-  {#if row.load >= FLOOR}
+  {#if row.load >= FLOOR && row.each > 0}
     <div class="flex justify-between gap-4">
       <span class="text-muted">per wake-up</span>
       <span class="tabular-nums">{micro(row.each)}</span>

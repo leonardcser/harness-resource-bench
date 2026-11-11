@@ -298,7 +298,8 @@ These live in each agent's file in `agents/`.
 - TUI cases record PSS at checkpoints, after 2 seconds of settle time. Idle runs
   split it into file pages (mostly code) and anonymous pages (heap).
 - `idle_wakeups_per_second`: voluntary context switches of all the agent's
-  threads, per second of idle.
+  threads, per second of idle. The host reads each thread every second, and a
+  thread that exits keeps its last count, so the total never drops.
 - `quiet_seconds`: how long the host waited before the case for the agent's CPUs
   to stay idle for 0.5 s, at most 30 s.
 - `peak_memory_bytes`: the cgroup's own peak, with file cache.

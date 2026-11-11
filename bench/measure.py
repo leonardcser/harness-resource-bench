@@ -66,10 +66,9 @@ def pss(cgroup):
     }
 
 
-def wakeups(cgroup):
-    """Voluntary context switches of all threads in the cgroup. An exited
-    thread's count is lost."""
-    total = 0
+def thread_switches(cgroup):
+    """Voluntary context switches of each thread in the cgroup, by thread ID."""
+    counts = {}
     for pid in pids(cgroup):
         try:
             tasks = list(Path(f"/proc/{pid}/task").iterdir())
@@ -80,8 +79,30 @@ def wakeups(cgroup):
                 status = (task / "status").read_text()
             except (FileNotFoundError, ProcessLookupError):
                 continue
-            total += int(status.split("voluntary_ctxt_switches:")[1].split()[0])
-    return total
+            counts[int(task.name)] = int(
+                status.split("voluntary_ctxt_switches:")[1].split()[0]
+            )
+    return counts
+
+
+class Wakeups:
+    """Voluntary context switches of a cgroup's threads since this counter
+    started. A thread keeps its last count after it exits, so the total never
+    drops. Call `read` often: switches after a thread's last read are lost."""
+
+    def __init__(self, cgroup):
+        self.cgroup = cgroup
+        self.last = thread_switches(cgroup)
+        self.start = sum(self.last.values())
+        # Switches of threads whose ID a new thread took.
+        self.retired = 0
+
+    def read(self):
+        for tid, count in thread_switches(self.cgroup).items():
+            if count < self.last.get(tid, 0):
+                self.retired += self.last[tid]
+            self.last[tid] = count
+        return self.retired + sum(self.last.values()) - self.start
 
 
 # Session file formats.

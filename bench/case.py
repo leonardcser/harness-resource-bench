@@ -15,11 +15,11 @@ from host import AGENT_CPUS, canary, quiet, steal
 from measure import (
     Connections,
     Sampler,
+    Wakeups,
     cgroup_for,
     disk,
     pss,
     summarize,
-    wakeups,
     write_samples,
 )
 from model import Model
@@ -27,6 +27,9 @@ from terminal import Terminal
 from workload import PROMPT, digest, files, marker, steps
 
 SETTLE_SECONDS = 2
+# Idle cases save a checkpoint this often. Thread switches are read every
+# second between them.
+IDLE_CHECKPOINT_SECONDS = 30
 # The memory limit of each container. The highest peak of any agent is under
 # 1 GiB.
 MEMORY = "4g"
@@ -114,7 +117,6 @@ def checkpoint(sampler, turn, model, home, assets):
     sample = sampler.sample()
     sample.update(pss(sampler.cgroup))
     sample.update(disk(home, assets))
-    sample["wakeups"] = wakeups(sampler.cgroup)
     sample["completed_turns"] = turn + 1
     sample["request_bytes"] = model.events[-1]["request_bytes"]
     sample["request_history_turns"] = model.events[-1]["history_turns"]
@@ -245,15 +247,20 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
             if question == "idle":
                 idle_started = time.monotonic()
                 deadline = idle_started + case["idle_seconds"]
+                switches = Wakeups(sampler.cgroup)
+                result["checkpoints"][-1]["wakeups"] = 0
+                mark = idle_started + IDLE_CHECKPOINT_SECONDS
                 while time.monotonic() < deadline:
                     if terminal.exited() or model.error:
                         raise RuntimeError(
                             model.error or "Agent exited during idle interval"
                         )
-                    time.sleep(min(30, max(0, deadline - time.monotonic())))
-                    result["checkpoints"].append(
-                        checkpoint(sampler, 0, model, root / "home", assets)
-                    )
+                    time.sleep(min(1, max(0, deadline - time.monotonic())))
+                    count = switches.read()
+                    if time.monotonic() >= min(mark, deadline):
+                        point = checkpoint(sampler, 0, model, root / "home", assets)
+                        result["checkpoints"].append(dict(point, wakeups=count))
+                        mark += IDLE_CHECKPOINT_SECONDS
             if model.error:
                 raise RuntimeError(model.error)
             sampler.stop()
