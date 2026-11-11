@@ -175,12 +175,16 @@ class Sampler:
         cpu = counters(self.cgroup / "cpu.stat")
         memory = counters(self.cgroup / "memory.stat")
         events = counters(self.cgroup / "memory.events")
+        # Pressure stall information: time that a task of the cgroup was ready
+        # to run but waited for a CPU.
+        pressure = (self.cgroup / "cpu.pressure").read_text().split()
         return {
             "time": time.monotonic(),
             "cpu_usec": cpu["usage_usec"],
             "user_usec": cpu.get("user_usec", 0),
             "system_usec": cpu.get("system_usec", 0),
             "throttled_usec": cpu.get("throttled_usec", 0),
+            "cpu_wait_usec": int(pressure[pressure.index("some") + 4][6:]),
             "memory_bytes": int((self.cgroup / "memory.current").read_text()),
             "peak_bytes": int((self.cgroup / "memory.peak").read_text()),
             "anon_bytes": memory.get("anon", 0),
@@ -316,6 +320,7 @@ def summarize(samples):
         for a, b in itertools.pairwise(samples)
     )
     throttled = (last["throttled_usec"] - first["throttled_usec"]) / 1e6
+    waited = (last["cpu_wait_usec"] - first["cpu_wait_usec"]) / 1e6
     return {
         "sampling_started_monotonic": first["time"],
         "sampling_ended_monotonic": last["time"],
@@ -326,6 +331,7 @@ def summarize(samples):
         "peak_memory_bytes": max(s["peak_bytes"] for s in samples),
         "last_memory_bytes": last["memory_bytes"],
         "throttled_seconds": throttled,
+        "cpu_wait_seconds": waited,
         "oom_kills": last["oom_kill"] - first["oom_kill"],
     }
 
@@ -345,6 +351,7 @@ def write_samples(path, samples):
                 "anonymous_bytes": sample["anon_bytes"],
                 "file_cache_bytes": sample["file_bytes"],
                 "throttled_seconds": round(sample["throttled_usec"] / 1e6, 6),
+                "cpu_wait_seconds": round(sample["cpu_wait_usec"] / 1e6, 6),
                 "oom_kills": sample["oom_kill"],
             }
             if writer is None:

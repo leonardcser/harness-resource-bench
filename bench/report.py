@@ -26,6 +26,7 @@ METRICS = (
     "terminal_cpu_seconds",
     "terminal_bytes",
     "steal_seconds",
+    "cpu_wait_seconds",
 )
 # Long-session and new-sessions runs also report memory, session data and the
 # text of the session at each checkpoint (`..._after_N`, N in turns or

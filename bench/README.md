@@ -308,6 +308,9 @@ These live in each agent's file in `agents/`.
   neighbour on the agent's cores shows there.
 - `steal_seconds`: the time the hypervisor ran something else on the agent's
   CPUs. On the benchmark VM it stays near zero.
+- `cpu_wait_seconds`: the time that at least one of the agent's threads was
+  ready to run but had no free CPU (`cpu.pressure`, "some"). It shows when 2
+  cores are too few for the agent.
 - `active_cpu_percent`: the CPU of the coding task, divided by the time from the
   first request to the done marker. It compares across streaming rates.
 
