@@ -125,6 +125,12 @@ export function versionOf(manifest: Manifest, agent: string): string {
 export const colorOf = (agent: string): string =>
   `var(--agent-${agent}, var(--muted))`;
 
+/** The streaming rate of the coding task, in tokens per second: the rate of
+ * its headless runs, which also picks the TUI runs that the site shows. */
+export const taskRate = (summary: Summary): number =>
+  summary.groups.find((g) => g.question === "task" && g.frontend === "headless")
+    ?.rate ?? 0;
+
 /** The group of each agent for one question and setting. If there are several
  * session lengths, it takes the longest. */
 export function pick(

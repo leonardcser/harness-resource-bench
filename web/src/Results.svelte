@@ -29,6 +29,7 @@
     pick,
     rows,
     series,
+    taskRate,
     type Run,
   } from "./lib/data";
   import { repeats } from "./lib/measures";
@@ -52,8 +53,9 @@
   const agents = $derived(agentsOf(manifest));
   const startup = $derived(pick(summary, "startup", "tui", 0));
   const cold = $derived(pick(summary, "start-memory", "headless", 0));
-  const tui = $derived(pick(summary, "task", "tui", 120));
-  const headless = $derived(pick(summary, "task", "headless", 120));
+  const rate = $derived(taskRate(summary));
+  const tui = $derived(pick(summary, "task", "tui", rate));
+  const headless = $derived(pick(summary, "task", "headless", rate));
   const growth = $derived(pick(summary, "long-session", "tui", 1000));
   const retention = $derived(pick(summary, "new-sessions", "tui", 1000));
   const idle = $derived(pick(summary, "idle", "tui", 1000));
@@ -245,7 +247,7 @@
 
 <Section
   title="A coding task"
-  description="One task with 24 tool calls. The model streams 120 tokens per second."
+  description="One task with 24 tool calls. The model streams {rate} tokens per second."
 >
   <div class="grid grid-cols-1 gap-x-10 gap-y-12 xl:grid-cols-2">
     <div class="xl:col-span-2">

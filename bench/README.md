@@ -29,15 +29,15 @@ from real sessions. To see it: `uv run bench.py transcript > transcript.json`.
 
 ## What it measures
 
-| Name            | Case id        | What it measures                                                                          |
-| --------------- | -------------- | ----------------------------------------------------------------------------------------- |
-| Startup         | `startup`      | Time from exec until a typed key shows in the TUI                                         |
-| Memory at start | `start-memory` | Memory (PSS) after the first request, headless, with a cold file cache                    |
-| Install size    | -              | Bytes that the install adds under `/root`, `/usr/local` and `/opt`                        |
-| Coding task     | `task`         | CPU and memory of a task with 24 tool calls, headless at 120 tokens/s, TUI at 30 to 1,000 |
-| Long session    | `long-session` | Memory, CPU per turn and session data over 64 turns                                       |
-| New sessions    | `new-sessions` | Memory over 16 sessions in one process                                                    |
-| Idle            | `idle`         | CPU and memory over 5 minutes without input, after a task                                 |
+| Name            | Case id        | What it measures                                                                         |
+| --------------- | -------------- | ---------------------------------------------------------------------------------------- |
+| Startup         | `startup`      | Time from exec until a typed key shows in the TUI                                        |
+| Memory at start | `start-memory` | Memory (PSS) after the first request, headless, with a cold file cache                   |
+| Install size    | -              | Bytes that the install adds under `/root`, `/usr/local` and `/opt`                       |
+| Coding task     | `task`         | CPU and memory of a task with 24 tool calls, headless at 60 tokens/s, TUI at 30 to 1,000 |
+| Long session    | `long-session` | Memory, CPU per turn and session data over 64 turns                                      |
+| New sessions    | `new-sessions` | Memory over 16 sessions in one process                                                   |
+| Idle            | `idle`         | CPU and memory over 5 minutes without input, after a task                                |
 
 - TUI cases also measure the CPU time that the terminal (tmux) spends.
 - Every case runs 3 times. Startup and memory at start run 10 times. Results

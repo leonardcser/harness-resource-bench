@@ -5,10 +5,10 @@ import random
 from workload import PROFILE, SEED, steps, transcript
 
 QUESTIONS = ("startup", "start-memory", "task", "long-session", "new-sessions", "idle")
-# A fast hosted model's streaming rate.
-TUI_RATE = 120
+# A typical hosted model's streaming rate, in tokens per second.
+TUI_RATE = 60
 # Streaming rates for the coding task in the TUI, in tokens per second.
-STREAM_RATES = (30, 60, TUI_RATE, 250, 1000)
+STREAM_RATES = (30, TUI_RATE, 120, 250, 1000)
 REPETITIONS = 3
 # Startup and memory at start take seconds and vary the most, so they repeat
 # more often.

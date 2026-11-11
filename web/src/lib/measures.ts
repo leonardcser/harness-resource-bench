@@ -1,5 +1,13 @@
 // The headline measures of a run: the columns of the overview table.
-import { agentsOf, marks, pick, single, type Run, type Stat } from "./data";
+import {
+  agentsOf,
+  marks,
+  pick,
+  single,
+  taskRate,
+  type Run,
+  type Stat,
+} from "./data";
 import { bytes, seconds } from "./format";
 
 export type Measure = {
@@ -30,6 +38,7 @@ export function measures({ summary, manifest }: Run): MeasureGroup[] {
       return group?.metrics[name(group.turns)];
     };
   };
+  const rate = taskRate(summary);
   const lastIdle =
     marks(
       summary.groups.filter((g) => g.question === "idle"),
@@ -73,21 +82,21 @@ export function measures({ summary, manifest }: Run): MeasureGroup[] {
           name: "CPU in the TUI",
           format: seconds,
           floor: MS,
-          stat: metric("task", "tui", 120, () => "cpu_seconds"),
+          stat: metric("task", "tui", rate, () => "cpu_seconds"),
         },
         {
           label: "CPU, headless",
           name: "headless CPU",
           format: seconds,
           floor: MS,
-          stat: metric("task", "headless", 120, () => "cpu_seconds"),
+          stat: metric("task", "headless", rate, () => "cpu_seconds"),
         },
         {
           label: "Terminal",
           name: "terminal CPU",
           format: seconds,
           floor: MS,
-          stat: metric("task", "tui", 120, () => "terminal_cpu_seconds"),
+          stat: metric("task", "tui", rate, () => "terminal_cpu_seconds"),
         },
       ],
     },
