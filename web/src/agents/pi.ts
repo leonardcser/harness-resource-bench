@@ -4,6 +4,7 @@ export default {
   tagline: "Minimal, extended in TypeScript.",
   text: "It has no subagents and does not ask before it acts. Extensions can change most of it.",
   logo: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="165 165 470 470"><path fill="#F09082" d="M165.29 165.29H517.36V400H400V282.65H165.29Z"/><path fill="#4D9ABF" d="M165.29 282.65H282.65V400H400V517.36H282.65V634.72H165.29Z"/><path fill="#F1BE58" d="M517.36 400H634.72V634.72H517.36Z"/></svg>`,
+  repo: "https://github.com/earendil-works/pi",
   cells: {
     // At a glance
     language: yes("TypeScript, Node"),

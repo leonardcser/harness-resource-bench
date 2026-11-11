@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { Icon } from "svelte-icons-pack";
+  import { BsGithub } from "svelte-icons-pack/bs";
+  import { FiArrowUpRight } from "svelte-icons-pack/fi";
   import Logo from "./Logo.svelte";
   import Matrix from "./Matrix.svelte";
   import Section from "./Section.svelte";
@@ -55,6 +58,15 @@
           <Logo {agent} />
           <h3 class="mt-3 text-sm font-medium">{profile.tagline}</h3>
           <p class="mt-2 text-sm leading-relaxed text-muted">{profile.text}</p>
+          <a
+            href={profile.repo}
+            class="mt-2 inline-flex items-center gap-1.5 text-xs text-faint transition-colors hover:text-fg"
+            ><Icon src={BsGithub} size={12} />GitHub<Icon
+              src={FiArrowUpRight}
+              size={12}
+              className="-ml-1"
+            /></a
+          >
         </article>
       {/each}
     </div>

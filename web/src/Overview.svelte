@@ -2,6 +2,7 @@
   import { Icon } from "svelte-icons-pack";
   import { BsChevronDown } from "svelte-icons-pack/bs";
   import Logo from "./Logo.svelte";
+  import { PROFILES, releaseUrl, type Agent } from "./agents";
   import { agentsOf, nameOf, versionOf, type Run, type Stat } from "./lib/data";
   import { measures, type Measure } from "./lib/measures";
 
@@ -180,9 +181,11 @@
           </td>
           <td class="sticky left-8 bg-inherit py-3 pr-4 whitespace-nowrap">
             <div class="flex items-center gap-2">
-              <Logo {agent} />
-              <span class="text-xs text-faint max-sm:hidden"
-                >{versionOf(manifest, agent)}</span
+              <Logo {agent} href={PROFILES[agent as Agent].repo} />
+              <a
+                href={releaseUrl(agent as Agent, versionOf(manifest, agent))}
+                class="text-xs text-faint hover:text-muted hover:underline max-sm:hidden"
+                >{versionOf(manifest, agent)}</a
               >
             </div>
           </td>

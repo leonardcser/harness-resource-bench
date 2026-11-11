@@ -4,6 +4,7 @@ export default {
   tagline: "A server with many clients.",
   text: "The terminal, desktop app, web app and editors all connect to it. It supports the most model providers.",
   logo: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="96 96 320 320"><path class="fill-fg" fill-rule="evenodd" d="M384 416H128V96H384V416ZM320 160H192V352H320V160Z"/><path class="fill-muted" d="M320 224V352H192V224H320Z"/></svg>`,
+  repo: "https://github.com/anomalyco/opencode",
   cells: {
     // At a glance
     language: yes("TypeScript, Bun"),

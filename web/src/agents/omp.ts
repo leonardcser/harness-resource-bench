@@ -4,6 +4,7 @@ export default {
   tagline: "A pi fork with everything built in.",
   text: "It adds subagents, language servers, a debugger, memory and hashline edits to pi.",
   logo: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 13 44 44"><defs><linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f84fcc"/><stop offset=".5" stop-color="#9362f4"/><stop offset="1" stop-color="#00dbe4"/></linearGradient></defs><path fill="url(#gradient)" d="M10 14h44v9H43v33h-9V23h-9v22h-9V23H10z"/></svg>`,
+  repo: "https://github.com/can1357/oh-my-pi",
   cells: {
     // At a glance
     language: yes(

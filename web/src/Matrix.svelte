@@ -4,7 +4,9 @@
   import type { ClassValue } from "svelte/elements";
   import {
     RANKED,
+    PROFILES,
     featureScore,
+    releaseUrl,
     type Agent,
     type Cell,
     type Group,
@@ -107,12 +109,20 @@
           ></th>
           {#each agents as agent (agent)}
             <th class={[head, "px-3 pb-3 text-left font-normal"]}>
-              <Logo {agent} />
+              <Logo {agent} href={PROFILES[agent].repo} />
               <div
                 class="mt-1 truncate text-xs text-faint"
                 title={versions[agent]}
               >
-                {versions[agent] ?? "Not measured yet"}
+                {#if versions[agent]}
+                  <a
+                    href={releaseUrl(agent, versions[agent])}
+                    class="hover:text-muted hover:underline"
+                    >{versions[agent]}</a
+                  >
+                {:else}
+                  Not measured yet
+                {/if}
               </div>
               {#if marks}
                 <div class="mt-0.5 text-xs text-muted tabular-nums">

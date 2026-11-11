@@ -207,5 +207,9 @@ export type Profile = {
    * `fill-muted` and `fill-bg`, and `currentColor`, follow the theme.
    */
   logo: string;
+  /** The agent's GitHub repository. */
+  repo: string;
+  /** What comes before the version in a release tag. The default is "v". */
+  tagPrefix?: string;
   cells: Record<FeatureId, Cell>;
 };

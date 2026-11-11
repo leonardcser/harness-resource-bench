@@ -27,6 +27,20 @@ export type Agent = keyof typeof profiles;
 export const PROFILES: Record<Agent, Profile> = profiles;
 export const AGENTS = Object.keys(PROFILES) as Agent[];
 
+/** The git tag of an agent's release. */
+export const tagOf = (agent: Agent, version: string): string =>
+  `${PROFILES[agent].tagPrefix ?? "v"}${version}`;
+
+/** The GitHub page of a version: its commit for a build between releases,
+ * as `versionOf` shortens it, or else its release. */
+export const releaseUrl = (agent: Agent, version: string): string => {
+  const { repo } = PROFILES[agent];
+  const commit = version.match(/-([0-9a-f]{7})$/)?.[1];
+  return commit
+    ? `${repo}/commit/${commit}`
+    : `${repo}/releases/tag/${tagOf(agent, version)}`;
+};
+
 export type Feature = {
   label: string;
   /** What the row means, shown on hover. */
