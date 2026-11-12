@@ -55,7 +55,7 @@ def call(step, body, workspace):
 
 AGENT = Agent(
     name="opencode",
-    version="2.2.6",
+    version="2.2.7",
     installer="https://opencode.ai/v2/install",
     install="curl -fsSL @INSTALLER_BASE@/opencode.sh | bash -s -- --version @VERSION@",
     executable="opencode",

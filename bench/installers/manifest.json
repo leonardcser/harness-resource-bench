@@ -1,7 +1,7 @@
 {
   "agents": {
     "claude-code": {
-      "version": "2.1.319",
+      "version": "2.1.322",
       "files": {
         "claude-code.sh": {
           "url": "https://claude.ai/install.sh",
@@ -11,7 +11,7 @@
       }
     },
     "codex": {
-      "version": "0.167.0",
+      "version": "0.167.2",
       "files": {
         "codex.sh": {
           "url": "https://chatgpt.com/codex/install.sh",
@@ -31,17 +31,17 @@
       }
     },
     "omp": {
-      "version": "18.18.0",
+      "version": "18.19.0",
       "files": {
         "omp.sh": {
           "url": "https://omp.sh/install",
-          "sha256": "cd8f77920da58c6f56b5851c841b61d5e30b4ba8f4cab683afba1f8274b56a06",
-          "bytes": 12296
+          "sha256": "20b3883dbeb675ea8b9b680c177146178ed6b1e9c974f6af0a36c1064e123bc3",
+          "bytes": 12444
         }
       }
     },
     "opencode": {
-      "version": "2.2.6",
+      "version": "2.2.7",
       "files": {
         "opencode.sh": {
           "url": "https://opencode.ai/v2/install",
@@ -51,7 +51,7 @@
       }
     },
     "pi": {
-      "version": "1.5.0",
+      "version": "1.5.2",
       "files": {
         "pi.sh": {
           "url": "https://pi.dev/install.sh",
@@ -60,18 +60,18 @@
         },
         "pi/latest": {
           "url": "https://pi.dev/api/installer/releases/latest",
-          "sha256": "40e4888bc348956615b68bb4812532aa3e857282e228cac0a724a134c374a3ac",
+          "sha256": "f2c2882f0fa5a409d4be2e3194abff6fd11a48b0f344bd1673b1e08f49464f0e",
           "bytes": 3223
         },
-        "pi/1.5.0/package.json": {
-          "url": "https://pi.dev/api/installer/releases/1.5.0/package.json",
-          "sha256": "2c0524e9556a475c087ea43c5b4ef6af232b180dfac5724a33dfe3e309349472",
+        "pi/1.5.2/package.json": {
+          "url": "https://pi.dev/api/installer/releases/1.5.2/package.json",
+          "sha256": "6c433244d03aa280f1aa298035ba59f54afd0c486566771ef83cc5aef318c4cc",
           "bytes": 317
         },
-        "pi/1.5.0/package-lock.json": {
-          "url": "https://pi.dev/api/installer/releases/1.5.0/package-lock.json",
-          "sha256": "d3d2abb9ed4e078b7978ecd0f6316cc4357cb8d7777d344020acfa23190e24b4",
-          "bytes": 52054
+        "pi/1.5.2/package-lock.json": {
+          "url": "https://pi.dev/api/installer/releases/1.5.2/package-lock.json",
+          "sha256": "57e3b475e52f630cf903f73b0d2a02c405875af61ce4a845f481dcc798f58005",
+          "bytes": 52064
         }
       }
     },

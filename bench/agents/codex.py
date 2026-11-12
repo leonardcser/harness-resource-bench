@@ -40,7 +40,7 @@ def call(step, body, workspace):
 
 AGENT = Agent(
     name="codex",
-    version="0.167.0",
+    version="0.167.2",
     installer="https://chatgpt.com/codex/install.sh",
     install="curl -fsSL @INSTALLER_BASE@/codex.sh"
     " | CODEX_NON_INTERACTIVE=1 sh -s -- --release @VERSION@",

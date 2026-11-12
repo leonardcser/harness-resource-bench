@@ -89,7 +89,7 @@ def call(step, body, workspace):
 
 AGENT = Agent(
     name="omp",
-    version="18.18.0",
+    version="18.19.0",
     installer="https://omp.sh/install",
     install="curl -fsSL @INSTALLER_BASE@/omp.sh | sh -s -- --binary --ref v@VERSION@",
     executable="omp",

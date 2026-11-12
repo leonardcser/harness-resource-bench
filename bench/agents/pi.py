@@ -61,7 +61,7 @@ def call(step, body, workspace):
 
 AGENT = Agent(
     name="pi",
-    version="1.5.0",
+    version="1.5.2",
     installer="https://pi.dev/install.sh",
     install=f"{NODE} && curl -fsSL @INSTALLER_BASE@/pi.sh"
     " | PI_INSTALLER_API_BASE=@INSTALLER_BASE@/pi sh",
