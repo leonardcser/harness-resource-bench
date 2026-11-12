@@ -14,3 +14,7 @@ fit = [
 
 [tool.ruff]
 src = ["."]
+
+[tool.uv]
+# Packages as of this date, on every machine, whatever its own uv config
+exclude-newer = "2026-11-05T00:00:00Z"
