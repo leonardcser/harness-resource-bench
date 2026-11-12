@@ -1,7 +1,7 @@
 from agents import CONTEXT_WINDOW, Agent
 
 
-def configure(frontend, home, url, prompt):
+def configure(home, url):
     # Codex cuts tool output at 10 KB for a model it does not know. Its own
     # models cut at 10,000 tokens, so the mock model gets that limit.
     (home / ".codex").mkdir()
@@ -21,12 +21,16 @@ enabled = false
 [feedback]
 enabled = false
 ''')
+    return {}
+
+
+def command(frontend, prompt):
     args = ["codex"]
     if frontend == "headless":
         args += ["exec", "--skip-git-repo-check", "--json"]
     else:
         args += ["--no-daemon"]
-    return {}, [*args, "--dangerously-bypass-approvals-and-sandbox", *prompt]
+    return [*args, "--dangerously-bypass-approvals-and-sandbox", *prompt]
 
 
 def call(step, body, workspace):
@@ -42,6 +46,7 @@ AGENT = Agent(
     " | CODEX_NON_INTERACTIVE=1 sh -s -- --release @VERSION@",
     executable="codex",
     configure=configure,
+    command=command,
     call=call,
     summaries=(
         ("You are performing a CONTEXT CHECKPOINT COMPACTION.", "handoff summary"),

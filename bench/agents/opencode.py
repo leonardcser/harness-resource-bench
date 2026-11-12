@@ -3,7 +3,7 @@ import json
 from agents import CONTEXT_WINDOW, KEY, MAX_TOKENS, Agent
 
 
-def configure(frontend, home, url, prompt):
+def configure(home, url):
     config = {
         "model": "mock/mock-model",
         "providers": {
@@ -22,14 +22,17 @@ def configure(frontend, home, url, prompt):
             }
         },
     }
+    return {"OPENCODE_CONFIG_CONTENT": json.dumps(config)}
+
+
+def command(frontend, prompt):
     if frontend == "headless":
         args = ["opencode", "run", "--format", "json", "--standalone", "--auto"]
-        args += prompt
-    else:
-        args = ["opencode", "--standalone", "--auto"]
-        if prompt:
-            args += ["--prompt", *prompt]
-    return {"OPENCODE_CONFIG_CONTENT": json.dumps(config)}, args
+        return args + prompt
+    args = ["opencode", "--standalone", "--auto"]
+    if prompt:
+        args += ["--prompt", *prompt]
+    return args
 
 
 def call(step, body, workspace):
@@ -57,6 +60,7 @@ AGENT = Agent(
     install="curl -fsSL @INSTALLER_BASE@/opencode.sh | bash -s -- --version @VERSION@",
     executable="opencode",
     configure=configure,
+    command=command,
     call=call,
     summaries=(
         ("<conversation>\n", "Keep each section concise."),

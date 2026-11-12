@@ -3,7 +3,7 @@ import json
 from agents import CONTEXT_WINDOW, MAX_TOKENS, Agent
 
 
-def configure(frontend, home, url, prompt):
+def configure(home, url):
     config = home / ".config/smelt/init.lua"
     config.parent.mkdir(parents=True)
     config.write_text(
@@ -15,10 +15,14 @@ def configure(frontend, home, url, prompt):
         'smelt.defaults.set({ model = "mock/mock-model" })\n'
         'smelt.settings.autoupgrade = "off"\n'
     )
+    return {}
+
+
+def command(frontend, prompt):
     args = ["smelt", "--model", "mock/mock-model", "--mode", "yolo"]
     if frontend == "headless":
         args += ["--headless", "--format", "json"]
-    return {}, args + prompt
+    return args + prompt
 
 
 def call(step, body, workspace):
@@ -51,6 +55,7 @@ AGENT = Agent(
     install="curl -fsSL @INSTALLER_BASE@/smelt.sh | SMELT_VERSION=v@VERSION@ sh",
     executable="smelt",
     configure=configure,
+    command=command,
     call=call,
     summaries=(
         ("The conversation above is becoming long.", "CONTEXT CHECKPOINT COMPACTION"),

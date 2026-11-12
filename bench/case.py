@@ -44,12 +44,9 @@ def create(case, root, port, image_id, prompt):
     home, workspace = root / "home", root / "workspace"
     home.mkdir()
     (workspace / "fixtures").mkdir(parents=True)
-    env, args = AGENTS[case["agent"]].configure(
-        frontend,
-        home,
-        f"http://127.0.0.1:{port}",
-        [] if case["question"] == "startup" else [prompt],
-    )
+    agent = AGENTS[case["agent"]]
+    env = agent.configure(home, f"http://127.0.0.1:{port}")
+    args = agent.command(frontend, [] if case["question"] == "startup" else [prompt])
     command = [
         "podman",
         "create",

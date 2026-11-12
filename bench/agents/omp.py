@@ -4,7 +4,7 @@ from agents import CONTEXT_WINDOW, MAX_TOKENS, Agent, write_json
 from model.requests import history, strings
 
 
-def configure(frontend, home, url, prompt):
+def configure(home, url):
     # YAML reads JSON.
     write_json(
         home / ".omp/agent/config.yml",
@@ -34,10 +34,14 @@ def configure(frontend, home, url, prompt):
             }
         },
     )
+    return {}
+
+
+def command(frontend, prompt):
     args = ["omp", "--model", "mock/mock-model", "--approval-mode", "yolo"]
     if frontend == "headless":
         args += ["--mode", "json", "-p"]
-    return {}, args + prompt
+    return args + prompt
 
 
 def hashline_patch(step, body, workspace):
@@ -90,6 +94,7 @@ AGENT = Agent(
     install="curl -fsSL @INSTALLER_BASE@/omp.sh | sh -s -- --binary --ref v@VERSION@",
     executable="omp",
     configure=configure,
+    command=command,
     call=call,
     summaries=(
         ("You MUST summarize the conversation above", "structured summary"),

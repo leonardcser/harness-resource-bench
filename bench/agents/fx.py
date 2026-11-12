@@ -1,7 +1,7 @@
 from agents import CONTEXT_WINDOW, MAX_TOKENS, Agent, write_json
 
 
-def configure(frontend, home, url, prompt):
+def configure(home, url):
     settings = home / ".fx/settings.json"
     write_json(
         settings,
@@ -30,9 +30,13 @@ def configure(frontend, home, url, prompt):
     )
     settings.parent.chmod(0o700)
     settings.chmod(0o600)
+    return {}
+
+
+def command(frontend, prompt):
     if frontend == "headless":
-        return {}, ["fx", "ask", "--full-access", "--json", *prompt]
-    return {}, ["fx"]
+        return ["fx", "ask", "--full-access", "--json", *prompt]
+    return ["fx"]
 
 
 def call(step, body, workspace):
@@ -64,6 +68,7 @@ AGENT = Agent(
     install="curl -fsSL @INSTALLER_BASE@/fx.sh | bash -s -- v@VERSION@",
     executable="fx",
     configure=configure,
+    command=command,
     call=call,
     # fx asks for its notes under exact turn headings, and asks again if one is
     # missing. The model's summary has a heading for each turn that it names.

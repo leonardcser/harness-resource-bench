@@ -1,7 +1,7 @@
 from agents import KEY, Agent, write_json
 
 
-def configure(frontend, home, url, prompt):
+def configure(home, url):
     write_json(
         home / ".claude.json",
         {
@@ -19,10 +19,14 @@ def configure(frontend, home, url, prompt):
         home / ".claude/settings.json",
         {"permissions": {"defaultMode": "bypassPermissions"}, "enabledPlugins": {}},
     )
+    return {"ANTHROPIC_BASE_URL": url}
+
+
+def command(frontend, prompt):
     args = ["claude", "--model", "claude-sonnet-4-6", "--dangerously-skip-permissions"]
     if frontend == "headless":
         args += ["--print", "--output-format", "stream-json", "--verbose"]
-    return {"ANTHROPIC_BASE_URL": url}, args + prompt
+    return args + prompt
 
 
 def call(step, body, workspace):
@@ -50,6 +54,7 @@ AGENT = Agent(
     install="curl -fsSL @INSTALLER_BASE@/claude-code.sh | bash -s -- @VERSION@",
     executable="claude",
     configure=configure,
+    command=command,
     call=call,
     summaries=(
         (

@@ -39,8 +39,10 @@ class Agent:
     - `installer` is the official install script. The installer cache saves it
       and serves it at @INSTALLER_BASE@. `install` gets the version at
       @VERSION@.
-    - `configure(frontend, home, url, prompt)` writes the agent's config under
-      `home` and returns its extra environment and its command.
+    - `configure(home, url)` writes the agent's config under `home`, once per
+      case, and returns its extra environment. `url` is the mock model.
+    - `command(frontend, prompt)` is the command that starts the agent in
+      `frontend`, with the arguments of `prompt` if it takes them.
     - `call(step, body, workspace)` is the tool call, as (name, arguments), that
       runs a step of the work. `body` is the request, `workspace` the host
       directory that the agent sees as /workspace.
@@ -63,6 +65,7 @@ class Agent:
     install: str
     executable: str
     configure: Callable
+    command: Callable
     call: Callable
     summaries: tuple = ()
     side_requests: tuple = ()

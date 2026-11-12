@@ -11,7 +11,7 @@ NODE = (
 )
 
 
-def configure(frontend, home, url, prompt):
+def configure(home, url):
     write_json(home / ".pi/agent/settings.json", {"defaultProjectTrust": "always"})
     write_json(
         home / ".pi/agent/models.json",
@@ -33,10 +33,14 @@ def configure(frontend, home, url, prompt):
             }
         },
     )
+    return {}
+
+
+def command(frontend, prompt):
     args = ["pi", "--provider", "mock", "--model", "mock-model"]
     if frontend == "headless":
         args += ["--mode", "json", "-p"]
-    return {}, args + prompt
+    return args + prompt
 
 
 def call(step, body, workspace):
@@ -63,6 +67,7 @@ AGENT = Agent(
     " | PI_INSTALLER_API_BASE=@INSTALLER_BASE@/pi sh",
     executable="pi",
     configure=configure,
+    command=command,
     call=call,
     summaries=(
         ("<conversation>\n", "Keep each section concise."),
