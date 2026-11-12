@@ -3,7 +3,7 @@
   // rows and shows a tooltip. Head and foot rows align with the cells.
   import type { Snippet } from "svelte";
   import Logo from "../Logo.svelte";
-  import { pointer } from "../lib/chart";
+  import { scrub, type Probe } from "../lib/scrub";
   import Tip from "./Tip.svelte";
 
   let {
@@ -38,7 +38,21 @@
     part: string | null;
     x: number;
     y: number;
+    touch: boolean;
   } | null>(null);
+
+  function probe({ x, y, target, touch }: Probe) {
+    const agent = target?.closest<HTMLElement>("[data-agent]")?.dataset.agent;
+    const row = rows.find((r) => r.agent === agent);
+    if (!box || !row) return void (touch || (hover = null));
+    hover = {
+      row,
+      part: target?.closest<HTMLElement>("[data-part]")?.dataset.part ?? null,
+      x: (x / box.clientWidth) * 100,
+      y: (y / box.clientHeight) * 100,
+      touch,
+    };
+  }
 </script>
 
 {#snippet line(content: Snippet)}
@@ -55,6 +69,7 @@
     end ? "grid-cols-[var(--columns)]" : "grid-cols-[6.5rem_var(--columns)]",
   ]}
   style:--columns={columns}
+  {@attach scrub(probe, () => (hover = null))}
 >
   {#if head}{@render line(head)}{/if}
   {#each rows as row (row.agent)}
@@ -65,16 +80,7 @@
       ]}
       role="img"
       aria-label={label(row)}
-      onpointermove={(e) =>
-        box &&
-        (hover = {
-          row,
-          part:
-            (e.target as HTMLElement).closest<HTMLElement>("[data-part]")
-              ?.dataset.part ?? null,
-          ...pointer(box, e),
-        })}
-      onpointerleave={() => (hover = null)}
+      data-agent={row.agent}
     >
       <div
         class={[
@@ -90,6 +96,8 @@
   {/each}
   {#if foot}{@render line(foot)}{/if}
   {#if hover}
-    <Tip x={hover.x} y={hover.y}>{@render tip(hover.row, hover.part)}</Tip>
+    <Tip x={hover.x} y={hover.y} above={hover.touch}
+      >{@render tip(hover.row, hover.part)}</Tip
+    >
   {/if}
 </div>

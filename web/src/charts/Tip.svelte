@@ -1,9 +1,14 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  // x and y are percentages of the chart box.
-  let { x, y, children }: { x: number; y: number; children: Snippet } =
-    $props();
+  // x and y are percentages of the chart box. A tooltip `above` clears the
+  // finger that points at it.
+  let {
+    x,
+    y,
+    above = false,
+    children,
+  }: { x: number; y: number; above?: boolean; children: Snippet } = $props();
 
   let tip = $state<HTMLElement>();
   let width = $state(0);
@@ -25,7 +30,11 @@
   class="pointer-events-none absolute z-10 w-max min-w-40 border border-line bg-bg px-2.5 py-2 text-xs"
   style:left="{left}px"
   style:top="{y}%"
-  style:transform="translateY({y > 60 ? 'calc(-100% - 6px)' : '6px'})"
+  style:transform="translateY({above
+    ? 'calc(-100% - 32px)'
+    : y > 60
+      ? 'calc(-100% - 6px)'
+      : '6px'})"
   role="status"
 >
   {@render children()}

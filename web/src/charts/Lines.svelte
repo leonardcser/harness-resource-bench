@@ -5,6 +5,7 @@
   import { area, line } from "d3-shape";
   import { spread, textWidth, thin } from "../lib/chart";
   import { colorOf, nameOf, type Point, type Series } from "../lib/data";
+  import { scrub } from "../lib/scrub";
   import Tip from "./Tip.svelte";
 
   let {
@@ -112,12 +113,10 @@
           .sort((a, b) => b.point!.stat.median - a.point!.stat.median),
   );
 
-  function move(event: PointerEvent) {
-    const px = event.offsetX;
-    hover = xs.reduce((best, v) =>
+  const nearest = (px: number) =>
+    xs.reduce((best, v) =>
       Math.abs(x(v) - px) < Math.abs(x(best) - px) ? v : best,
     );
-  }
 </script>
 
 {#snippet swatch(agent: string)}
@@ -131,8 +130,10 @@
     role="img"
     aria-label={summary}
     class="block overflow-visible"
-    onpointermove={move}
-    onpointerleave={() => (hover = null)}
+    {@attach scrub(
+      (p) => (hover = nearest(p.x)),
+      () => (hover = null),
+    )}
   >
     {#each yTicks as tick (tick)}
       <line

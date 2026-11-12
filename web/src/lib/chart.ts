@@ -1,4 +1,4 @@
-// Label layout and pointer helpers shared by the charts.
+// Label layout helpers shared by the charts.
 
 /** End-label positions at least `gap` apart, each near its target. */
 export function spread(
@@ -43,18 +43,6 @@ export function thin(
     kept.push(last);
   }
   return kept;
-}
-
-/** The pointer's position as percentages of `box`, for placing a Tip. */
-export function pointer(
-  box: HTMLElement,
-  e: PointerEvent,
-): { x: number; y: number } {
-  const r = box.getBoundingClientRect();
-  return {
-    x: ((e.clientX - r.left) / r.width) * 100,
-    y: ((e.clientY - r.top) / r.height) * 100,
-  };
 }
 
 /** Length along a bar track for a fraction of the scale. The last 4.5rem stay
