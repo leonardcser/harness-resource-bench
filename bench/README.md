@@ -150,8 +150,9 @@ Lint: `uv run ruff check .`
   swap and 512 processes. No agent peaks above 1 GiB.
 - **State:** dummy credentials and no personal state. The first launch starts
   the TUI in a new HOME, waits until it takes input and its files stop changing,
-  then quits with SIGTERM. codex clones a plugin repository in the background,
-  so its first launch also waits for that (`background_setup`).
+  then quits with SIGTERM. codex and Claude Code clone a plugin repository in
+  the background, so their first launch also waits for that
+  (`background_setup`).
 - **CPUs:** the agent runs on CPUs 2 to 5, the harness on CPUs 0 and 1. One case
   runs at a time. In a test, 4 neighbours on the same CCD added 6% to 8% CPU,
   against under 1% of noise.

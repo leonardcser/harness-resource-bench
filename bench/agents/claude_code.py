@@ -63,4 +63,6 @@ AGENT = Agent(
         ),
     ),
     reset="/clear",
+    # It clones the official plugin marketplace, then lists it in this file.
+    background_setup=".claude/plugins/known_marketplaces.json",
 )
