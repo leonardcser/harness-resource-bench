@@ -17,10 +17,13 @@
     STARTUP,
     TIMERS,
   } from "./findings";
+  import CopyLink from "./CopyLink.svelte";
   import Overview from "./Overview.svelte";
   import Section from "./Section.svelte";
   import {
     CLOCK_GHZ,
+    PERMALINK,
+    RUN_DATE,
     agentsOf,
     marks,
     pick,
@@ -98,7 +101,7 @@
     return fewest === most ? `${most}` : `${fewest} to ${most}`;
   });
   const facts = $derived([
-    ["Run", manifest.started_utc.slice(0, 10)],
+    ["Run", RUN_DATE, PERMALINK],
     [
       "Machine",
       `${manifest.machine.cpu.replace(/ \d+-Core Processor$/, "")}, fixed ${CLOCK_GHZ} GHz`,
@@ -164,10 +167,22 @@
   </p>
 </div>
 <dl class="mt-8 mb-14 grid grid-cols-2 gap-x-8 gap-y-4 text-sm sm:grid-cols-5">
-  {#each facts as [label, value] (label)}
+  {#each facts as [label, value, permalink] (label)}
     <div class="border-l border-line pl-3">
       <dt class="text-xs text-muted">{label}</dt>
-      <dd class="mt-0.5">{value}</dd>
+      <dd class="mt-0.5">
+        {#if permalink}
+          <span class="flex flex-wrap items-center gap-x-2">
+            {value}
+            <CopyLink
+              href={permalink}
+              title="Copy a permanent link to this run, which never changes"
+            />
+          </span>
+        {:else}
+          {value}
+        {/if}
+      </dd>
     </div>
   {/each}
 </dl>

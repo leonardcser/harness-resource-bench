@@ -1,11 +1,15 @@
 .venv/
 __pycache__/
 node_modules/
-# Git keeps a run's manifest, summary and profile, not its raw cases.
+# Git keeps a run's manifest, summary, profile and frozen page, not its raw
+# cases.
 results/*/*
 !results/*/manifest.json
 !results/*/summary.json
 !results/*/profile.json
+!results/*/site/
+# The newest setup check
+results/check/
 web/dist/
 web/.svelte-check/
 web/src/data/

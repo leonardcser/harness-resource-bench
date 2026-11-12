@@ -3,13 +3,13 @@
   import {
     CLOCK_GHZ,
     PROFILE as profile,
-    REPO,
     RUN as run,
     nameOf,
     type Profile,
   } from "./lib/data";
   import { count, percent, seconds } from "./lib/format";
   import { noise, repeats, spread, steal } from "./lib/measures";
+  import { REPO } from "./lib/site";
   import Section from "./Section.svelte";
 
   const calls = (profile: Profile, p: number) =>
@@ -18,6 +18,9 @@
   const { fewest, most } = repeats(run);
   const RUNS = fewest === most ? `${most}` : `${fewest} to ${most}`;
   const NOISE = noise(run);
+  // Files of the repository at the code that measured the run, so a later move
+  // cannot break a frozen page
+  const CODE = `${REPO}/blob/${run.manifest.commit ?? "main"}`;
   const CANARY = run.summary.canary;
   const QUESTIONS = [
     [
@@ -223,8 +226,7 @@
     <div class="mt-8">{@render definitions(CONTROLS)}</div>
     <p class="mt-4 max-w-2xl text-xs leading-relaxed text-muted">
       The host hook that reserves the cores is in
-      <a href="{REPO}/blob/main/bench/proxmox/bench-isolate" class="link"
-        >bench/proxmox</a
+      <a href="{CODE}/bench/proxmox/bench-isolate" class="link">bench/proxmox</a
       >.
     </p>
   </Section>
@@ -308,8 +310,8 @@
       Each cause links the code in the agent's source, at the version in the
       benchmark. Claude Code is closed source, so its causes come from traces
       only.
-      <a href="{REPO}/blob/main/bench/ANALYSIS.md" class="link">ANALYSIS.md</a> tells
-      how to find each cause again.
+      <a href="{CODE}/RELEASE.md#recipes" class="link">RELEASE.md</a> tells how to
+      find each cause again.
     </p>
   </Section>
 
@@ -339,8 +341,13 @@
 </div>
 
 <p class="border-t border-line pt-6 text-xs leading-relaxed text-muted">
+  {#if run.manifest.commit}
+    This run was measured with the code at
+    <a href="{REPO}/tree/{run.manifest.commit}/bench" class="font-mono link"
+      >{run.manifest.commit.slice(0, 7)}</a
+    >.
+  {/if}
   The
-  <a href="{REPO}/blob/main/bench/README.md" class="link">benchmark README</a> has
-  the full details, such as how results are checked and how the cost of the terminal
-  is measured.
+  <a href="{CODE}/bench/README.md" class="link">benchmark README</a> has the full
+  details, such as how results are checked and how the cost of the terminal is measured.
 </p>

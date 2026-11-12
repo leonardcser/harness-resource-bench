@@ -1,4 +1,4 @@
-// What a person found, with ANALYSIS.md, at the versions in the benchmark:
+// What a person found, with the recipes in RELEASE.md, at the versions in the benchmark:
 // the cause behind each chart and the numbers that the bench cannot measure.
 
 import type { Piece } from "./lib/splits";

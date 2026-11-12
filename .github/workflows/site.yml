@@ -1,5 +1,5 @@
 # Checks and builds the site on every change to it, and deploys it to GitHub
-# Pages from main.
+# Pages from main. The build includes the frozen page of each run.
 name: Site
 
 on:
@@ -9,12 +9,14 @@ on:
       - web/**
       - results/*.json
       - results/*/*.json
+      - results/*/site/**
       - .github/workflows/site.yml
   pull_request:
     paths:
       - web/**
       - results/*.json
       - results/*/*.json
+      - results/*/site/**
       - .github/workflows/site.yml
   workflow_dispatch:
 
@@ -28,9 +30,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: read
     defaults:
       run:
         working-directory: web
@@ -41,11 +40,7 @@ jobs:
           bun-version: 1.4.4
       - run: bun install --frozen-lockfile
       - run: bun run lint
-      - uses: actions/configure-pages@v6
-        id: pages
       - run: bun run build
-        env:
-          VITE_SITE_URL: ${{ steps.pages.outputs.base_url }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: web/dist

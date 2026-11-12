@@ -5,9 +5,11 @@
   import { slide } from "svelte/transition";
   import AgentFilter from "./AgentFilter.svelte";
   import Agents from "./Agents.svelte";
-  import { REPO, RUN } from "./lib/data";
+  import { RUN } from "./lib/data";
   import { visible } from "./lib/filter.svelte";
+  import { REPO } from "./lib/site";
   import Methodology from "./Methodology.svelte";
+  import Newer from "./Newer.svelte";
   import Results from "./Results.svelte";
   import ThemeToggle from "./ThemeToggle.svelte";
 
@@ -96,6 +98,7 @@
     </nav>
   {/if}
 </header>
+<Newer />
 
 <main class="mx-auto max-w-6xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24">
   {#if hash === "#/methodology"}

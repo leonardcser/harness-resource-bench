@@ -2,9 +2,32 @@
 // bundles them, so they are there on the first frame.
 import manifest from "../data/manifest.json";
 import profile from "../data/profile.json";
+import run from "../data/run.json";
 import summary from "../data/summary.json";
 
-export const REPO = "https://github.com/leonardcser/harness-resource-bench";
+/** The ID of the run, the name of its folder in results/. */
+export const RUN_ID: string = run.id;
+/** The day the run started, as YYYY-MM-DD. */
+export const RUN_DATE: string = run.date;
+
+/** The path from this page to the root of the site. */
+export const ROOT = __ROOT__;
+
+/** The page of this run, which never changes once the run is frozen. */
+export const PERMALINK = `${ROOT}runs/${RUN_ID}/`;
+
+/** The ID of the run that the root of the site shows, from the build. It is
+ * null when that is unknown, as in development. */
+export async function latestRunId(): Promise<string | null> {
+  try {
+    const response = await fetch(`${ROOT}runs.json`, { cache: "no-cache" });
+    if (!response.ok) return null;
+    const { latest } = (await response.json()) as { latest?: unknown };
+    return typeof latest === "string" ? latest : null;
+  } catch {
+    return null;
+  }
+}
 
 /** The clock of the benchmark VM's reserved cores, in GHz, which the host
  * hook in bench/proxmox sets. */
@@ -43,6 +66,8 @@ export type Manifest = {
   machine: { cpu: string; kernel: string; podman: string };
   /** When the run started. */
   started_utc: string;
+  /** The commit of the code that measured the run, if the run recorded it. */
+  commit?: string;
 };
 
 export type Kind = "shell" | "read" | "search" | "edit" | "write";

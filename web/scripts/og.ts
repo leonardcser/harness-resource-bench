@@ -1,7 +1,9 @@
-// Draws public/og.png, the 1200x630 preview that social sites show for a link.
+// Draws public/og.png, the 1200x630 preview that social sites show for a link,
+// with the date of the run.
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
 import { AGENTS, PROFILES } from "../src/agents";
+import run from "../src/data/run.json";
 
 const out = new URL("../public/og.png", import.meta.url).pathname;
 const fonts = new URL(
@@ -61,6 +63,11 @@ const card = h(
     { display: "flex", alignItems: "center", gap: 14 },
     image(mark, 32),
     h("div", { fontSize: 24, fontWeight: 600 }, "harness resource bench"),
+    h(
+      "div",
+      { marginLeft: "auto", fontSize: 24, color: C.muted },
+      `Run of ${run.date}`,
+    ),
   ),
   h(
     "div",
@@ -101,4 +108,4 @@ const svg = await satori(card as never, {
   fonts: [await font(400), await font(600)],
 });
 await Bun.write(out, new Resvg(svg).render().asPng());
-console.log(`og: ${AGENTS.length} agents`);
+console.log(`og: ${AGENTS.length} agents, run of ${run.date}`);

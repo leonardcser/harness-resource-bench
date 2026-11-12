@@ -6,7 +6,6 @@ import subprocess
 from itertools import pairwise
 from pathlib import Path
 
-from agents import AGENTS
 from case import save
 from host import AGENT_CPUS
 from measure import SESSION_KINDS
@@ -17,7 +16,6 @@ from workload import text_bytes
 # Results live at the root of the repository, beside the harness and the site.
 RESULTS = Path(__file__).resolve().parent.parent / "results"
 # Names the run that the site shows.
-PUBLISHED = RESULTS / "published.json"
 METRICS = (
     "input_ready_seconds",
     "first_request_seconds",
@@ -179,21 +177,3 @@ def replay(out):
     manifest["replay"] = {"tmux": tmux, "cpu": cpu, "replays": REPLAYS}
     save(out / "manifest.json", manifest)
     return report(out)
-
-
-def publish():
-    """Point the site at the newest complete run of all agents. Only one run is
-    shown, so every agent was measured in the same session."""
-    complete = []
-    for path in RESULTS.glob("*/summary.json"):
-        out = path.parent
-        if not json.loads(path.read_text())["complete"]:
-            continue
-        manifest = json.loads((out / "manifest.json").read_text())
-        if manifest["config"]["versions"].keys() == AGENTS.keys():
-            complete.append((manifest["started_utc"], out.name))
-    if not complete:
-        raise RuntimeError(f"No complete run of all agents in {RESULTS}")
-    _, run = max(complete)
-    save(PUBLISHED, {"run": run})
-    print(f"PUBLISHED {run}", flush=True)

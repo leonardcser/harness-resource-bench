@@ -25,27 +25,26 @@ A local mock model gives every agent the same scripted work: real tool calls
 against real files, with the shape of real sessions. Each agent runs at a pinned
 version in its own container, and the host measures the container from outside.
 
-| Folder     | What it holds                                                       |
-| ---------- | ------------------------------------------------------------------- |
-| `bench/`   | The harness: agents, mock model, workload and measurement           |
-| `results/` | One folder per run, with its manifest, summary and workload profile |
-| `web/`     | The site, which shows the run that `results/published.json` names   |
+| Folder     | What it holds                                                    |
+| ---------- | ---------------------------------------------------------------- |
+| `bench/`   | The harness: agents, mock model, workload and measurement        |
+| `results/` | One folder per run: manifest, summary, workload profile and page |
+| `web/`     | The site, which shows the newest frozen run                      |
 
 ## Run the benchmark
 
-On a Linux host with rootless podman, cgroup v2, tmux and
-[uv](https://docs.astral.sh/uv/):
+On a fresh Ubuntu VM with 6 CPUs or more, to reproduce a released run:
 
 ```sh
-cd bench
-uv run bench.py run        # all agents, about 8.5 hours
-uv run bench.py check omp  # build and run the setup check only
+git checkout COMMIT          # the commit on the Methodology page of the run
+cd bench && ./setup.sh       # once; then log out and in again
+uv run bench.py run          # all agents, about 8.5 hours
+cd ../web && RUN=ID bun run dev   # ID: the folder that run made in results/
 ```
 
-`run` checks the host, builds the images, measures, and publishes the results
-for the site. If it stops, run it again to continue.
-[`bench/README.md`](bench/README.md) explains how it works, what each case
-measures and how to update one agent.
+`run` checks the host, builds the images and measures, all in one session.
+[`bench/README.md`](bench/README.md) explains how it works and what each case
+measures.
 
 ## Build the site
 
@@ -57,7 +56,8 @@ bun install
 bun run dev    # or: bun run build
 ```
 
-`bun run lint` checks formatting and types.
+`bun run lint` checks formatting and types. To release a new run and share it,
+see [RELEASE.md](RELEASE.md).
 
 ## License
 
