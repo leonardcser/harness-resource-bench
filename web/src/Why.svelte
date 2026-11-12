@@ -2,34 +2,32 @@
   // The causes behind a chart, folded under it. Each agent gets its class and
   // one sentence, with the source line where there is one.
   import type { Snippet } from "svelte";
+  import type { Agent } from "./agents";
   import type { Topic } from "./findings";
-  import { shown } from "./lib/filter.svelte";
   import Logo from "./Logo.svelte";
 
   let {
     topic,
+    rows,
     rule = "",
     children,
   }: {
     topic: Topic;
+    /** The same sorted rows the chart receives. */
+    rows: { agent: string }[];
     /** Classes for the rule above the panel, such as a width. */
     rule?: string;
     children?: Snippet;
   } = $props();
 
-  const rows = $derived(
-    Object.entries(topic.causes)
-      .filter(([agent]) => shown(agent))
-      .map(([agent, cause]) => ({ agent, cause }))
-      .sort(
-        (a, b) =>
-          topic.tags.indexOf(a.cause.tag) - topic.tags.indexOf(b.cause.tag),
-      ),
+  const causes = $derived(
+    rows
+      .filter((row): row is { agent: Agent } =>
+        Object.hasOwn(topic.causes, row.agent),
+      )
+      .map(({ agent }) => ({ agent, cause: topic.causes[agent] })),
   );
-  // Each class once, in order, with the agents in it.
-  const classes = $derived(
-    topic.tags.filter((tag) => rows.some((r) => r.cause.tag === tag)),
-  );
+  const classes = $derived([...new Set(causes.map((r) => r.cause.tag))]);
 </script>
 
 {#snippet tag(label: string)}
@@ -55,7 +53,7 @@
   <div
     class="mt-3 grid gap-y-4 text-sm sm:grid-cols-[8.5rem_max-content_minmax(0,1fr)] sm:gap-x-3 sm:gap-y-2.5"
   >
-    {#each rows as { agent, cause } (agent)}
+    {#each causes as { agent, cause } (agent)}
       <div class="space-y-1 sm:contents">
         <div class="flex items-center justify-between gap-2 sm:contents">
           <div class="flex items-start"><Logo {agent} /></div>

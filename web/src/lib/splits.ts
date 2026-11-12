@@ -16,6 +16,19 @@ export type StackRow = {
   pieces: { part: string; value: number; items?: string[] }[];
 };
 
+/** The sort key for the sum of all parts. */
+export const TOTAL = "total";
+
+export const stackValue = (row: StackRow, part = TOTAL): number =>
+  part === TOTAL
+    ? row.pieces.reduce((n, p) => n + p.value, 0)
+    : (row.pieces.find((p) => p.part === part)?.value ?? 0);
+
+/** Keep chart rows and their explanations in the same value order. */
+export function sortStack(rows: StackRow[], part = TOTAL): StackRow[] {
+  return [...rows].sort((a, b) => stackValue(a, part) - stackValue(b, part));
+}
+
 /** A curated piece. Without a value, it takes the rest of the total. */
 export type Piece = { part: string; value?: number; items?: string[] };
 
@@ -121,21 +134,27 @@ export function sessionRows(
   });
 }
 
-/** Wake-ups and CPU seconds per second of idle. CPU skips the first mark,
- * while the agent settles. */
-export function idleRates(
-  idle: Map<string, Group>,
-): Map<string, { wakeups: number; cpu: number }> {
+/** CPU/s below this is noise. Such agents tie and sort by wake-ups. */
+export const IDLE_CPU_FLOOR = 1e-5;
+export type IdleRow = { agent: string; wakeups: number; cpu: number };
+
+/** Wake-ups and CPU seconds per second of idle, ordered by CPU use.
+ * CPU skips the first mark, while the agent settles. */
+export function idleRows(idle: Map<string, Group>): IdleRow[] {
   const at = marks(idle.values(), "idle_cpu_seconds_after_");
   const [from, to] = [at.find((m) => m > 0), at.at(-1)];
-  const rates = new Map<string, { wakeups: number; cpu: number }>();
-  if (from === undefined || to === undefined || to <= from) return rates;
+  const rows: IdleRow[] = [];
+  if (from === undefined || to === undefined || to <= from) return rows;
   for (const [agent, group] of idle) {
     const wakeups = median(group, "idle_wakeups_per_second");
     const a = median(group, `idle_cpu_seconds_after_${from}`);
     const b = median(group, `idle_cpu_seconds_after_${to}`);
     if (wakeups === undefined || a === undefined || b === undefined) continue;
-    rates.set(agent, { wakeups, cpu: Math.max(0, b - a) / (to - from) });
+    rows.push({ agent, wakeups, cpu: Math.max(0, b - a) / (to - from) });
   }
-  return rates;
+  return rows.sort(
+    (a, b) =>
+      Math.max(a.cpu, IDLE_CPU_FLOOR) - Math.max(b.cpu, IDLE_CPU_FLOOR) ||
+      a.wakeups - b.wakeups,
+  );
 }

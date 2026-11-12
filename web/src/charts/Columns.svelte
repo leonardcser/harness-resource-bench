@@ -2,29 +2,28 @@
   // One bar column per part, each from its own baseline. Parts with the same
   // `scale` share it. A header click sorts by that column.
   import { nameOf } from "../lib/data";
-  import type { Part, StackRow } from "../lib/splits";
+  import {
+    TOTAL,
+    stackValue as value,
+    type Part,
+    type StackRow,
+  } from "../lib/splits";
   import AgentRows from "./AgentRows.svelte";
 
   let {
     rows,
     parts,
     format,
+    by,
+    onsort,
   }: {
     rows: StackRow[];
+    by: string;
+    onsort: (part: string) => void;
     parts: Part[];
     format: (v: number) => string;
   } = $props();
 
-  const TOTAL = "total";
-  let by = $state(TOTAL);
-
-  const value = (row: StackRow, part: string) =>
-    part === TOTAL
-      ? row.pieces.reduce((n, p) => n + p.value, 0)
-      : (row.pieces.find((p) => p.part === part)?.value ?? 0);
-  const sorted = $derived(
-    [...rows].sort((a, b) => value(a, by) - value(b, by)),
-  );
   const scaleOf = (part: Part) => part.scale ?? part.id;
   const top = (part: Part) =>
     Math.max(
@@ -49,7 +48,7 @@
       id === TOTAL && "ml-auto justify-end sm:ml-0",
     ]}
     aria-pressed={by === id}
-    onclick={() => (by = id)}
+    onclick={() => onsort(id)}
   >
     {#if color}<i
         class="inline-block size-2.5 shrink-0 self-center sm:hidden"
@@ -126,7 +125,7 @@
 {/snippet}
 
 <AgentRows
-  rows={sorted}
+  {rows}
   label={(row) =>
     `${nameOf(row.agent)}: ${parts
       .map((p) => `${p.label} ${format(value(row, p.id))}`)

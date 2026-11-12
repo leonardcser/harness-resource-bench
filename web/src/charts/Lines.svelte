@@ -79,14 +79,9 @@
       .y1((p) => at(p, "max")),
   );
   const ends = $derived(drawn.map((s) => s.points.at(-1)!));
-  const legend = $derived(
-    [...drawn].sort(
-      (a, b) => b.points.at(-1)!.stat.median - a.points.at(-1)!.stat.median,
-    ),
-  );
   const summary = $derived(
     `At ${xLabel} ${xFormat(xs.at(-1) ?? 0)}: ` +
-      legend
+      drawn
         .map(
           (s) => `${nameOf(s.agent)} ${yFormat(s.points.at(-1)!.stat.median)}`,
         )
@@ -248,7 +243,7 @@
   <ul
     class="mt-3 grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-6 gap-y-1.5 text-xs"
   >
-    {#each legend as s (s.agent)}
+    {#each drawn as s (s.agent)}
       <li class="flex items-center gap-1.5 whitespace-nowrap">
         {@render swatch(s.agent)}
         <Logo agent={s.agent} name={false} size={12} />

@@ -3,23 +3,21 @@
   // fires, as tall as the CPU time of one wake-up.
   import { nameOf } from "../lib/data";
   import { seconds } from "../lib/format";
+  import { IDLE_CPU_FLOOR as FLOOR, type IdleRow } from "../lib/splits";
   import AgentRows from "./AgentRows.svelte";
 
   type Timer = { ms: number; label: string };
 
   let {
-    rates,
+    rows,
     timers,
   }: {
-    /** Wake-ups and CPU seconds per second of idle. */
-    rates: Map<string, { wakeups: number; cpu: number }>;
+    rows: IdleRow[];
     timers: Record<string, Timer[]>;
   } = $props();
 
   const WINDOW = 2000;
   const AXIS = [0, 500, 1000, 1500, 2000];
-  /** CPU/s below this is noise. Such agents tie and sort by wake-ups. */
-  const FLOOR = 1e-5;
   const TALL = 26;
   const SHORT = 4;
 
@@ -30,25 +28,18 @@
     load: number;
     each: number;
   };
-  const rows: BeatRow[] = $derived(
-    [...rates]
-      .map(([agent, { wakeups, cpu }]) => ({
-        agent,
-        perSecond: wakeups,
-        timers: timers[agent] ?? [],
-        load: cpu,
-        // A count of zero or less means no usable count: the ticks keep the
-        // timers from the source, at the lowest height.
-        each: wakeups > 0 ? cpu / wakeups : 0,
-      }))
-      .sort(
-        (a, b) =>
-          Math.max(a.load, FLOOR) - Math.max(b.load, FLOOR) ||
-          a.perSecond - b.perSecond,
-      ),
+  const beats: BeatRow[] = $derived(
+    rows.map(({ agent, wakeups, cpu }) => ({
+      agent,
+      perSecond: wakeups,
+      timers: timers[agent] ?? [],
+      load: cpu,
+      // Keep the source timers at minimum height when the count is unusable.
+      each: wakeups > 0 ? cpu / wakeups : 0,
+    })),
   );
   const costliest = $derived(
-    Math.max(1e-12, ...rows.filter((r) => r.timers.length).map((r) => r.each)),
+    Math.max(1e-12, ...beats.filter((r) => r.timers.length).map((r) => r.each)),
   );
   const height = (each: number) =>
     SHORT + (TALL - SHORT) * Math.min(1, each / costliest);
@@ -142,7 +133,7 @@
 {/snippet}
 
 <AgentRows
-  {rows}
+  rows={beats}
   columns="minmax(0,1fr) 3rem 4rem"
   label={(row) =>
     `${nameOf(row.agent)}: ${rate(row.perSecond)} wake-ups and ${load(row.load)} of CPU time a second`}

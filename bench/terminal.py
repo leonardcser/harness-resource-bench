@@ -15,6 +15,12 @@ from pathlib import Path
 COLUMNS, ROWS = 120, 40
 # How often startup types its probe, in seconds. This is the resolution of startup.
 PROBE_INTERVAL = 0.005
+PROBE = "zvqx7319"
+# Deletes of the probe go in groups, with a gap. Some agents take a fast burst
+# of input for a paste, and a paste does not delete.
+DELETE_GROUP, DELETE_GAP = 50, 0.02
+# The gap between the two presses of the quit key, in seconds.
+QUIT_GAP = 0.01
 # Escape sequences, to find text in the raw output.
 ANSI = re.compile(rb"\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)|\x1b\[[0-?]*[ -/]*[@-~]")
 # Scrollback that a turn's done marker is searched in when it is drawn in pieces.
@@ -117,7 +123,11 @@ class Terminal:
         self.exec_time = None
         self.watches = {}
         self.errors = []
+        # Characters that the startup probe typed into the agent's editor.
+        self.probed = 0
         self.log = Path(log).open("wb")  # noqa: SIM115 - owned until close()
+        # Every log the pane has written to, closed with the terminal.
+        self.logs = [self.log]
         self.stop_event = threading.Event()
         # The pane waits until the harness reads its output, then runs podman in
         # raw mode, as a terminal emulator would.
@@ -233,6 +243,43 @@ class Terminal:
     def type(self, keys):
         self.command(f"send-keys -t {self.target} -l -- {shlex.quote(keys)}")
 
+    def clear_probe(self, timeout=30):
+        """Delete what the startup probe typed, and wait until the screen no
+        longer shows it. Extra deletes in an empty editor do nothing."""
+        for done in range(0, self.probed, DELETE_GROUP):
+            count = min(DELETE_GROUP, self.probed - done)
+            self.command(f"send-keys -t {self.target} -N {count} BSpace")
+            time.sleep(DELETE_GAP)
+        self.probed = 0
+        # The deletes go from the end, so the last text left starts the probe.
+        deadline = time.monotonic() + timeout
+        while PROBE[:4] in self.screen():
+            if time.monotonic() > deadline:
+                raise TimeoutError(
+                    "Agent editor kept the startup probe; see terminal.log"
+                )
+            self.stop_event.wait(0.1)
+
+    def quit(self, pid, key, timeout=10):
+        """Press `key` twice and return the seconds from the first press until
+        process `pid` exits. The second press is for agents that ask to
+        confirm; an agent that has exited does not get it."""
+        # The exit output goes to its own log, so that the terminal replay of
+        # the case leaves it out. Some agents print their transcript on exit.
+        self.log = Path(self.logs[0].name).with_name("quit.log").open("wb")
+        self.logs.append(self.log)
+        process = os.pidfd_open(pid)
+        try:
+            start = time.monotonic()
+            self.command(f"send-keys -t {self.target} {key}")
+            if not select.select([process], [], [], QUIT_GAP)[0]:
+                self.command(f"send-keys -t {self.target} {key}")
+                if not select.select([process], [], [], timeout)[0]:
+                    raise TimeoutError(f"Agent did not quit within {timeout} s")
+            return time.monotonic() - start
+        finally:
+            os.close(process)
+
     def send(self, value):
         """Paste `value` and press Enter. tmux brackets the paste when the agent
         asks for it."""
@@ -263,7 +310,7 @@ class Terminal:
         raise TimeoutError("Agent screen did not settle; see terminal.log")
 
     def input_ready(self, timeout=30):
-        token = "zvqx7319"
+        token = PROBE
         self.watches[token] = None
         deadline = time.monotonic() + timeout
         next_probe = 0
@@ -285,6 +332,7 @@ class Terminal:
             now = time.monotonic()
             if self.launch_time is not None and now >= next_probe:
                 self.type(token)
+                self.probed += len(token)
                 next_probe = now + PROBE_INTERVAL
             self.stop_event.wait(0.001)
         raise TimeoutError(
@@ -331,7 +379,8 @@ class Terminal:
         for thread in self.threads:
             thread.join(timeout=2)
         os.close(self.output)
-        self.log.close()
+        for log in self.logs:
+            log.close()
         for path in self.folder.iterdir():
             path.unlink()
         self.folder.rmdir()

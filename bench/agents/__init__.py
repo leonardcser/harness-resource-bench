@@ -57,6 +57,8 @@ class Agent:
       in every session. They do not count as session data.
     - `typed_prompt` is for a TUI that takes no prompt argument. The harness
       types the first prompt.
+    - `quit` is the tmux key that quits the TUI. The harness presses it twice,
+      for agents that ask to confirm.
     """
 
     name: str
@@ -73,6 +75,7 @@ class Agent:
     reset: str = "/new"
     assets: tuple = ()
     typed_prompt: bool = False
+    quit: str = "C-c"
 
 
 def write_json(path, value):

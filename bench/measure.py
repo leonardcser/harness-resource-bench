@@ -163,6 +163,24 @@ def disk(path, assets=(), depth=3):
     }
 
 
+def settle(cgroup, below=0.1, quiet=3, timeout=30):
+    """Wait until the cgroup uses less than `below` of one core in each of
+    `quiet` seconds in a row. Some agents still start up after their first
+    request, and some start background work a second later. Return the seconds
+    waited."""
+    start = time.monotonic()
+    used = lambda: counters(cgroup / "cpu.stat")["usage_usec"] / 1e6
+    before, calm = used(), 0
+    while time.monotonic() - start < timeout:
+        time.sleep(1)
+        now = used()
+        calm = calm + 1 if now - before < below else 0
+        before = now
+        if calm == quiet:
+            return time.monotonic() - start
+    raise RuntimeError(f"Agent CPU did not settle within {timeout} s")
+
+
 class Sampler:
     def __init__(self, cgroup, interval=0.1):
         self.cgroup, self.interval = cgroup, interval

@@ -18,6 +18,7 @@ RESULTS = Path(__file__).resolve().parent.parent / "results"
 # Names the run that the site shows.
 METRICS = (
     "input_ready_seconds",
+    "quit_seconds",
     "first_request_seconds",
     "pss_bytes",
     "peak_memory_bytes",
@@ -102,6 +103,14 @@ def stat(values):
     }
 
 
+def canary(values):
+    """The stat of the canary job, with its 95th percentile: one slow case
+    sets the range."""
+    if len(values) < 2:
+        return None
+    return {**stat(values), "p95": statistics.quantiles(values, n=20)[-1]}
+
+
 def stats(results):
     """The stat of each metric over repeated cases."""
     metrics = {}
@@ -151,7 +160,7 @@ def report(out):
                 for key, results in sorted(groups.items(), key=lambda kv: str(kv[0]))
             ],
             # The fixed job before every case: the same work over the whole run.
-            "canary": stat(canaries) if canaries else None,
+            "canary": canary(canaries),
             # Addresses outside the host that each agent connected to.
             "remote_connections": {a: sorted(r) for a, r in sorted(remotes.items())},
         },

@@ -47,8 +47,9 @@ export type Group = {
 export type Summary = {
   planned: number;
   groups: Group[];
-  /** The fixed job before every case, if the run has one. */
-  canary?: Stat | null;
+  /** The fixed job before every case, if the run has one, with its 95th
+   * percentile: one slow case sets the range. */
+  canary?: (Stat & { p95?: number }) | null;
 };
 
 export type Image = {
@@ -156,22 +157,34 @@ export function pick(
 export function rows(groups: Map<string, Group>, metric: string): Row[] {
   return [...groups]
     .filter(([, group]) => group.metrics[metric])
-    .map(([agent, group]) => ({ agent, stat: group.metrics[metric] }));
+    .map(([agent, group]) => ({ agent, stat: group.metrics[metric] }))
+    .sort((a, b) => a.stat.median - b.stat.median);
 }
 
 /** Points from metrics named `prefix` and a number. For an interval
  * (`prefix` A_B), the point is at the end of the interval. */
 export function series(groups: Map<string, Group>, prefix: string): Series[] {
   const pattern = new RegExp(`^${prefix}(?:\\d+_)?(\\d+)$`);
-  return [...groups].map(([agent, group]) => ({
-    agent,
-    points: Object.entries(group.metrics)
-      .flatMap(([name, stat]) => {
-        const match = name.match(pattern);
-        return match ? [{ x: Number(match[1]), stat }] : [];
-      })
-      .sort((a, b) => a.x - b.x),
-  }));
+  return sortSeries(
+    [...groups].map(([agent, group]) => ({
+      agent,
+      points: Object.entries(group.metrics)
+        .flatMap(([name, stat]) => {
+          const match = name.match(pattern);
+          return match ? [{ x: Number(match[1]), stat }] : [];
+        })
+        .sort((a, b) => a.x - b.x),
+    })),
+  );
+}
+
+/** Line labels run from highest to lowest at the last point. */
+export function sortSeries(series: Series[]): Series[] {
+  return series
+    .filter((s) => s.points.length)
+    .sort(
+      (a, b) => b.points.at(-1)!.stat.median - a.points.at(-1)!.stat.median,
+    );
 }
 
 /** The sorted numbers N of the metrics named `prefix` N in any group. */

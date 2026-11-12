@@ -32,12 +32,13 @@ from real sessions. To see it: `uv run bench.py transcript > transcript.json`.
 | Name            | Case id        | What it measures                                                                         |
 | --------------- | -------------- | ---------------------------------------------------------------------------------------- |
 | Startup         | `startup`      | Time from exec until a typed key shows in the TUI                                        |
-| Memory at start | `start-memory` | Memory (PSS) after the first request, headless, with a cold file cache                   |
+| Memory at start | `start-memory` | Memory (PSS) once the agent settles after its first request, headless, cold file cache   |
 | Install size    | -              | Bytes that the install adds under `/root`, `/usr/local` and `/opt`                       |
 | Coding task     | `task`         | CPU and memory of a task with 24 tool calls, headless at 60 tokens/s, TUI at 30 to 1,000 |
 | Long session    | `long-session` | Memory, CPU per turn and session data over 64 turns                                      |
 | New sessions    | `new-sessions` | Memory over 16 sessions in one process                                                   |
 | Idle            | `idle`         | CPU and memory over 5 minutes without input, after a task                                |
+| Quit            | -              | Time to quit the TUI at the end of `startup`, `task` and `long-session`                  |
 
 - TUI cases also measure the CPU time that the terminal (tmux) spends.
 - Every case runs 3 times. Startup and memory at start run 10 times. Results
@@ -302,10 +303,14 @@ These live in each agent's file in `agents/`.
   thread that exits keeps its last count, so the total never drops.
 - `quiet_seconds`: how long the host waited before the case for the agent's CPUs
   to stay idle for 0.5 s, at most 30 s.
+- `settle_seconds`: how long the model held the agent's first request, until the
+  agent used less than 10% of a core in each of 3 s in a row, at most 30 s. So
+  startup work, such as codex's background work, stays out of every measurement.
+  Memory at start is read at its end.
 - `peak_memory_bytes`: the cgroup's own peak, with file cache.
 - `canary_seconds`: the CPU time of a fixed hash of 4 MiB on CPU 2, just before
-  the case. `summary.json` gives its spread under `canary`. A clock change or a
-  neighbour on the agent's cores shows there.
+  the case. `summary.json` gives its range and 95th percentile under `canary`. A
+  clock change or a neighbour on the agent's cores shows there.
 - `steal_seconds`: the time the hypervisor ran something else on the agent's
   CPUs. On the benchmark VM it stays near zero.
 - `cpu_wait_seconds`: the time that at least one of the agent's threads was
@@ -324,6 +329,18 @@ These live in each agent's file in `agents/`.
   agent's capability queries, as it does for users.
 - `first_request_seconds`: the time from the exec to the first request with the
   task.
+
+**Quit**
+
+- At the end of the TUI startup, task and long-session cases, the host waits
+  until the agent's CPU settles. Then it presses the agent's `quit` key twice,
+  10 ms apart, as some agents ask to confirm.
+- `quit_seconds`: the time from the first press until the agent's main process
+  exits, read from a pidfd. The agent must exit with status 0.
+- After startup, the host first deletes the probe and waits until the screen no
+  longer shows it.
+- The quit comes after the last sample, so it does not count in CPU, memory or
+  the terminal replay.
 
 **End of a turn:** the agent draws its done marker. A renderer can split the
 marker across frames, so when the output stops, the harness also checks the

@@ -29,6 +29,7 @@
     pick,
     rows,
     series,
+    sortSeries,
     taskRate,
     type Run,
   } from "./lib/data";
@@ -38,7 +39,9 @@
     MEMORY_PARTS,
     SESSION_PARTS,
     TASK_PARTS,
-    idleRates,
+    TOTAL,
+    idleRows,
+    sortStack,
     installRows,
     memoryRows,
     sessionRows,
@@ -48,6 +51,8 @@
   import Why from "./Why.svelte";
 
   let { run }: { run: Run } = $props();
+
+  let taskSort = $state(TOTAL);
 
   const { summary, manifest } = $derived(run);
   const agents = $derived(agentsOf(manifest));
@@ -75,29 +80,50 @@
     ].sort((a, b) => a - b),
   );
   const byRate = $derived(
-    agents.map((agent) => ({
-      agent,
-      points: rates.flatMap((rate) => {
-        const stat = pick(summary, "task", "tui", rate).get(agent)?.metrics
-          .active_cpu_percent;
-        return stat ? [{ x: rate, stat }] : [];
-      }),
-    })),
+    sortSeries(
+      agents.map((agent) => ({
+        agent,
+        points: rates.flatMap((rate) => {
+          const stat = pick(summary, "task", "tui", rate).get(agent)?.metrics
+            .active_cpu_percent;
+          return stat ? [{ x: rate, stat }] : [];
+        }),
+      })),
+    ),
   );
   const lastIdle = $derived(
     marks(idle.values(), "idle_pss_bytes_after_").at(-1) ?? 0,
   );
-  const install = $derived(installRows(manifest, INSTALL_PIECES));
-  const task = $derived(taskRows(tui, headless));
-  const memory = $derived(memoryRows(idle, lastIdle));
-  const session = $derived(sessionRows(growth, turns));
+  const startupRows = $derived(rows(startup, "input_ready_seconds"));
+  const install = $derived(sortStack(installRows(manifest, INSTALL_PIECES)));
+  const task = $derived(sortStack(taskRows(tui, headless), taskSort));
+  const memory = $derived(sortStack(memoryRows(idle, lastIdle)));
+  const session = $derived(sortStack(sessionRows(growth, turns)));
+  const growthSeries = $derived(series(growth, "cpu_seconds_per_turn_"));
   /** The same workload for every agent, so any group has it. */
   const text = $derived(
     [...growth.values()]
       .map((g) => g.metrics[`session_text_bytes_after_${turns}`]?.median)
       .find((v) => v !== undefined),
   );
-  const idleRate = $derived(idleRates(idle));
+  const idleRate = $derived(idleRows(idle));
+  /** The quits of each agent, in the order that a session reaches them. */
+  const quits = $derived([
+    { label: "at start", groups: startup },
+    { label: "after the task", groups: tui },
+    { label: `after ${turns} turns`, groups: growth },
+  ]);
+  const quitSeries = $derived(
+    sortSeries(
+      agents.map((agent) => ({
+        agent,
+        points: quits.flatMap(({ groups }, x) => {
+          const stat = groups.get(agent)?.metrics.quit_seconds;
+          return stat ? [{ x, stat }] : [];
+        }),
+      })),
+    ),
+  );
   const runs = $derived.by(() => {
     const { fewest, most } = repeats(run);
     return fewest === most ? `${most}` : `${fewest} to ${most}`;
@@ -213,20 +239,20 @@
       title="Startup"
       note="Time from launch until a typed key shows on screen. Log scale."
     >
-      <Bars
-        rows={rows(startup, "input_ready_seconds")}
-        format={seconds}
-        zones={ZONES}
-      />
+      <Bars rows={startupRows} format={seconds} zones={ZONES} />
     </Figure>
     <!-- Both columns wide, with the rule under the startup chart only. -->
     <div class="-mt-(--gap-y) xl:col-span-2 xl:row-start-2">
-      <Why topic={STARTUP} rule="xl:w-[calc(50%-var(--gap-x)/2)]" />
+      <Why
+        topic={STARTUP}
+        rows={startupRows}
+        rule="xl:w-[calc(50%-var(--gap-x)/2)]"
+      />
     </div>
     <div class="xl:col-start-2 xl:row-start-1">
       <Figure
         title="Memory at start"
-        note="Memory after the first request, with a cold file cache."
+        note="Memory once the agent settles after its first request, with a cold file cache."
       >
         <div class="xl:pt-5">
           <Bars rows={rows(cold, "pss_bytes")} format={bytes} />
@@ -239,7 +265,7 @@
         note="Disk space that the official installer uses, split by what the files are. For pi, this includes Node.js, which it needs to run. Hover a part for the files in it."
       >
         <Stack rows={install} parts={INSTALL_PARTS} format={bytes} />
-        {#snippet more()}<Why topic={INSTALL} />{/snippet}
+        {#snippet more()}<Why topic={INSTALL} rows={install} />{/snippet}
       </Figure>
     </div>
   </div>
@@ -255,8 +281,14 @@
         title="Where the CPU time goes"
         note="The parts add up to the total. Headless is the same task without the TUI. + TUI is the extra CPU time of the agent when it runs with its TUI. + Terminal is the time that tmux needs to draw the output, which your machine also pays. It is much smaller, so it has its own scale. Click a column to sort by it."
       >
-        <Columns rows={task} parts={TASK_PARTS} format={seconds} />
-        {#snippet more()}<Why topic={RENDER} />{/snippet}
+        <Columns
+          rows={task}
+          parts={TASK_PARTS}
+          format={seconds}
+          by={taskSort}
+          onsort={(part) => (taskSort = part)}
+        />
+        {#snippet more()}<Why topic={RENDER} rows={task} />{/snippet}
       </Figure>
     </div>
     <Figure
@@ -291,13 +323,8 @@
       />
     </Figure>
     <Figure title="CPU time per turn" note="Average between two checkpoints.">
-      <Lines
-        series={series(growth, "cpu_seconds_per_turn_")}
-        xLabel="turns"
-        yFormat={seconds}
-        log
-      />
-      {#snippet more()}<Why topic={GROWTH}>
+      <Lines series={growthSeries} xLabel="turns" yFormat={seconds} log />
+      {#snippet more()}<Why topic={GROWTH} rows={growthSeries}>
           {@render walk()}
         </Why>{/snippet}
     </Figure>
@@ -326,7 +353,7 @@
             ? { value: text, label: "Text of the session" }
             : undefined}
         />
-        {#snippet more()}<Why topic={SESSION} />{/snippet}
+        {#snippet more()}<Why topic={SESSION} rows={session} />{/snippet}
       </Figure>
     {/if}
   </div>
@@ -348,13 +375,13 @@
 
 <Section title="Idle" description="An open session, left alone after a task.">
   <div class="grid grid-cols-1 gap-y-12">
-    {#if idleRate.size}
+    {#if idleRate.length}
       <Figure
         title="What wakes an idle agent"
         note="Two seconds of idle. Each tick is a timer from the agent's source code, as tall as the CPU time of one wake-up. Wake-ups/s counts all its threads over the whole idle. CPU/s is the CPU time per second of idle, after the first 30 s. A few costly wake-ups can cost more than many cheap ones. No agent draws to the screen while idle."
       >
-        <Beats rates={idleRate} timers={TIMERS} />
-        {#snippet more()}<Why topic={IDLE} />{/snippet}
+        <Beats rows={idleRate} timers={TIMERS} />
+        {#snippet more()}<Why topic={IDLE} rows={idleRate} />{/snippet}
       </Figure>
     {/if}
     <Figure title="CPU time" note="CPU time since the agent went idle.">
@@ -381,10 +408,29 @@
       )} of idle. Code and mapped files are pages that the kernel can read again from disk, mostly the program itself. Heap and data is all the rest."
     >
       <Stack rows={memory} parts={MEMORY_PARTS} format={bytes} />
-      {#snippet more()}<Why topic={MEMORY} />{/snippet}
+      {#snippet more()}<Why topic={MEMORY} rows={memory} />{/snippet}
     </Figure>
   </div>
 </Section>
+
+{#if quitSeries.length}
+  <Section
+    title="Quit"
+    description="How long each agent takes to exit when you press Ctrl+C. Some agents ask for a second press; the time includes it."
+  >
+    <Figure
+      title="Time to quit"
+      note="Time from the first press until the agent's process exits, once its CPU is idle."
+    >
+      <Lines
+        series={quitSeries}
+        xLabel="quit"
+        xFormat={(x) => quits[x].label}
+        yFormat={seconds}
+      />
+    </Figure>
+  </Section>
+{/if}
 
 <p class="border-t border-line pt-6 text-xs leading-relaxed text-muted">
   Values are medians of the runs. Whiskers and bands show the range. Kernel

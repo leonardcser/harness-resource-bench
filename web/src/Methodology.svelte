@@ -29,7 +29,7 @@
     ],
     [
       "Memory at start",
-      "Memory after the first request, with a cold file cache.",
+      "Memory once the agent settles after its first request, with a cold file cache.",
     ],
     [
       "Install size",
@@ -51,6 +51,10 @@
       "Idle",
       "CPU time and memory during 5 minutes without input, after a task.",
     ],
+    [
+      "Quit",
+      "Time from Ctrl+C until the agent's process exits, at start, after the coding task and after the long session. The agent gets a second press 10 ms later, if it asks to confirm, and must exit with status 0.",
+    ],
   ];
   const CONTROLS = [
     [
@@ -67,7 +71,7 @@
     ],
     [
       "Same start",
-      "Each agent comes from its official installer, at a fixed version, with its defaults. Only telemetry, error reports and updates are off. Each case starts a new container with a new home folder. One practice task per agent does not count.",
+      "Each agent comes from its official installer, at a fixed version, with its defaults. Only telemetry, error reports and updates are off. Each case starts a new container with a new home folder. Measurement starts when the agent's CPU settles after its first request, so startup work does not count twice. One practice task per agent does not count.",
     ],
     [
       "Same work",
@@ -242,9 +246,17 @@
         steal(run),
       )} from the agent's cores in any case.
       {#if CANARY}
-        A fixed CPU job before every case took {seconds(CANARY.median)}, with a
-        spread of {percent(spread(CANARY) * 100)} over the {CANARY.n} cases of the
-        run.
+        A fixed CPU job before every case took {seconds(CANARY.median)}.
+        {#if CANARY.p95}
+          In 95% of the {CANARY.n} cases it took at most {percent(
+            (CANARY.p95 / CANARY.median - 1) * 100,
+          )} longer, and {percent((CANARY.max / CANARY.median - 1) * 100)} longer
+          in the slowest.
+        {:else}
+          Its spread over the {CANARY.n} cases of the run was {percent(
+            spread(CANARY) * 100,
+          )}.
+        {/if}
       {/if}
     </p>
     <table class="mt-6 w-full max-w-2xl text-sm tabular-nums">

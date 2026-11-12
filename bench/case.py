@@ -19,6 +19,7 @@ from measure import (
     cgroup_for,
     disk,
     pss,
+    settle,
     summarize,
     write_samples,
 )
@@ -27,6 +28,9 @@ from terminal import Terminal
 from workload import PROMPT, digest, files, marker, steps
 
 SETTLE_SECONDS = 2
+# Cases that end by quitting the TUI and timing the exit, after one task and
+# after a long session. Startup also quits, at the prompt.
+QUIT_AFTER = ("task", "long-session")
 # Idle cases save a checkpoint this often. Thread switches are read every
 # second between them.
 IDLE_CHECKPOINT_SECONDS = 30
@@ -123,6 +127,18 @@ def checkpoint(sampler, turn, model, home, assets):
     return sample
 
 
+def quit_seconds(terminal, container, pid, agent):
+    """Wait until the agent's CPU settles, then time how long it takes to quit.
+    A quit counts only if the agent exits with status 0, so that a key that
+    kills the agent does not pass for a fast quit."""
+    settle(cgroup_for(pid))
+    seconds = terminal.quit(pid, agent.quit)
+    status = subprocess.check_output(["podman", "wait", container], text=True)
+    if status.strip() != "0":
+        raise RuntimeError(f"Agent quit with exit status {status.strip()}")
+    return seconds
+
+
 def container_pid(container, terminal):
     deadline = time.monotonic() + 20
     while time.monotonic() < deadline:
@@ -189,7 +205,14 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
             if question == "startup":
                 readiness = terminal.input_ready()
                 (folder / "startup-screen.txt").write_text(readiness.pop("screen"))
-                result.update(readiness, status="ok")
+                result.update(readiness)
+                pid = container_pid(container, terminal)
+                # The agent takes in all of the probe before the deletes, so
+                # that they do not come in one burst with it, like a paste.
+                settle(cgroup_for(pid))
+                terminal.clear_probe()
+                result["quit_seconds"] = quit_seconds(terminal, container, pid, agent)
+                result["status"] = "ok"
                 return result
             pid = container_pid(container, terminal)
             # Startup leaves this out, so that the poller cannot delay its probe.
@@ -203,9 +226,11 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
                 raise RuntimeError(
                     model.error or "Agent never reached inference; see terminal.log"
                 )
+            # The model holds the first request while the agent finishes its
+            # startup, so that startup work stays out of every measurement.
+            result["settle_seconds"] = settle(cgroup_for(pid))
             if question == "start-memory":
                 # The agent waits for its first reply; the model never sends it.
-                time.sleep(SETTLE_SECONDS)
                 result.update(pss(cgroup_for(pid)), status="ok")
                 return result
             sampler = Sampler(cgroup_for(pid))
@@ -287,6 +312,8 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
                 result["idle"] = summarize(
                     [s for s in sampler.samples if s["time"] >= idle_started]
                 )
+            if question in QUIT_AFTER and case["frontend"] == "tui":
+                result["quit_seconds"] = quit_seconds(terminal, container, pid, agent)
             result["status"] = "ok"
     except Exception as exc:  # noqa: BLE001 - keep failed-run diagnostics
         result["status"] = "failed"

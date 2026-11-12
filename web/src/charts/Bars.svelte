@@ -18,9 +18,6 @@
     zones?: Zone[];
   } = $props();
 
-  const sorted = $derived(
-    [...rows].sort((a, b) => a.stat.median - b.stat.median),
-  );
   const top = $derived(max(rows, (r) => r.stat.max) ?? 1);
   const x = $derived(
     zones.length
@@ -117,7 +114,7 @@
 {/snippet}
 
 <AgentRows
-  rows={sorted}
+  {rows}
   label={(row) => `${nameOf(row.agent)}: ${format(row.stat.median)}`}
   {cells}
   {tip}

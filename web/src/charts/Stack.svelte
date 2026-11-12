@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Horizontal bars split into parts, one bar per agent, sorted by total.
+  // Horizontal bars split into parts, in the supplied row order.
   import { span } from "../lib/chart";
   import { nameOf } from "../lib/data";
   import type { Part, StackRow } from "../lib/splits";
@@ -19,21 +19,19 @@
   } = $props();
 
   const total = (row: StackRow) => row.pieces.reduce((n, p) => n + p.value, 0);
-  const sorted = $derived(
-    rows
-      .map((row) => ({
-        ...row,
-        // Pieces in the order of the legend.
-        pieces: parts.flatMap((part) =>
-          row.pieces.filter((p) => p.part === part.id && p.value > 0),
-        ),
-      }))
-      .sort((a, b) => total(a) - total(b)),
+  const drawn = $derived(
+    rows.map((row) => ({
+      ...row,
+      // Pieces in the order of the legend.
+      pieces: parts.flatMap((part) =>
+        row.pieces.filter((p) => p.part === part.id && p.value > 0),
+      ),
+    })),
   );
-  const top = $derived(Math.max(1e-9, mark?.value ?? 0, ...sorted.map(total)));
+  const top = $derived(Math.max(1e-9, mark?.value ?? 0, ...drawn.map(total)));
   const used = $derived(
     parts.filter((part) =>
-      sorted.some((r) => r.pieces.some((p) => p.part === part.id)),
+      drawn.some((r) => r.pieces.some((p) => p.part === part.id)),
     ),
   );
   const partOf = (id: string) => parts.find((p) => p.id === id)!;
@@ -111,7 +109,7 @@
 </div>
 
 <AgentRows
-  rows={sorted}
+  rows={drawn}
   label={(row) =>
     `${nameOf(row.agent)}: ${format(total(row))}, ${row.pieces
       .map((p) => `${partOf(p.part).label} ${format(p.value)}`)

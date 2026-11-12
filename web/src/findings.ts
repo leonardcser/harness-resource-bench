@@ -1,28 +1,29 @@
 // What a person found, with the recipes in RELEASE.md, at the versions in the benchmark:
 // the cause behind each chart and the numbers that the bench cannot measure.
 
+import { PROFILES, tagOf, type Agent } from "./agents";
 import type { Piece } from "./lib/splits";
 
 export type Source = { label: string; href?: string };
 
-/** One agent's cause in a topic. `tag` names its class, from the topic's
- * `tags`. */
+/** One agent's cause and a short label for its approach. */
 export type Cause = { tag: string; text: string; source?: Source };
 
 export type Topic = {
-  /** The classes, in order from cheapest to most costly. */
-  tags: string[];
-  causes: Record<string, Cause>;
+  causes: Record<Agent, Cause>;
   /** A sentence that applies to several agents. */
   note?: string;
 };
 
-const FX = "https://github.com/vercel-labs/fx/blob/v0.0.16";
-const OPENCODE = "https://github.com/sst/opencode/blob/v2.2.6";
-const OMP = "https://github.com/can1357/oh-my-pi/blob/v18.18.0";
-const CODEX = "https://github.com/openai/codex/blob/rust-v0.167.0";
-const PI = "https://github.com/earendil-works/pi/blob/v1.5.0";
-const SMELT = "https://github.com/leonardcser/smelt/blob/v0.8.0";
+/** An agent's source at the version that the analysis read. */
+const at = (agent: Agent, version: string) =>
+  `${PROFILES[agent].repo}/blob/${tagOf(agent, version)}`;
+const FX = at("fx", "0.0.16");
+const OPENCODE = at("opencode", "2.2.7");
+const OMP = at("omp", "18.19.0");
+const CODEX = at("codex", "0.167.2");
+const PI = at("pi", "1.5.2");
+const SMELT = at("smelt", "0.8.0");
 
 const src = (repo: string, path: string, lines: string): Source => ({
   label: `${path.split("/").pop()}:${lines}`,
@@ -31,16 +32,16 @@ const src = (repo: string, path: string, lines: string): Source => ({
 const trace = (label: string): Source => ({ label });
 
 export const STARTUP: Topic = {
-  tags: ["Native", "Loads JavaScript", "Two processes"],
   note: "The JavaScript runtimes boot in 3 to 16 ms. The rest is loading and running each agent's code.",
   causes: {
     fx: {
       tag: "Native",
-      text: "A small static binary. It draws the prompt at once.",
+      text: "A small binary that shows the prompt at once.",
     },
     smelt: {
       tag: "Native",
-      text: "A static binary. Half of the time is the kernel that maps the binary into memory.",
+      text: "A native binary. About half of its startup is the kernel, as it reads each TLS certificate file and searches for Lua modules.",
+      source: trace("strace: open and stat"),
     },
     codex: {
       tag: "Native",
@@ -71,89 +72,81 @@ export const STARTUP: Topic = {
 };
 
 export const INSTALL: Topic = {
-  tags: [
-    "One binary",
-    "Several binaries",
-    "JavaScript twice",
-    "Node.js install",
-  ],
   causes: {
-    fx: { tag: "One binary", text: "One static Zig binary." },
+    fx: { tag: "One binary", text: "One Zig binary." },
     smelt: {
       tag: "One binary",
-      text: "One static Rust binary and its Lua files.",
+      text: "One Rust binary and its Lua files.",
     },
     codex: {
       tag: "Several binaries",
-      text: "A main binary of about 1,200 Rust crates with 3 TLS libraries, and 3 helper binaries that repeat much of its code.",
+      text: "A large main binary and 3 helpers that repeat much of its code.",
     },
     "claude-code": {
       tag: "JavaScript twice",
-      text: "Bun keeps the JavaScript source and also its precompiled bytecode.",
+      text: "Keeps both JavaScript source and compiled bytecode.",
     },
     omp: {
       tag: "JavaScript twice",
-      text: "Source and bytecode, and its native module twice: for new and for old CPUs.",
+      text: "Keeps source, bytecode and two native modules for different CPUs.",
     },
     opencode: {
       tag: "JavaScript twice",
-      text: "Source and bytecode, and a web UI and a model catalog that the TUI does not use.",
+      text: "Keeps source, bytecode, a web UI and a model catalog.",
     },
     pi: {
       tag: "Node.js install",
-      text: "It needs Node.js, which comes with its C headers and npm.",
+      text: "Includes Node.js, its development files and npm.",
     },
   },
 };
 
 export const IDLE: Topic = {
-  tags: ["Waits", "Slow timers", "Polls files", "Watchdog", "Busy loop"],
   causes: {
     smelt: {
       tag: "Waits",
-      text: "It sleeps until a key or a model event comes.",
+      text: "Sleeps until input or a model event arrives.",
     },
     pi: {
       tag: "Waits",
-      text: "No timers. The first 30 s run one-time checks for updates.",
+      text: "No repeating timers. Update checks finish in the first 30 s.",
     },
     codex: {
       tag: "Slow timers",
-      text: "It checks the terminal size every 500 ms and writes its log every 10 s.",
-      source: src(CODEX, "codex-rs/tui/src/tui/size_monitor.rs", "19"),
+      text: "Writes logs every 10 s. Its 500 ms terminal size check runs only inside tmux, which the agent cannot detect here.",
+      source: src(CODEX, "codex-rs/state/src/log_db.rs", "58"),
     },
     "claude-code": {
       tag: "Polls files",
-      text: "It checks ~/.claude.json and the git HEAD for changes every second, and the keybindings every 2 s.",
+      text: "Checks ~/.claude.json every 1 s and the ~/.claude folder every 2 s.",
       source: trace("strace: statx every 1 s"),
     },
     opencode: {
       tag: "Polls files",
-      text: "It checks 2 plugin folders that do not exist every 500 ms, and sends a heartbeat every 15 s.",
+      text: "Checks plugin folders every 500 ms; sends a heartbeat every 15 s.",
       source: src(OPENCODE, "packages/tui/src/plugin/watch.ts", "100"),
     },
     omp: {
       tag: "Watchdog",
-      text: "A watchdog checks every 250 ms that the event loop is not blocked.",
+      text: "Checks for a blocked event loop every 250 ms.",
       source: src(OMP, "packages/tui/src/loop-watchdog.ts", "78"),
     },
     fx: {
       tag: "Busy loop",
-      text: "Its main loop waits for input for at most 8 ms, then runs again, about 120 times a second.",
+      text: "Checks for input every 8 ms, about 120 times a second.",
       source: src(FX, "src/main.zig", "174"),
     },
   },
-  note: "In the Bun agents, 70 to 83% of this CPU time is the memory allocator, which cleans up after each wake-up. A larger heap makes each clean-up cost more.",
+  note: "Bun agents spend most idle CPU time on memory cleanup after wake-ups.",
 };
 
 export const MEMORY: Topic = {
-  tags: ["Small", "Own code", "JavaScript heap", "Two heaps"],
   causes: {
     fx: { tag: "Small", text: "Its code and data fit in 16 MiB." },
     smelt: { tag: "Small", text: "Most of its memory is its own code." },
     codex: {
       tag: "Own code",
-      text: "About 80% of its memory is its own machine code. Its heap is small.",
+      text: "About 80% is program code; little is data.",
     },
     pi: { tag: "JavaScript heap", text: "Node.js code and a small heap." },
     "claude-code": {
@@ -166,17 +159,34 @@ export const MEMORY: Topic = {
     },
     opencode: {
       tag: "Two heaps",
-      text: "The TUI and the server are two processes, each with its own JavaScript engine and heap.",
+      text: "The TUI and server each keep their own JavaScript code and data.",
     },
   },
 };
 
 export const RENDER: Topic = {
-  tags: ["Lays out all", "Renders all", "Animates", "Reprints"],
   causes: {
+    opencode: {
+      tag: "Rebuilds rows",
+      text: "Rebuilds the session's display rows when the message list changes.",
+      source: src(
+        OPENCODE,
+        "packages/tui/src/routes/session/rows.ts",
+        "164-187",
+      ),
+    },
+    codex: {
+      tag: "Animates",
+      text: "The progress animation adds redraws between tokens.",
+      source: src(
+        CODEX,
+        "codex-rs/tui/src/status_indicator_widget.rs",
+        "308-318",
+      ),
+    },
     fx: {
       tag: "Renders all",
-      text: "It writes little to the terminal, because finished text goes to the scrollback once. But each update renders the whole transcript again, and its loop wakes about 120 times a second.",
+      text: "Renders the whole transcript on each update, but writes finished text only once.",
       source: src(
         FX,
         "src/ui/render_engine/transcript_blocks.zig",
@@ -185,52 +195,51 @@ export const RENDER: Topic = {
     },
     "claude-code": {
       tag: "Lays out all",
-      text: "Each frame lays out the whole message tree, and each new token parses the whole message as Markdown again.",
+      text: "Lays out all messages each frame and parses Markdown again for each token.",
       source: trace("perf: Yoga layout and Markdown"),
     },
     smelt: {
       tag: "Animates",
-      text: "While it works, an animation draws about 23 frames a second. Each frame runs the full render, but 86% of frames change 40 characters or fewer.",
+      text: "Animations add redraws between tokens, without clearing the screen.",
       source: src(SMELT, "runtime/lua/smelt/prompt_chrome.lua", "175"),
     },
     pi: {
-      tag: "Reprints",
-      text: "When a change is above the visible screen, it prints the whole transcript again.",
-      source: src(PI, "packages/tui/src/tui-main-screen.ts", "456-458"),
+      tag: "Rewrites rows",
+      text: "Rewrites each screen row that changes. When the transcript scrolls, that is the whole screen.",
+      source: src(PI, "packages/tui/src/tui-alt-screen.ts", "1778-1781"),
     },
     omp: {
-      tag: "Reprints",
-      text: "It draws up to 30 frames a second and sometimes replays the whole screen.",
+      tag: "Animates",
+      text: "Animations add redraws between tokens. The task clears the screen only at startup.",
     },
   },
 };
 
 export const GROWTH: Topic = {
-  tags: ["Flat", "Rebuilds per message", "Walks all per update"],
   causes: {
     smelt: {
       tag: "Flat",
-      text: "CPU time per turn stays the same after turn 16.",
+      text: "CPU per turn stays level after turn 16.",
     },
     pi: {
       tag: "Flat",
-      text: "CPU time per turn stays the same after turn 16.",
+      text: "CPU per turn stays level after turn 16.",
     },
     omp: {
       tag: "Flat",
-      text: "CPU time per turn stays the same after turn 16.",
+      text: "CPU per turn stays level after turn 16.",
     },
     codex: {
       tag: "Flat",
-      text: "CPU time per turn stays the same after turn 16.",
+      text: "CPU per turn stays level after turn 16.",
     },
     "claude-code": {
       tag: "Flat",
-      text: "Flat after turn 16. Each frame lays out the whole message tree, so each turn costs more than in the other flat agents.",
+      text: "Nearly level after turn 16, but each frame still lays out all messages.",
     },
     opencode: {
       tag: "Rebuilds per message",
-      text: "For each new message, the TUI builds all rows of the session again. The server reads the whole history from its database for each step.",
+      text: "Rebuilds all display rows per message and reads all history per step.",
       source: src(
         OPENCODE,
         "packages/tui/src/routes/session/rows.ts",
@@ -239,7 +248,7 @@ export const GROWTH: Topic = {
     },
     fx: {
       tag: "Walks all per update",
-      text: "Each change renders every block of the transcript again. When its scrollback cap is full, each new line removes an old one and starts another full render.",
+      text: "Renders the whole transcript on each change. A longer session means more work.",
       source: src(
         FX,
         "src/ui/render_engine/transcript_blocks.zig",
@@ -251,36 +260,35 @@ export const GROWTH: Topic = {
 
 /** How each agent stores sessions, and what takes the space. */
 export const SESSION: Topic = {
-  tags: ["File per session", "Folder per session", "One database"],
-  note: "Each agent stores the same text. The sizes differ by how many copies of it they keep, and by what else they cache next to it.",
+  note: "Same session text; different copies, logs and caches.",
   causes: {
     pi: {
       tag: "File per session",
-      text: "One JSONL file per session, in a folder per project. It keeps each tool result once, plus a small diff for each edit.",
+      text: "Saves each tool result once, plus small edit diffs.",
     },
     omp: {
       tag: "File per session",
-      text: "One JSONL file per session, like pi. Each tool result also keeps a display copy, a trace copy, and the old and new text of each edit. 4 SQLite databases sit next to it, and the model catalog is the largest (12 MiB with its WAL).",
+      text: "Keeps extra copies of tool results and edits, plus a 12 MiB model catalog.",
     },
     "claude-code": {
       tag: "File per session",
-      text: "One JSONL file per session, in a folder per project. Each tool result goes in 3 times: the message, a toolUseResult copy (with the whole file before each edit) and an API request record. A file-history folder keeps each version of each edited file.",
+      text: "Keeps tool results in 3 places, plus copies of edited files.",
     },
     codex: {
       tag: "File per session",
-      text: "One JSONL rollout per session, in date folders, plus 6 SQLite databases. The rollout writes each item twice, and the thread_history database keeps another copy of the rollout. A log database keeps debug logs, with full diffs.",
+      text: "Saves each item twice in the session log, plus database copies and debug logs.",
     },
     fx: {
       tag: "Folder per session",
-      text: "One folder per session: a JSONL log, plus one blob file per tool output, named by its hash. The log and the blobs both hold the output, and the number of files grows with each call (4,362 in 64 turns).",
+      text: "Saves tool output in both a log and separate files: about 4,370 files in 64 turns.",
     },
     opencode: {
       tag: "One database",
-      text: "One SQLite database for all sessions. The messages take only 8 MiB. The same database caches the models.dev catalog (11 MiB), and its WAL holds another 11 MiB from that write.",
+      text: "Stores 8 MiB of messages, plus a model catalog and its write log at 11 MiB each.",
     },
     smelt: {
       tag: "One database",
-      text: "One SQLite database for all sessions. It keeps the display transcript and the model history in separate tables, plus blobs, a record of each request and a full-text search index.",
+      text: "Keeps display and model history separately, plus request logs and a search index.",
     },
   },
 };
@@ -293,14 +301,10 @@ export const FX_WALK = [91, 227, 535, 628, 687, 735, 849, 968];
 export const TIMERS: Record<string, { ms: number; label: string }[]> = {
   smelt: [],
   pi: [],
-  codex: [
-    { ms: 500, label: "terminal size check" },
-    { ms: 10000, label: "log write" },
-  ],
+  codex: [{ ms: 10000, label: "log write" }],
   "claude-code": [
     { ms: 1000, label: "~/.claude.json check" },
-    { ms: 1000, label: "git HEAD check" },
-    { ms: 2000, label: "keybindings check" },
+    { ms: 2000, label: "~/.claude folder check" },
   ],
   omp: [{ ms: 250, label: "event loop watchdog" }],
   opencode: [
@@ -324,7 +328,7 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   codex: [
     {
       part: "code",
-      value: 320.6 * MB,
+      value: 320.2 * MB,
       items: ["codex: 251 MB machine code, 36 MB unwind tables"],
     },
     {
@@ -342,36 +346,36 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   "claude-code": [
     {
       part: "code",
-      value: 58.2 * MB,
-      items: ["JavaScript, 54.5 MB", "assets, 3.7 MB"],
+      value: 58.6 * MB,
+      items: ["JavaScript, 54.9 MB", "assets, 3.7 MB"],
     },
     { part: "runtime", value: 149.4 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 108.3 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 109.4 * MB, items: ["JavaScriptCore bytecode"] },
     { part: "other" },
   ],
   omp: [
     {
       part: "code",
-      value: 74.5 * MB,
+      value: 75.1 * MB,
       items: [
         "native module for new CPUs, 40.8 MB",
-        "JavaScript, 29.7 MB",
-        "scripts and docs, 4 MB",
+        "JavaScript, 30.2 MB",
+        "scripts and docs, 4.1 MB",
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 47.1 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 47.9 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 40.7 * MB,
-      items: ["native module for old CPUs, 40.7 MB"],
+      value: 40.9 * MB,
+      items: ["native module for old CPUs, 40.9 MB"],
     },
     { part: "other" },
   ],
   opencode: [
     {
       part: "code",
-      value: 50 * MB,
+      value: 49.9 * MB,
       items: [
         "JavaScript, 16.5 MB",
         "file search library, 12.9 MB",
@@ -381,16 +385,16 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 49.4 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 49.3 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 42.3 * MB,
-      items: ["web UI archive, 25.9 MB", "models.dev catalog, 16.4 MB"],
+      value: 42.5 * MB,
+      items: ["web UI archive, 25.9 MB", "models.dev catalog, 16.6 MB"],
     },
     { part: "other" },
   ],
   pi: [
-    { part: "code", value: 163.3 * MB, items: ["pi and its npm packages"] },
+    { part: "code", value: 164.8 * MB, items: ["pi and its npm packages"] },
     {
       part: "runtime",
       value: 211.5 * MB,
