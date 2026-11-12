@@ -2,20 +2,32 @@
 terminal queries and keeps its screen. The harness reads the pane's raw output,
 keeps it as a log, and types into the pane."""
 
+import fcntl
 import os
 import re
 import select
 import shlex
+import struct
 import subprocess
 import tempfile
+import termios
 import threading
 import time
 from pathlib import Path
 
 COLUMNS, ROWS = 120, 40
-# How often startup types its probe, in seconds. This is the resolution of startup.
-PROBE_INTERVAL = 0.005
-PROBE = "zvqx7319"
+# The key of the startup probe, which no agent draws. A first launch types
+# another, so that a draft that the agent keeps cannot pass for the next probe.
+PROBE, FIRST_PROBE = "Q", "V"
+# After the agent takes a key without drawing it, the probe types the next one
+# QUICK later, then waits PAUSE. Two short gaps never follow each other, so
+# three keys never come within PAUSE, and no paste detector sees a paste
+# (codex: three keys within 8 ms).
+QUICK, PAUSE = 0.002, 0.010
+# While the agent's tty is out of sight, the probe types a key every PAUSE.
+# If it stays out of sight this long, the probe stops looking, and PAUSE is
+# the resolution of startup.
+TTY_WAIT = 0.1
 # Deletes of the probe go in groups, with a gap. Some agents take a fast burst
 # of input for a paste, and a paste does not delete.
 DELETE_GROUP, DELETE_GAP = 50, 0.02
@@ -108,6 +120,14 @@ def replay_cost(log, cpu, columns=COLUMNS, lines=ROWS):
     }
 
 
+def tty_state(fd):
+    """Whether the tty is in raw mode, and how many bytes wait in its input
+    queue. The kernel counts only whole lines outside raw mode."""
+    raw = not termios.tcgetattr(fd)[3] & termios.ICANON
+    queued = struct.unpack("i", fcntl.ioctl(fd, termios.FIONREAD, b"\0" * 4))[0]
+    return raw, queued
+
+
 class Terminal:
     """Runs `podman start --attach` for `container` in a new tmux server."""
 
@@ -119,16 +139,23 @@ class Terminal:
         self.marks = b""
         self.received = 0
         self.launch_time = None
+        # Keys that the probes typed, which `erase` deletes.
+        self.typed = 0
         # The wall clock when a headless supervisor started the agent.
         self.exec_time = None
         self.watches = {}
         self.errors = []
-        # Characters that the startup probe typed into the agent's editor.
-        self.probed = 0
         self.log = Path(log).open("wb")  # noqa: SIM115 - owned until close()
         # Every log the pane has written to, closed with the terminal.
         self.logs = [self.log]
         self.stop_event = threading.Event()
+        # Holds the pid of the container's first process once it starts.
+        self.pidfile = Path(
+            subprocess.check_output(
+                ["podman", "inspect", "--format", "{{.PidFile}}", container],
+                text=True,
+            ).strip()
+        )
         # The pane waits until the harness reads its output, then runs podman in
         # raw mode, as a terminal emulator would.
         go = shlex.join([*self.tmux, "wait-for", "go"])
@@ -243,23 +270,6 @@ class Terminal:
     def type(self, keys):
         self.command(f"send-keys -t {self.target} -l -- {shlex.quote(keys)}")
 
-    def clear_probe(self, timeout=30):
-        """Delete what the startup probe typed, and wait until the screen no
-        longer shows it. Extra deletes in an empty editor do nothing."""
-        for done in range(0, self.probed, DELETE_GROUP):
-            count = min(DELETE_GROUP, self.probed - done)
-            self.command(f"send-keys -t {self.target} -N {count} BSpace")
-            time.sleep(DELETE_GAP)
-        self.probed = 0
-        # The deletes go from the end, so the last text left starts the probe.
-        deadline = time.monotonic() + timeout
-        while PROBE[:4] in self.screen():
-            if time.monotonic() > deadline:
-                raise TimeoutError(
-                    "Agent editor kept the startup probe; see terminal.log"
-                )
-            self.stop_event.wait(0.1)
-
     def quit(self, pid, key, timeout=10):
         """Press `key` twice and return the seconds from the first press until
         process `pid` exits. The second press is for agents that ask to
@@ -309,34 +319,93 @@ class Terminal:
             self.stop_event.wait(0.05)
         raise TimeoutError("Agent screen did not settle; see terminal.log")
 
-    def input_ready(self, timeout=30):
-        token = PROBE
+    def erase(self, token, timeout=30):
+        """Delete the keys that the probe typed, and wait until the screen no
+        longer shows `token`. Extra deletes in an empty editor do nothing."""
+        for done in range(0, self.typed, DELETE_GROUP):
+            count = min(DELETE_GROUP, self.typed - done)
+            self.command(f"send-keys -t {self.target} -N {count} BSpace")
+            time.sleep(DELETE_GAP)
+        self.typed = 0
+        self.check()
+        deadline = time.monotonic() + timeout
+        while token in self.screen():
+            if time.monotonic() > deadline:
+                raise TimeoutError("Agent editor kept the probe; see terminal.log")
+            self.stop_event.wait(0.1)
+
+    def tty(self):
+        """The agent's tty, opened from the host, or None until it runs."""
+        try:
+            pid = int(self.pidfile.read_text())
+            return os.open(
+                f"/proc/{pid}/fd/0", os.O_RDONLY | os.O_NOCTTY | os.O_NONBLOCK
+            )
+        except (OSError, ValueError):
+            return None
+
+    def input_ready(self, token=PROBE, timeout=30):
+        """Type the key `token` at the exec, as a user who types at once, and
+        again only when the agent has taken it without drawing it. Return the
+        time from the exec until the agent draws it, and the screen.
+
+        The probe sees the agent's tty from the host: its raw mode, and whether
+        the key still waits in its input queue. So at most one key waits for
+        the agent. While the tty is out of sight, the probe types a key every
+        PAUSE instead."""
         self.watches[token] = None
         deadline = time.monotonic() + timeout
-        next_probe = 0
-        while time.monotonic() < deadline:
-            if self.exited():
-                raise RuntimeError(
-                    "Agent exited before accepting input; see terminal.log"
-                )
-            if self.watches[token] is not None:
+        keys, tty, raw_time = [], None, None
+        try:
+            while time.monotonic() < deadline:
+                if self.exited():
+                    raise RuntimeError(
+                        "Agent exited before accepting input; see terminal.log"
+                    )
+                if self.watches[token] is not None:
+                    return {
+                        "input_ready_seconds": self.watches[token] - self.launch_time,
+                        "launch_time": self.launch_time,
+                        "input_observed_time": self.watches[token],
+                        "probe": "interval" if tty is None else "queue",
+                        "probe_keys": len(keys),
+                        "raw_mode_seconds": (
+                            None if raw_time is None else raw_time - self.launch_time
+                        ),
+                        "screen": self.text()[-12000:],
+                    }
+                now = time.monotonic()
                 if self.launch_time is None:
-                    raise RuntimeError("Missing process exec timestamp")
-                return {
-                    "input_ready_seconds": self.watches[token] - self.launch_time,
-                    "launch_time": self.launch_time,
-                    "input_observed_time": self.watches[token],
-                    "probe_interval_seconds": PROBE_INTERVAL,
-                    "screen": self.text()[-12000:],
-                }
-            now = time.monotonic()
-            if self.launch_time is not None and now >= next_probe:
-                self.type(token)
-                self.probed += len(token)
-                next_probe = now + PROBE_INTERVAL
-            self.stop_event.wait(0.001)
+                    self.stop_event.wait(0.0005)
+                    continue
+                if tty is None and now - self.launch_time < TTY_WAIT:
+                    tty = self.tty()
+                if not keys:
+                    send = True
+                elif tty is None:
+                    send = now - keys[-1] >= PAUSE
+                else:
+                    raw, queued = tty_state(tty)
+                    if raw and raw_time is None:
+                        raw_time = now
+                    gap = now - keys[-1]
+                    previous = keys[-1] - keys[-2] if len(keys) > 1 else PAUSE
+                    send = (
+                        raw
+                        and not queued
+                        and gap >= QUICK
+                        and (gap >= PAUSE or previous >= PAUSE)
+                    )
+                if send:
+                    self.type(token)
+                    self.typed += 1
+                    keys.append(now)
+                self.stop_event.wait(0.0005)
+        finally:
+            if tty is not None:
+                os.close(tty)
         raise TimeoutError(
-            "Agent did not render typed probe within 30 seconds; see terminal.log"
+            "Agent did not draw the typed probe within 30 seconds; see terminal.log"
         )
 
     def wait(self, token, model, timeout=300):

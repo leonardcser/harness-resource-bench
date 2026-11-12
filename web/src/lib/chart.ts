@@ -45,10 +45,10 @@ export function thin(
   return kept;
 }
 
-/** Length along a bar track for a fraction of the scale. The last 4.5rem stay
+/** Length along a bar track for a fraction of the scale. The last `room` stays
  * free for the value label. */
-export const span = (fraction: number): string =>
-  `calc((100% - 4.5rem) * ${fraction})`;
+export const span = (fraction: number, room = "4.5rem"): string =>
+  `calc((100% - ${room}) * ${fraction})`;
 
 const measure = document.createElement("canvas").getContext("2d")!;
 

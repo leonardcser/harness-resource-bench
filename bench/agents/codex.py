@@ -51,5 +51,6 @@ AGENT = Agent(
     summaries=(
         ("You are performing a CONTEXT CHECKPOINT COMPACTION.", "handoff summary"),
     ),
-    assets=(".codex/.tmp", ".codex/skills/.system"),
+    # It clones its plugin repository to a temporary folder, then renames it.
+    background_setup=".codex/.tmp/plugins",
 )

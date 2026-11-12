@@ -61,5 +61,4 @@ AGENT = Agent(
         ("The conversation above is becoming long.", "CONTEXT CHECKPOINT COMPACTION"),
         ("You are performing a CONTEXT CHECKPOINT COMPACTION.", "handoff summary"),
     ),
-    assets=(".local/share/smelt/builtins",),
 )

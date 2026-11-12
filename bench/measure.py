@@ -125,18 +125,15 @@ def kind(file):
     return "other"
 
 
-def disk(path, assets=(), depth=3):
+def disk(path, depth=3):
     """Apparent size of the files under `path`. The host reads them without
-    following links, so the container runs no helper. `session_bytes` does not
-    include the `assets` directories; `session_files` and `session_<kind>_bytes`
-    split it. `disk_dirs` sums each directory up to `depth` levels down."""
-    total, session, files_count, dirs = 0, 0, 0, {}
+    following links, so the container runs no helper. `disk_<kind>_bytes`
+    splits the size by format, and `disk_dirs` sums each directory up to
+    `depth` levels down."""
+    total, count, dirs = 0, 0, {}
     kinds = dict.fromkeys(SESSION_KINDS, 0)
     for directory, _, files in os.walk(path):
         parts = Path(directory).relative_to(path).parts
-        is_session = not any(
-            parts[: len(Path(a).parts)] == Path(a).parts for a in assets
-        )
         size = 0
         for name in files:
             file = Path(directory, name)
@@ -145,20 +142,16 @@ def disk(path, assets=(), depth=3):
             except FileNotFoundError:
                 continue
             size += bytes_
-            if is_session:
-                kinds[kind(file)] += bytes_
-                files_count += 1
+            kinds[kind(file)] += bytes_
+            count += 1
         total += size
-        if is_session:
-            session += size
         for level in range(1, min(len(parts), depth) + 1):
             key = "/".join(parts[:level])
             dirs[key] = dirs.get(key, 0) + size
     return {
         "disk_bytes": total,
-        "session_bytes": session,
-        "session_files": files_count,
-        **{f"session_{k}_bytes": v for k, v in kinds.items()},
+        "disk_files": count,
+        **{f"disk_{k}_bytes": v for k, v in kinds.items()},
         "disk_dirs": dirs,
     }
 
@@ -179,6 +172,51 @@ def settle(cgroup, below=0.1, quiet=3, timeout=30):
         if calm == quiet:
             return time.monotonic() - start
     raise RuntimeError(f"Agent CPU did not settle within {timeout} s")
+
+
+def session(now, before):
+    """What a session added to the disk since `before`, both from `disk`:
+    `session_bytes`, `session_files` and `session_<kind>_bytes`."""
+    names = ["bytes", "files", *(f"{k}_bytes" for k in SESSION_KINDS)]
+    return {f"session_{n}": now[f"disk_{n}"] - before[f"disk_{n}"] for n in names}
+
+
+def tree(path):
+    """The size and change time of each entry under `path` that the host can
+    read. An agent can make a folder private, and files can go away."""
+    entries = []
+    for directory, folders, names in os.walk(path):
+        for name in folders + names:
+            file = os.path.join(directory, name)
+            try:
+                info = os.lstat(file)
+            except OSError:
+                continue
+            entries.append((file, info.st_size, info.st_mtime_ns))
+    return sorted(entries)
+
+
+def files_settled(path, quiet=1.0, timeout=30):
+    """Wait until the files under `path` stop changing."""
+    deadline = time.monotonic() + timeout
+    last, changed = None, time.monotonic()
+    while time.monotonic() < deadline:
+        current = tree(path)
+        if current != last:
+            last, changed = current, time.monotonic()
+        elif time.monotonic() - changed >= quiet:
+            return
+        time.sleep(0.1)
+    raise TimeoutError(f"Files under {path} did not settle")
+
+
+def appears(path, timeout=60):
+    """Wait until `path` exists."""
+    deadline = time.monotonic() + timeout
+    while not path.exists():
+        if time.monotonic() > deadline:
+            raise TimeoutError(f"{path} did not appear")
+        time.sleep(0.1)
 
 
 class Sampler:

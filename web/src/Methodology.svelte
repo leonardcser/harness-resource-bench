@@ -25,7 +25,7 @@
   const QUESTIONS = [
     [
       "Startup",
-      "Time from launch until a key typed in the TUI shows on screen, with a warm file cache.",
+      "Time from launch until a key typed in the TUI shows on screen, with a warm file cache. At the first launch in a new home folder, and at the launch after it.",
     ],
     [
       "Memory at start",
@@ -33,7 +33,7 @@
     ],
     [
       "Install size",
-      "Disk space that the official installer adds to the image.",
+      "Disk space that the official installer adds to the image, plus what the first launch writes into the home folder.",
     ],
     [
       "Coding task",
@@ -71,7 +71,7 @@
     ],
     [
       "Same start",
-      "Each agent comes from its official installer, at a fixed version, with its defaults. Only telemetry, error reports and updates are off. Each case starts a new container with a new home folder. Measurement starts when the agent's CPU settles after its first request, so startup work does not count twice. One practice task per agent does not count.",
+      "Each agent comes from its official installer, at a fixed version, with its defaults. Only telemetry, error reports and updates are off. Each case starts a new container, in a home folder that a first launch used, as on a user's machine. Measurement starts when the agent's CPU settles after its first request, so startup work does not count twice. One practice task per agent does not count.",
     ],
     [
       "Same work",

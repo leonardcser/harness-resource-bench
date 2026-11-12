@@ -20,6 +20,7 @@ Do all the work of a release on one branch.
      `--no-daemon`.
    - codex's `tool_output_token_limit` still equals the limit of its real
      models.
+   - `background_setup` is still the only work after the prompt shows.
    - the [agent quirks](bench/README.md#agent-quirks) are still true.
 3. **Commit and push** all changes to `bench/`.
 4. **Run:** on the benchmark VM, in tmux. Do not rebase the branch after this:
@@ -123,6 +124,18 @@ podman run --rm --user root IMAGE \
 its JavaScript in a `.bun` section: `readelf -S BINARY | grep -A1 bun`.
 
 Result: `INSTALL_PIECES[agent]` and `INSTALL.causes[agent]`.
+
+### First launch: what the agent sets up once
+
+```sh
+jq .first_launch_dirs ../results/RUN/cases/ID/result.json   # ID of a startup case
+```
+
+Name the folders. The run measures their sizes, and a folder without a name
+shows as "other files".
+
+Result: `FIRST_LAUNCH_FILES[agent]` and the first launch in
+`STARTUP.causes[agent]`.
 
 ### Startup: what happens before the prompt
 

@@ -41,6 +41,17 @@
   --part-4: #8a63d2;
 }
 
+:root,
+.dark {
+  /* What an agent writes or does once, at its first launch. Stripes of the bar
+     color, so it reads as extra to the bar. */
+  --first-launch: repeating-linear-gradient(
+    135deg,
+    var(--bar) 0 1.5px,
+    transparent 1.5px 4px
+  );
+}
+
 .dark {
   color-scheme: dark;
   --bg: #161615;

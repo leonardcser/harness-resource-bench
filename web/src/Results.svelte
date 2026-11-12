@@ -6,6 +6,7 @@
   import Lines from "./charts/Lines.svelte";
   import Stack from "./charts/Stack.svelte";
   import {
+    FIRST_LAUNCH_FILES,
     FX_WALK,
     GROWTH,
     IDLE,
@@ -95,7 +96,14 @@
     marks(idle.values(), "idle_pss_bytes_after_").at(-1) ?? 0,
   );
   const startupRows = $derived(rows(startup, "input_ready_seconds"));
-  const install = $derived(sortStack(installRows(manifest, INSTALL_PIECES)));
+  // Where the first row of each chart starts, to line up the two side by side
+  let startupTop = $state(0);
+  let memoryTop = $state(0);
+  const install = $derived(
+    sortStack(
+      installRows(manifest, INSTALL_PIECES, startup, FIRST_LAUNCH_FILES),
+    ),
+  );
   const task = $derived(sortStack(taskRows(tui, headless), taskSort));
   const memory = $derived(sortStack(memoryRows(idle, lastIdle)));
   const session = $derived(sortStack(sessionRows(growth, turns)));
@@ -239,7 +247,13 @@
       title="Startup"
       note="Time from launch until a typed key shows on screen. Log scale."
     >
-      <Bars rows={startupRows} format={seconds} zones={ZONES} />
+      <Bars
+        rows={startupRows}
+        first={rows(startup, "first_launch_seconds")}
+        format={seconds}
+        zones={ZONES}
+        bind:rowsTop={startupTop}
+      />
     </Figure>
     <!-- Both columns wide, with the rule under the startup chart only. -->
     <div class="-mt-(--gap-y) xl:col-span-2 xl:row-start-2">
@@ -254,15 +268,23 @@
         title="Memory at start"
         note="Memory once the agent settles after its first request, with a cold file cache."
       >
-        <div class="xl:pt-5">
-          <Bars rows={rows(cold, "pss_bytes")} format={bytes} />
+        <!-- Side by side, its rows line up with the startup rows. -->
+        <div
+          class="xl:pt-(--below)"
+          style:--below="{Math.max(0, startupTop - memoryTop)}px"
+        >
+          <Bars
+            rows={rows(cold, "pss_bytes")}
+            format={bytes}
+            bind:rowsTop={memoryTop}
+          />
         </div>
       </Figure>
     </div>
     <div class="xl:col-span-2">
       <Figure
         title="Install size"
-        note="Disk space that the official installer uses, split by what the files are. For pi, this includes Node.js, which it needs to run. Hover a part for the files in it."
+        note="Disk space that the official installer uses, split by what the files are. The stripes are what the agent writes into its home folder at the first launch. For pi, this includes Node.js, which it needs to run. Hover a part for the files in it."
       >
         <Stack rows={install} parts={INSTALL_PARTS} format={bytes} />
         {#snippet more()}<Why topic={INSTALL} rows={install} />{/snippet}
@@ -330,7 +352,7 @@
     </Figure>
     <Figure
       title="Session data on disk"
-      note="Transcripts, history, databases and logs that the agent saves."
+      note="Transcripts, history, databases and logs that the session adds. What the first launch writes is in the install size."
     >
       <Lines
         series={series(growth, "session_bytes_after_")}

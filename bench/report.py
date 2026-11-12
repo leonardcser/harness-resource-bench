@@ -19,6 +19,8 @@ RESULTS = Path(__file__).resolve().parent.parent / "results"
 METRICS = (
     "input_ready_seconds",
     "quit_seconds",
+    "first_launch_seconds",
+    "first_launch_bytes",
     "first_request_seconds",
     "pss_bytes",
     "peak_memory_bytes",
@@ -33,11 +35,14 @@ METRICS = (
 # text of the session at each checkpoint (`..._after_N`, N in turns or
 # sessions), and `cpu_seconds_per_turn_A_B` between checkpoints. Idle runs
 # report CPU and memory at each idle mark, and `idle_wakeups_per_second`.
+# Startup runs report what the first launch wrote in each folder of the HOME,
+# `first_launch_bytes_in_FOLDER`.
 CHECKPOINT_METRICS = (
     "pss_bytes_after_",
     "session_",
     "cpu_seconds_per_turn_",
     "idle_",
+    "first_launch_bytes_in_",
 )
 SESSION_SPLIT = (
     "session_bytes",
@@ -56,6 +61,9 @@ def cpu_per_turn(start, end):
 def derived(result, case):
     """The checkpoint metrics of one finished case, from its raw checkpoints."""
     points = result["checkpoints"]
+    if case["question"] == "startup":
+        for folder, size in result["first_launch_dirs"].items():
+            result[f"first_launch_bytes_in_{folder}"] = size
     if case["question"] in ("long-session", "new-sessions"):
         for point in points:
             turns = point["completed_turns"]

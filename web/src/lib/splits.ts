@@ -2,6 +2,7 @@
 
 import type { Group, Manifest } from "./data";
 import { marks } from "./data";
+import { bytes } from "./format";
 
 export type Part = {
   id: string;
@@ -38,6 +39,11 @@ export const INSTALL_PARTS: Part[] = [
   { id: "bytecode", label: "Bytecode copy", color: "var(--part-3)" },
   { id: "extra", label: "Extra binaries and data", color: "var(--part-4)" },
   { id: "other", label: "Other", color: "var(--faint)" },
+  {
+    id: "first",
+    label: "Written at first launch",
+    color: "var(--first-launch)",
+  },
 ];
 
 /** Session files by format, as the bench names them. */
@@ -60,22 +66,71 @@ export const TASK_PARTS: Part[] = [
   { id: "terminal", label: "+ Terminal", color: "var(--part-3)" },
 ];
 
+/** The names of the HOME folders that an agent writes at its first launch,
+ * and of the rest of its files. */
+export type FirstLaunchFiles = {
+  folders: Record<string, string>;
+  rest?: string;
+};
+
+/** Less than this at the first launch is a few small files, not drawn. */
+const FIRST_LAUNCH_MIN_BYTES = 0.1 * 2 ** 20;
+
 const median = (group: Group | undefined, metric: string) =>
   group?.metrics[metric]?.median;
 
+/** The named files of the first launch, largest first, with their measured
+ * sizes. The rest is what the named folders leave of `total`. */
+function firstLaunchItems(
+  group: Group | undefined,
+  total: number,
+  names: FirstLaunchFiles | undefined,
+): string[] | undefined {
+  if (!names) return undefined;
+  const sized: [string, number][] = Object.entries(names.folders).map(
+    ([folder, name]) => [
+      name,
+      median(group, `first_launch_bytes_in_${folder}`) ?? 0,
+    ],
+  );
+  const rest = total - sized.reduce((n, [, size]) => n + size, 0);
+  sized.push([names.rest ?? "other files", rest]);
+  return sized
+    .filter(([, size]) => size >= FIRST_LAUNCH_MIN_BYTES)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, size]) => `${name}, ${bytes(size)}`);
+}
+
+/** The install, split by `pieces`, and what the agent writes into its home
+ * folder at the first launch of `startup`, with the `files` that it holds. */
 export function installRows(
   manifest: Manifest,
   pieces: Record<string, Piece[]>,
+  startup: Map<string, Group>,
+  files: Record<string, FirstLaunchFiles>,
 ): StackRow[] {
   return Object.entries(manifest.config.images.agents).map(([agent, image]) => {
     const own = pieces[agent] ?? [{ part: "other" }];
     const known = own.reduce((n, p) => n + (p.value ?? 0), 0);
+    const group = startup.get(agent);
+    const first = median(group, "first_launch_bytes");
     return {
       agent,
-      pieces: own.map((p) => ({
-        ...p,
-        value: p.value ?? Math.max(0, image.install_bytes - known),
-      })),
+      pieces: [
+        ...own.map((p) => ({
+          ...p,
+          value: p.value ?? Math.max(0, image.install_bytes - known),
+        })),
+        ...(first && first >= FIRST_LAUNCH_MIN_BYTES
+          ? [
+              {
+                part: "first",
+                value: first,
+                items: firstLaunchItems(group, first, files[agent]),
+              },
+            ]
+          : []),
+      ],
     };
   });
 }

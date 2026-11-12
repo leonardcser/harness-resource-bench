@@ -31,13 +31,25 @@ class Model:
 
     def __init__(self, agent, rate, calls):
         self.agent, self.rate, self.calls = agent, rate, calls
+        # The host directory that the agent sees as /workspace.
+        self.workspace = None
+        self.lock = threading.Lock()
+        self.ready = threading.Event()
+        self.received = threading.Event()
+        self.forget()
+        self.ready.set()
+        self.server = ThreadingHTTPServer(("0.0.0.0", 0), self.handler())
+        self.server.daemon_threads = True
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+
+    def forget(self):
+        """Start the records of the case: what the agent sent and what the
+        model served. An earlier launch of the agent does not count."""
         self.deltas = 0
         self.progress = {}
         self.request_sequence = 0
         self.previous = {}
-        # The host directory that the agent sees as /workspace, and the tool that ran
-        # each kind of call.
-        self.workspace = None
+        # The tool that ran each kind of call.
         self.tools = {}
         self.verified_call = None
         self.shortened = set()
@@ -51,15 +63,9 @@ class Model:
         self.paths = Counter()
         self.error = None
         self.error_details = None
-        self.lock = threading.Lock()
-        self.ready = threading.Event()
-        self.received = threading.Event()
         # The wall clock of the first request of the work.
         self.first_request = None
-        self.ready.set()
-        self.server = ThreadingHTTPServer(("0.0.0.0", 0), self.handler())
-        self.server.daemon_threads = True
-        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+        self.received.clear()
 
     @property
     def port(self):

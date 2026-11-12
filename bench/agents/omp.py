@@ -110,5 +110,4 @@ AGENT = Agent(
     # omp refuses an edit of lines that it has not shown under the file's
     # current tag.
     edit_retries=("a straight retry now succeeds",),
-    assets=(".omp/natives",),
 )

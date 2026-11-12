@@ -63,5 +63,4 @@ AGENT = Agent(
         ),
     ),
     reset="/clear",
-    assets=(".claude/plugins",),
 )

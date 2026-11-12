@@ -39,6 +39,7 @@ export function measures({ summary, manifest }: Run): MeasureGroup[] {
     };
   };
   const rate = taskRate(summary);
+  const firstLaunch = metric("startup", "tui", 0, () => "first_launch_bytes");
   const lastIdle =
     marks(
       summary.groups.filter((g) => g.question === "idle"),
@@ -64,12 +65,13 @@ export function measures({ summary, manifest }: Run): MeasureGroup[] {
         },
         {
           label: "Install",
-          name: "install size",
+          name: "disk after the first launch",
           format: bytes,
           floor: MIB,
           stat: (a) => {
             const value = manifest.config.images.agents[a]?.install_bytes;
-            return value === undefined ? undefined : single(value);
+            const first = firstLaunch(a)?.median ?? 0;
+            return value === undefined ? undefined : single(value + first);
           },
         },
       ],

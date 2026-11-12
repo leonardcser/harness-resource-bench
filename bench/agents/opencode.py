@@ -71,5 +71,4 @@ AGENT = Agent(
         ),
         ("The previous response did not fill in the required summary template.", ""),
     ),
-    assets=(".local/share/opentui",),
 )

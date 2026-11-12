@@ -31,7 +31,7 @@ from real sessions. To see it: `uv run bench.py transcript > transcript.json`.
 
 | Name            | Case id        | What it measures                                                                         |
 | --------------- | -------------- | ---------------------------------------------------------------------------------------- |
-| Startup         | `startup`      | Time from exec until a typed key shows in the TUI                                        |
+| Startup         | `startup`      | Time from exec until a typed key shows in the TUI, at the first and next launch          |
 | Memory at start | `start-memory` | Memory (PSS) once the agent settles after its first request, headless, cold file cache   |
 | Install size    | -              | Bytes that the install adds under `/root`, `/usr/local` and `/opt`                       |
 | Coding task     | `task`         | CPU and memory of a task with 24 tool calls, headless at 60 tokens/s, TUI at 30 to 1,000 |
@@ -40,6 +40,7 @@ from real sessions. To see it: `uv run bench.py transcript > transcript.json`.
 | Idle            | `idle`         | CPU and memory over 5 minutes without input, after a task                                |
 | Quit            | -              | Time to quit the TUI at the end of `startup`, `task` and `long-session`                  |
 
+- Every case starts in a HOME that a first launch used, as on a user's machine.
 - TUI cases also measure the CPU time that the terminal (tmux) spends.
 - Every case runs 3 times. Startup and memory at start run 10 times. Results
   show the median and the range.
@@ -147,7 +148,10 @@ Lint: `uv run ruff check .`
 - **Install:** each agent's official installer, frozen in `installers/`.
 - **Limits:** per container, 4 CPUs (two physical cores), 4 GiB of memory, no
   swap and 512 processes. No agent peaks above 1 GiB.
-- **State:** a new HOME, dummy credentials and no personal state.
+- **State:** dummy credentials and no personal state. The first launch starts
+  the TUI in a new HOME, waits until it takes input and its files stop changing,
+  then quits with SIGTERM. codex clones a plugin repository in the background,
+  so its first launch also waits for that (`background_setup`).
 - **CPUs:** the agent runs on CPUs 2 to 5, the harness on CPUs 0 and 1. One case
   runs at a time. In a test, 4 neighbours on the same CCD added 6% to 8% CPU,
   against under 1% of noise.
@@ -323,10 +327,24 @@ These live in each agent's file in `agents/`.
 
 - `launch.py` writes a monotonic timestamp just before the agent's `exec`, with
   kernel echo off.
-- The host types a probe every 5 ms and measures the time until its echo.
-  Differences below 5 ms are not resolved.
+- The probe is one key, typed at the exec. Startup is the time until the agent
+  draws it.
+- The host sees the agent's tty input queue in `/proc`. It types the next key
+  only when the agent took the last one without drawing it. Three keys never
+  come within 10 ms, so no agent takes them for a paste. Startup resolves about
+  1 ms.
+- If the host cannot see the tty, it types a key every 10 ms, and `probe` is
+  `interval`.
 - The terminal is a tmux pane of 120 by 40, with a dark theme. tmux answers the
   agent's capability queries, as it does for users.
+- The startup case times two launches: `first_launch_seconds` and
+  `input_ready_seconds`. Both run with podman's `--init`, so the first can quit
+  with SIGTERM.
+- The first launch types its own probe key and deletes it before it quits. So a
+  draft that the agent keeps cannot pass for the next probe.
+- Each launch stops with an error if the agent draws the key of the other
+  launch, which it never got. A key that the agent draws itself would pass for
+  an echo.
 - `first_request_seconds`: the time from the exec to the first request with the
   task.
 
@@ -350,13 +368,13 @@ screen.
 
 - `disk_bytes`: the size of all files in the agent's HOME, a host folder mounted
   into the container. `disk_dirs` gives it per folder.
-- `session_bytes`: the same without each agent's `assets` in `agents/`. These
-  are plugins, grammars and bundled files that the agent downloads or unpacks in
-  every session. They do not grow with the session, and `disk_bytes` still
-  counts them. The long session reports `session_bytes_after_N`.
-- `session_files` counts those files. `session_<kind>_bytes` splits the bytes by
-  format: `sqlite`, `wal` (SQLite `-wal`, `-shm`, `-journal`), `jsonl`, `json`
-  and `other`.
+- `first_launch_bytes`: what the first launch adds to the HOME, beside the
+  config. `first_launch_dirs` gives it per folder.
+- `session_bytes`: the net growth of the HOME since the first launch. The long
+  session reports `session_bytes_after_N`.
+- `session_files` counts the files the same way. `session_<kind>_bytes` splits
+  the bytes by format: `sqlite`, `wal` (SQLite `-wal`, `-shm`, `-journal`),
+  `jsonl`, `json` and `other`.
 - `session_text_bytes`: the text of the session itself (tool calls, tool output
   and answers).
 
@@ -374,8 +392,8 @@ screen.
 **Network:** containers use the host network, so an agent can reach other hosts.
 These requests are part of the agent's cost, so they stay on.
 
-- Every case except startup records them under `remote_connections`, and
-  `summary.json` lists them per agent.
+- Every case except startup records them under `remote_connections`, without the
+  first launch. `summary.json` lists them per agent.
 - The host reads the sockets of the agent's processes from `/proc` every 200 ms.
   A connection that opens and closes between two reads is missed.
 - DNS lookups and loopback addresses, such as the model, are not recorded.

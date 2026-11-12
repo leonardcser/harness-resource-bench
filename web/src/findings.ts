@@ -2,7 +2,7 @@
 // the cause behind each chart and the numbers that the bench cannot measure.
 
 import { PROFILES, tagOf, type Agent } from "./agents";
-import type { Piece } from "./lib/splits";
+import type { FirstLaunchFiles, Piece } from "./lib/splits";
 
 export type Source = { label: string; href?: string };
 
@@ -40,17 +40,17 @@ export const STARTUP: Topic = {
     },
     smelt: {
       tag: "Native",
-      text: "A native binary. About half of its startup is the kernel, as it reads each TLS certificate file and searches for Lua modules.",
+      text: "A native binary. About half of its startup is the kernel, as it reads each TLS certificate file and searches for Lua modules. At the first launch, it also unpacks its built-in Lua plugins.",
       source: trace("strace: open and stat"),
     },
     codex: {
       tag: "Native",
-      text: "A large binary. A worker thread sets up codex while the main thread waits for it. It clones a plugin repository in the background.",
+      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also clones an 80 MiB plugin repository in the background. A short first session can quit before the clone is done.",
       source: trace("bpftrace: futex wait of the main thread"),
     },
     "claude-code": {
       tag: "Loads JavaScript",
-      text: "Bun starts in 7 ms at most. Then it runs 108 MB of precompiled JavaScript on the CPU until the first frame, and runs git 3 times.",
+      text: "Bun starts in 7 ms at most. Then it runs 103 MiB of precompiled JavaScript on the CPU until the first frame, and runs git 3 times. At the first launch, it also clones the plugin marketplace.",
       source: trace("bpftrace: CPU, exec and connect"),
     },
     pi: {
@@ -60,12 +60,12 @@ export const STARTUP: Topic = {
     },
     omp: {
       tag: "Loads JavaScript",
-      text: "Bun starts in 3 ms. Then a long chain of JavaScript setup runs on one thread. In it, omp writes a 129 MB native module into the home folder, in about 50 ms. Each case has a new home folder, so it pays this every time. You pay it once per version.",
+      text: "Bun starts in 3 ms. Then a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 123 MiB native module into the home folder and builds a model catalog database.",
       source: trace("bpftrace: CPU and open"),
     },
     opencode: {
       tag: "Two processes",
-      text: "Bun starts in 3 ms. The TUI loads, starts a server process and waits for it, for about a quarter of the startup. In a new home folder, the server also creates its database first.",
+      text: "Bun starts in 3 ms. The TUI starts a server and waits for it, for about a quarter of the startup. The first launch also fills a database with the models.dev catalog. Here the server quits with the TUI (--standalone). By default, it stays for later launches.",
       source: trace("bpftrace: event loop waits of the TUI"),
     },
   },
@@ -268,7 +268,7 @@ export const SESSION: Topic = {
     },
     omp: {
       tag: "File per session",
-      text: "Keeps extra copies of tool results and edits, plus a 12 MiB model catalog.",
+      text: "Keeps extra copies of tool results and edits.",
     },
     "claude-code": {
       tag: "File per session",
@@ -284,7 +284,7 @@ export const SESSION: Topic = {
     },
     opencode: {
       tag: "One database",
-      text: "Stores 8 MiB of messages, plus a model catalog and its write log at 11 MiB each.",
+      text: "One SQLite database for all sessions. It also holds the models.dev catalog, which the first launch writes.",
     },
     smelt: {
       tag: "One database",
@@ -316,29 +316,64 @@ export const TIMERS: Record<string, { ms: number; label: string }[]> = {
 
 const MB = 1e6;
 
+/** The folders that each agent writes into its home folder at the first
+ * launch, by name, from `first_launch_dirs`. The run measures their sizes. */
+export const FIRST_LAUNCH_FILES: Record<string, FirstLaunchFiles> = {
+  omp: {
+    folders: {
+      ".omp/natives": "native module for this CPU",
+      ".omp/agent": "model catalog and other databases",
+    },
+  },
+  codex: {
+    folders: {
+      ".codex/.tmp/plugins": "plugin repository",
+      ".codex/skills": "built-in skills",
+    },
+    rest: "five SQLite databases",
+  },
+  "claude-code": {
+    folders: {
+      ".claude/plugins": "plugin marketplace",
+      ".claude/cache": "cache",
+    },
+  },
+  opencode: {
+    folders: {
+      ".local/share/opencode": "database with the models.dev catalog",
+    },
+  },
+  smelt: {
+    folders: {
+      ".local/share/smelt": "built-in Lua plugins",
+      ".local/state/smelt": "state",
+    },
+  },
+};
+
 /** What the installer puts on disk, in bytes. */
 export const INSTALL_PIECES: Record<string, Piece[]> = {
   fx: [{ part: "code", items: ["fx, a static Zig binary"] }],
   smelt: [
     {
       part: "code",
-      items: ["smelt, a static Rust binary", "Lua runtime files, 0.8 MB"],
+      items: ["smelt, a static Rust binary", "Lua runtime files, 0.8 MiB"],
     },
   ],
   codex: [
     {
       part: "code",
-      value: 320.2 * MB,
-      items: ["codex: 251 MB machine code, 36 MB unwind tables"],
+      value: 320.6 * MB,
+      items: ["codex: 239 MiB machine code, 34 MiB unwind tables"],
     },
     {
       part: "extra",
       value: 207 * MB,
       items: [
-        "codex-exec-server, 82 MB",
-        "codex-code-mode-host, 79 MB",
-        "codex-voice-host, 40 MB",
-        "ripgrep, 5 MB",
+        "codex-exec-server, 78 MiB",
+        "codex-code-mode-host, 75 MiB",
+        "codex-voice-host, 38 MiB",
+        "ripgrep, 5 MiB",
       ],
     },
     { part: "other" },
@@ -346,8 +381,8 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   "claude-code": [
     {
       part: "code",
-      value: 58.6 * MB,
-      items: ["JavaScript, 54.9 MB", "assets, 3.7 MB"],
+      value: 58.2 * MB,
+      items: ["JavaScript, 52.0 MiB", "assets, 3.5 MiB"],
     },
     { part: "runtime", value: 149.4 * MB, items: ["Bun"] },
     { part: "bytecode", value: 109.4 * MB, items: ["JavaScriptCore bytecode"] },
@@ -358,17 +393,17 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
       part: "code",
       value: 75.1 * MB,
       items: [
-        "native module for new CPUs, 40.8 MB",
-        "JavaScript, 30.2 MB",
-        "scripts and docs, 4.1 MB",
+        "native module for new CPUs, 38.9 MiB",
+        "JavaScript, 28.3 MiB",
+        "scripts and docs, 4 MiB",
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
     { part: "bytecode", value: 47.9 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 40.9 * MB,
-      items: ["native module for old CPUs, 40.9 MB"],
+      value: 40.7 * MB,
+      items: ["native module for old CPUs, 38.8 MiB"],
     },
     { part: "other" },
   ],
@@ -377,19 +412,19 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
       part: "code",
       value: 49.9 * MB,
       items: [
-        "JavaScript, 16.5 MB",
-        "file search library, 12.9 MB",
-        "TUI library, 8.5 MB",
-        "tree-sitter and other wasm, 6.9 MB",
-        "terminal helper, 3.5 MB",
+        "JavaScript, 15.7 MiB",
+        "file search library, 12.3 MiB",
+        "TUI library, 8.1 MiB",
+        "tree-sitter and other wasm, 6.6 MiB",
+        "terminal helper, 3.3 MiB",
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
     { part: "bytecode", value: 49.3 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 42.5 * MB,
-      items: ["web UI archive, 25.9 MB", "models.dev catalog, 16.6 MB"],
+      value: 42.3 * MB,
+      items: ["web UI archive, 24.7 MiB", "models.dev catalog, 15.6 MiB"],
     },
     { part: "other" },
   ],
@@ -399,9 +434,9 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
       part: "runtime",
       value: 211.5 * MB,
       items: [
-        "Node.js binary, 124.9 MB",
-        "C headers, 67.7 MB",
-        "npm and corepack, 18.9 MB",
+        "Node.js binary, 119.1 MiB",
+        "C headers, 64.6 MiB",
+        "npm and corepack, 18.0 MiB",
       ],
     },
     { part: "extra", value: 27.3 * MB, items: ["npm download cache"] },

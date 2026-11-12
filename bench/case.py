@@ -16,15 +16,18 @@ from measure import (
     Connections,
     Sampler,
     Wakeups,
+    appears,
     cgroup_for,
     disk,
+    files_settled,
     pss,
+    session,
     settle,
     summarize,
     write_samples,
 )
 from model import Model
-from terminal import Terminal
+from terminal import FIRST_PROBE, PROBE, Terminal
 from workload import PROMPT, digest, files, marker, steps
 
 SETTLE_SECONDS = 2
@@ -45,15 +48,11 @@ def save(path, value):
     temporary.replace(path)
 
 
-def create(case, root, port, image_id, prompt):
-    """Create the container of a case. The agent starts when it is attached."""
-    frontend = case["frontend"]
-    home, workspace = root / "home", root / "workspace"
-    home.mkdir()
-    (workspace / "fixtures").mkdir(parents=True)
-    agent = AGENTS[case["agent"]]
-    env = agent.configure(home, f"http://127.0.0.1:{port}")
-    args = agent.command(frontend, [] if case["question"] == "startup" else [prompt])
+def create(root, image_id, env, frontend, entry, helpers=(), init=False):
+    """Create a container on the HOME and workspace in `root`. It runs `entry`
+    when it is attached, with the `helpers` of container/ in /tmp. With
+    `init`, a small init passes SIGTERM on to the agent, which as PID 1 would
+    ignore it."""
     command = [
         "podman",
         "create",
@@ -76,51 +75,121 @@ def create(case, root, port, image_id, prompt):
         "--env",
         "HOME=/home/bench",
         "--volume",
-        f"{home}:/home/bench:rw",
+        f"{root / 'home'}:/home/bench:rw",
         "--volume",
-        f"{workspace}:/workspace:rw",
+        f"{root / 'workspace'}:/workspace:rw",
         "--volume",
         f"{root / 'fixtures'}:/workspace/fixtures:ro",
     ]
+    if init:
+        command += ["--init"]
     if frontend == "tui":
         command += ["--tty"]
     for key, value in {**ENV, **env}.items():
         command += ["--env", f"{key}={value}"]
-    if case["question"] == "startup":
-        command += ["--volume", f"{ROOT / 'container/launch.py'}:/tmp/launch.py:ro"]
-        args = ["python3", "/tmp/launch.py", *args]
-    elif case["question"] == "start-memory":
-        command += ["--volume", f"{ROOT / 'container/evict.py'}:/tmp/evict.py:ro"]
-        args = [
-            "bash",
-            "-c",
-            'python3 /tmp/evict.py && exec "$@" </dev/null',
-            "cold",
-            *args,
-        ]
-    elif frontend == "headless":
-        # The shell keeps the cgroup alive after the agent exits and reports its status.
-        # It marks the wall clock just before it starts the agent, with a builtin, so
-        # no extra process runs in the measured cgroup.
-        args = [
-            "bash",
-            "-c",
-            (
-                'printf "\\033]777;BENCH_EXEC=%s\\a" "$EPOCHREALTIME"; "$@" </dev/null;'
-                ' rc=$?; printf "\\nBENCH_EXIT_%s\\n" "$rc"; read -r _; exit "$rc"'
-            ),
-            "supervisor",
-            *args,
-        ]
-    command += [image_id, *args]
+    for name in helpers:
+        command += ["--volume", f"{ROOT / 'container' / name}:/tmp/{name}:ro"]
+    command += [image_id, *entry]
     return subprocess.check_output(command, text=True).strip()
 
 
-def checkpoint(sampler, turn, model, home, assets):
+def launched(args):
+    """The command that marks the exec of a launch, and its helper."""
+    return ["python3", "/tmp/launch.py", *args], ("launch.py",)
+
+
+def entry(question, frontend, args):
+    """The command of a case's container, and the helpers that it runs."""
+    if question == "startup":
+        return launched(args)
+    if question == "start-memory":
+        command = 'python3 /tmp/evict.py && exec "$@" </dev/null'
+        return ["bash", "-c", command, "cold", *args], ("evict.py",)
+    if frontend == "headless":
+        # The shell keeps the cgroup alive after the agent exits and reports its status.
+        # It marks the wall clock just before it starts the agent, with a builtin, so
+        # no extra process runs in the measured cgroup.
+        command = (
+            'printf "\\033]777;BENCH_EXEC=%s\\a" "$EPOCHREALTIME"; "$@" </dev/null;'
+            ' rc=$?; printf "\\nBENCH_EXIT_%s\\n" "$rc"; read -r _; exit "$rc"'
+        )
+        return ["bash", "-c", command, "supervisor", *args], ()
+    return args, ()
+
+
+def launch_once(root, image_id, env, agent, model, log):
+    """Launch the agent in its TUI for the first time, wait until it is done
+    with its setup, and quit, as on an earlier day. Its files stay in the HOME
+    and workspace in `root`, and the page cache keeps what it read. Return its
+    startup time and what it left, for the result. The model then forgets it."""
+    home = root / "home"
+    configured = disk(home)
+    command = launched(agent.command("tui", []))
+    container = create(root, image_id, env, "tui", *command, init=True)
+    try:
+        terminal = Terminal(container, log)
+        try:
+            readiness = terminal.input_ready(token=FIRST_PROBE)
+            terminal.erase(FIRST_PROBE)
+            terminal.settle()
+            # Only the next launch types PROBE, so any here is the agent's own,
+            # and would pass for the echo of the next probe
+            if PROBE in terminal.text():
+                raise RuntimeError(f"Agent draws {PROBE} itself; see first-launch.log")
+            if agent.background_setup:
+                appears(home / agent.background_setup)
+            files_settled(home)
+            # As a closed terminal: SIGTERM, then SIGKILL after 5 seconds.
+            quit_started = time.monotonic()
+            subprocess.run(
+                ["podman", "stop", "--time", "5", container],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=True,
+            )
+            quit_seconds = time.monotonic() - quit_started
+        finally:
+            terminal.close()
+    finally:
+        subprocess.run(
+            ["podman", "rm", "--force", container],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,
+        )
+    # What the agent writes as it quits.
+    files_settled(home)
+    if model.error:
+        raise RuntimeError(f"First launch: {model.error}")
+    if model.events:
+        raise RuntimeError("First launch sent a workload request")
+    after = disk(home)
+    left = {
+        "first_launch_seconds": readiness["input_ready_seconds"],
+        "first_launch_probe": readiness["probe"],
+        "first_launch_bytes": after["disk_bytes"] - configured["disk_bytes"],
+        "first_launch_dirs": {
+            d: size - configured["disk_dirs"].get(d, 0)
+            for d, size in after["disk_dirs"].items()
+        },
+        "first_launch_requests": dict(model.paths),
+        # 5 or more mean that the agent ignored SIGTERM.
+        "first_launch_quit_seconds": quit_seconds,
+    }
+    model.forget()
+    return left
+
+
+def checkpoint(sampler, turn, model, home, before):
+    """A sample of the agent and of what its session added to the disk since
+    `before`."""
     # Sample without launching helpers in the measured container.
     sample = sampler.sample()
     sample.update(pss(sampler.cgroup))
-    sample.update(disk(home, assets))
+    now = disk(home)
+    sample.update(session(now, before))
+    sample["disk_bytes"] = now["disk_bytes"]
+    sample["disk_dirs"] = now["disk_dirs"]
     sample["completed_turns"] = turn + 1
     sample["request_bytes"] = model.events[-1]["request_bytes"]
     sample["request_history_turns"] = model.events[-1]["history_turns"]
@@ -186,16 +255,35 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
                 for name, content in files(turn, case["calls"]).items():
                     (root / name).parent.mkdir(parents=True, exist_ok=True)
                     (root / name).write_text(content)
+            home = root / "home"
+            home.mkdir()
+            (root / "workspace" / "fixtures").mkdir(parents=True)
             model.workspace = root / "workspace"
             if keep_home:
                 # Runs after the container is removed, before the folder is.
                 kept = folder / "home"
                 shutil.rmtree(kept, ignore_errors=True)
-                resources.callback(shutil.copytree, root / "home", kept, symlinks=True)
-            container = create(case, root, model.port, image_id, PROMPT.format(turn=0))
+                resources.callback(shutil.copytree, home, kept, symlinks=True)
+            env = agent.configure(home, f"http://127.0.0.1:{model.port}")
+            log = folder / "first-launch.log"
+            result.update(launch_once(root, image_id, env, agent, model, log))
+            before = disk(home)
+            prompt = [] if question == "startup" else [PROMPT.format(turn=0)]
+            args = agent.command(case["frontend"], prompt)
+            container = create(
+                root,
+                image_id,
+                env,
+                case["frontend"],
+                *entry(question, case["frontend"], args),
+                # As the first launch, so that both times compare.
+                init=question == "startup",
+            )
+            # The case is over by then: kill at once, as an agent that is PID 1
+            # ignores SIGTERM, and podman would wait 10 seconds for it.
             resources.callback(
                 subprocess.run,
-                ["podman", "rm", "--force", container],
+                ["podman", "rm", "--force", "--time", "0", container],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.PIPE,
                 check=True,
@@ -204,13 +292,19 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
             resources.callback(terminal.close)
             if question == "startup":
                 readiness = terminal.input_ready()
+                # Only the first launch typed FIRST_PROBE, so any here is the
+                # agent's own, and could have passed for the echo of that probe
+                if FIRST_PROBE in terminal.text():
+                    raise RuntimeError(
+                        f"Agent draws {FIRST_PROBE} itself; see terminal.log"
+                    )
                 (folder / "startup-screen.txt").write_text(readiness.pop("screen"))
                 result.update(readiness)
                 pid = container_pid(container, terminal)
                 # The agent takes in all of the probe before the deletes, so
                 # that they do not come in one burst with it, like a paste.
                 settle(cgroup_for(pid))
-                terminal.clear_probe()
+                terminal.erase(PROBE)
                 result["quit_seconds"] = quit_seconds(terminal, container, pid, agent)
                 result["status"] = "ok"
                 return result
@@ -235,7 +329,6 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
                 return result
             sampler = Sampler(cgroup_for(pid))
             sampler.samples.append(sampler.sample())
-            assets = agent.assets
             sampler.start()
             resources.callback(sampler.stop)
             model.ready.set()
@@ -267,7 +360,7 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
                         raise RuntimeError("New session kept earlier turns")
                 if turn + 1 in case["checkpoints"]:
                     result["checkpoints"].append(
-                        checkpoint(sampler, turn, model, root / "home", assets)
+                        checkpoint(sampler, turn, model, home, before)
                     )
             if question == "idle":
                 idle_started = time.monotonic()
@@ -283,7 +376,7 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
                     time.sleep(min(1, max(0, deadline - time.monotonic())))
                     count = switches.read()
                     if time.monotonic() >= min(mark, deadline):
-                        point = checkpoint(sampler, 0, model, root / "home", assets)
+                        point = checkpoint(sampler, 0, model, home, before)
                         result["checkpoints"].append(dict(point, wakeups=count))
                         mark += IDLE_CHECKPOINT_SECONDS
             if model.error:
