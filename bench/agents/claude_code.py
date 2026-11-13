@@ -18,7 +18,7 @@ def configure(home, url):
     write_json(
         home / ".claude/settings.json",
         {
-            "model": "claude-sonnet-4-6",
+            "model": "claude-sonnet-5-5",
             "permissions": {"defaultMode": "bypassPermissions"},
             "enabledPlugins": {},
         },
@@ -35,7 +35,7 @@ def command(frontend, prompt):
             "stream-json",
             "--verbose",
             "--model",
-            "claude-sonnet-4-6",
+            "claude-sonnet-5-5",
             "--dangerously-skip-permissions",
             *prompt,
         ]
