@@ -31,8 +31,6 @@ TTY_WAIT = 0.1
 # Deletes of the probe go in groups, with a gap. Some agents take a fast burst
 # of input for a paste, and a paste does not delete.
 DELETE_GROUP, DELETE_GAP = 50, 0.02
-# The gap between the two presses of the quit key, in seconds.
-QUIT_GAP = 0.01
 # Escape sequences, to find text in the raw output.
 ANSI = re.compile(rb"\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)|\x1b\[[0-?]*[ -/]*[@-~]")
 # Scrollback that a turn's done marker is searched in when it is drawn in pieces.
@@ -270,22 +268,22 @@ class Terminal:
     def type(self, keys):
         self.command(f"send-keys -t {self.target} -l -- {shlex.quote(keys)}")
 
-    def quit(self, pid, key, timeout=10):
-        """Press `key` twice and return the seconds from the first press until
-        process `pid` exits. The second press is for agents that ask to
-        confirm; an agent that has exited does not get it."""
+    def quit(self, pid, timeout=10):
+        """Type `/quit`, which every agent takes, wait until the agent has drawn
+        it, then press Enter. Return the seconds from Enter until process `pid`
+        exits."""
         # The exit output goes to its own log, so that the terminal replay of
         # the case leaves it out. Some agents print their transcript on exit.
         self.log = Path(self.logs[0].name).with_name("quit.log").open("wb")
         self.logs.append(self.log)
+        self.command(f"send-keys -t {self.target} -l /quit")
+        self.settle(quiet=0.3)
         process = os.pidfd_open(pid)
         try:
             start = time.monotonic()
-            self.command(f"send-keys -t {self.target} {key}")
-            if not select.select([process], [], [], QUIT_GAP)[0]:
-                self.command(f"send-keys -t {self.target} {key}")
-                if not select.select([process], [], [], timeout)[0]:
-                    raise TimeoutError(f"Agent did not quit within {timeout} s")
+            self.command(f"send-keys -t {self.target} Enter")
+            if not select.select([process], [], [], timeout)[0]:
+                raise TimeoutError(f"Agent did not quit within {timeout} s")
             return time.monotonic() - start
         finally:
             os.close(process)

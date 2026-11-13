@@ -208,10 +208,10 @@ def checkpoint(sampler, turn, model, home, before):
 
 def quit_seconds(terminal, container, pid, agent):
     """Wait until the agent's CPU settles, then time how long it takes to quit.
-    A quit counts only if the agent exits with status 0, so that a key that
-    kills the agent does not pass for a fast quit."""
+    A quit counts only if the agent exits with status 0, so that a crash does
+    not pass for a fast quit."""
     settle(cgroup_for(pid))
-    seconds = terminal.quit(pid, agent.quit)
+    seconds = terminal.quit(pid)
     status = subprocess.check_output(["podman", "wait", container], text=True)
     if status.strip() != "0":
         raise RuntimeError(f"Agent quit with exit status {status.strip()}")

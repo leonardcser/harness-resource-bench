@@ -363,10 +363,10 @@ These live in each agent's file in `agents/`.
 **Quit**
 
 - At the end of the TUI startup, task and long-session cases, the host waits
-  until the agent's CPU settles. Then it presses the agent's `quit` key twice,
-  10 ms apart, as some agents ask to confirm.
-- `quit_seconds`: the time from the first press until the agent's main process
-  exits, read from a pidfd. The agent must exit with status 0.
+  until the agent's CPU settles. Then it types `/quit`, which every agent takes,
+  and waits until the agent has drawn it.
+- `quit_seconds`: the time from Enter until the agent's main process exits,
+  read from a pidfd. The agent must exit with status 0.
 - After startup, the host first deletes the probe and waits until the screen no
   longer shows it.
 - The quit comes after the last sample, so it does not count in CPU, memory or
