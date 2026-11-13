@@ -138,7 +138,7 @@ knows no agent.
 | `installers/`         | The frozen installer of each agent                        |
 | `setup.sh`            | Prepares a fresh Ubuntu VM                                |
 | `container/launch.py` | In the container: marks the exec time of a launch         |
-| `container/warm.py`   | In the container: starts a shared server before a launch  |
+| `container/warm.py`   | In the container: an earlier session before a launch      |
 | `container/evict.py`  | In the container: empties the file cache for start-memory |
 
 Lint: `uv run ruff check .`
@@ -348,10 +348,10 @@ These live in each agent's file in `agents/`.
   `input_ready_seconds`. Both run with podman's `--init`, so the first can quit
   with SIGTERM.
 - The first launch is cold: it starts the shared server of opencode and codex.
-  The next launch is warm: `warm.py` first starts that server with the agent's
-  own command (`server`), and waits until the container is idle, as after an
-  earlier launch of the day. This happens before the exec mark, so it does not
-  count.
+  The next launch is warm, as later in a user's day: `warm.py` first runs an
+  earlier session of the TUI until the container is idle, and closes its
+  terminal. The server stays, and has served the workspace. This happens before
+  the exec mark, so it does not count.
 - The first launch types its own probe key and deletes it before it quits. So a
   draft that the agent keeps cannot pass for the next probe.
 - Each launch stops with an error if the agent draws the key of the other

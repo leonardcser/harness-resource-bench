@@ -62,9 +62,9 @@ class Agent:
       for agents that ask to confirm.
     - `background_setup` is what the agent's first launch writes into HOME in
       the background, after the prompt shows. The first launch waits for it.
-    - `server` is the user command that starts the agent's shared background
-      server, for an agent whose TUI starts one and leaves it running. The
-      warm startup starts it first, as an earlier launch of the day would.
+    - `server` is for a TUI that starts a shared background server, which
+      stays after quit. The warm startup first runs an earlier session, so the
+      server runs and has served the workspace, as later in a user's day.
     """
 
     name: str
@@ -82,7 +82,7 @@ class Agent:
     typed_prompt: bool = False
     quit: str = "C-c"
     background_setup: str = ""
-    server: tuple = ()
+    server: bool = False
 
 
 def write_json(path, value):

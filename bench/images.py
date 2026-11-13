@@ -23,7 +23,7 @@ BASE_DOCKERFILE = """\
 FROM docker.io/library/ubuntu:26.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \\
-    curl ca-certificates bash git build-essential procps ripgrep xz-utils python3 \\
+    curl ca-certificates bash git build-essential procps ripgrep xz-utils python3 tmux \\
     && rm -rf /var/lib/apt/lists/*
 """
 # Install size is what the install adds to these directories.

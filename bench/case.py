@@ -98,17 +98,13 @@ def launched(args):
     return ["python3", "/tmp/launch.py", *args], ("launch.py",)
 
 
-def entry(question, frontend, args, server=()):
-    """The command of a case's container, and the helpers that it runs. A warm
-    startup first starts the agent's shared `server`, if it has one."""
+def entry(question, frontend, args, server=False):
+    """The command of a case's container, and the helpers that it runs. For an
+    agent with a shared `server`, the startup first runs an earlier session."""
     if question == "startup":
-        command, helpers = launched(args)
-        if not server:
-            return command, helpers
-        return ["python3", "/tmp/warm.py", *server, "--", *command], (
-            *helpers,
-            "warm.py",
-        )
+        if server:
+            return ["python3", "/tmp/warm.py", *args], ("launch.py", "warm.py")
+        return launched(args)
     if question == "start-memory":
         command = 'python3 /tmp/evict.py && exec "$@" </dev/null'
         return ["bash", "-c", command, "cold", *args], ("evict.py",)
@@ -146,8 +142,15 @@ def launch_once(root, image_id, env, agent, model, log):
             if agent.background_setup:
                 appears(home / agent.background_setup)
             files_settled(home)
-            # As a closed terminal: SIGTERM, then SIGKILL after 5 seconds.
+            # As the end of a day, at logout: SIGTERM to every process, such as
+            # a shared server, then SIGKILL after 5 seconds.
             quit_started = time.monotonic()
+            subprocess.run(
+                ["podman", "exec", container, "kill", "-TERM", "--", "-1"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
             subprocess.run(
                 ["podman", "stop", "--time", "5", container],
                 stdout=subprocess.DEVNULL,

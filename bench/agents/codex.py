@@ -64,5 +64,5 @@ AGENT = Agent(
     ),
     # It clones its plugin repository to a temporary folder, then renames it.
     background_setup=".codex/.tmp/plugins",
-    server=("codex", "app-server", "daemon", "start"),
+    server=True,
 )

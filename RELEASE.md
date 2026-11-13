@@ -18,7 +18,7 @@ Do all the work of a release on one branch.
    - the flags in `command()` and the config in `configure()` still work:
      approvals off, no updates or telemetry. The TUI gets these from the
      config only, the headless mode from the flags.
-   - `server` still starts the same shared server that the TUI starts, and
+   - `server` still marks each agent whose TUI starts a shared server, and
      the headless mode still starts none.
    - codex's `tool_output_token_limit` still equals the limit of its real
      models.
