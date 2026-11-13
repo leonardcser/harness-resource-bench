@@ -6,6 +6,7 @@ from agents import CONTEXT_WINDOW, KEY, MAX_TOKENS, Agent
 def configure(home, url):
     config = {
         "model": "mock/mock-model",
+        "permissions": [{"action": "*", "resource": "*", "effect": "allow"}],
         "providers": {
             "mock": {
                 "package": "@opencode/ai/providers/openai-compatible",
@@ -27,12 +28,16 @@ def configure(home, url):
 
 def command(frontend, prompt):
     if frontend == "headless":
-        args = ["opencode", "run", "--format", "json", "--standalone", "--auto"]
-        return args + prompt
-    args = ["opencode", "--standalone", "--auto"]
-    if prompt:
-        args += ["--prompt", *prompt]
-    return args
+        return [
+            "opencode",
+            "run",
+            "--format",
+            "json",
+            "--standalone",
+            "--auto",
+            *prompt,
+        ]
+    return ["opencode", "--prompt", *prompt] if prompt else ["opencode"]
 
 
 def call(step, body, workspace):
@@ -60,6 +65,7 @@ AGENT = Agent(
     install="curl -fsSL @INSTALLER_BASE@/opencode.sh | bash -s -- --version @VERSION@",
     executable="opencode",
     configure=configure,
+    server=("opencode", "service", "start"),
     command=command,
     call=call,
     summaries=(

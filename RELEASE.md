@@ -16,8 +16,10 @@ Do all the work of a release on one branch.
    compaction prompt.
 2. **Assumptions:** for each new version, check that:
    - the flags in `command()` and the config in `configure()` still work:
-     approvals off, no updates or telemetry, opencode `--standalone`, codex
-     `--no-daemon`.
+     approvals off, no updates or telemetry. The TUI gets these from the
+     config only, the headless mode from the flags.
+   - `server` still starts the same shared server that the TUI starts, and
+     the headless mode still starts none.
    - codex's `tool_output_token_limit` still equals the limit of its real
      models.
    - `background_setup` is still the only work after the prompt shows.

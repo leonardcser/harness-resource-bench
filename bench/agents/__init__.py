@@ -42,7 +42,10 @@ class Agent:
     - `configure(home, url)` writes the agent's config under `home`, once per
       case, and returns its extra environment. `url` is the mock model.
     - `command(frontend, prompt)` is the command that starts the agent in
-      `frontend`, with the arguments of `prompt` if it takes them.
+      `frontend`, with the arguments of `prompt` if it takes them. The TUI
+      command is the bare command, as a user types it each day: `configure`
+      holds its settings. The headless command passes them as flags, as
+      automation does.
     - `call(step, body, workspace)` is the tool call, as (name, arguments), that
       runs a step of the work. `body` is the request, `workspace` the host
       directory that the agent sees as /workspace.
@@ -59,6 +62,9 @@ class Agent:
       for agents that ask to confirm.
     - `background_setup` is what the agent's first launch writes into HOME in
       the background, after the prompt shows. The first launch waits for it.
+    - `server` is the user command that starts the agent's shared background
+      server, for an agent whose TUI starts one and leaves it running. The
+      warm startup starts it first, as an earlier launch of the day would.
     """
 
     name: str
@@ -76,6 +82,7 @@ class Agent:
     typed_prompt: bool = False
     quit: str = "C-c"
     background_setup: str = ""
+    server: tuple = ()
 
 
 def write_json(path, value):

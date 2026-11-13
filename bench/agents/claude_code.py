@@ -17,16 +17,29 @@ def configure(home, url):
     )
     write_json(
         home / ".claude/settings.json",
-        {"permissions": {"defaultMode": "bypassPermissions"}, "enabledPlugins": {}},
+        {
+            "model": "claude-sonnet-4-6",
+            "permissions": {"defaultMode": "bypassPermissions"},
+            "enabledPlugins": {},
+        },
     )
     return {"ANTHROPIC_BASE_URL": url}
 
 
 def command(frontend, prompt):
-    args = ["claude", "--model", "claude-sonnet-4-6", "--dangerously-skip-permissions"]
     if frontend == "headless":
-        args += ["--print", "--output-format", "stream-json", "--verbose"]
-    return args + prompt
+        return [
+            "claude",
+            "--print",
+            "--output-format",
+            "stream-json",
+            "--verbose",
+            "--model",
+            "claude-sonnet-4-6",
+            "--dangerously-skip-permissions",
+            *prompt,
+        ]
+    return ["claude", *prompt]
 
 
 def call(step, body, workspace):

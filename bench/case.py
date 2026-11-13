@@ -98,10 +98,17 @@ def launched(args):
     return ["python3", "/tmp/launch.py", *args], ("launch.py",)
 
 
-def entry(question, frontend, args):
-    """The command of a case's container, and the helpers that it runs."""
+def entry(question, frontend, args, server=()):
+    """The command of a case's container, and the helpers that it runs. A warm
+    startup first starts the agent's shared `server`, if it has one."""
     if question == "startup":
-        return launched(args)
+        command, helpers = launched(args)
+        if not server:
+            return command, helpers
+        return ["python3", "/tmp/warm.py", *server, "--", *command], (
+            *helpers,
+            "warm.py",
+        )
     if question == "start-memory":
         command = 'python3 /tmp/evict.py && exec "$@" </dev/null'
         return ["bash", "-c", command, "cold", *args], ("evict.py",)
@@ -275,7 +282,7 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
                 image_id,
                 env,
                 case["frontend"],
-                *entry(question, case["frontend"], args),
+                *entry(question, case["frontend"], args, agent.server),
                 # As the first launch, so that both times compare.
                 init=question == "startup",
             )

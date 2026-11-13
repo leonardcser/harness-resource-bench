@@ -12,7 +12,14 @@ NODE = (
 
 
 def configure(home, url):
-    write_json(home / ".pi/agent/settings.json", {"defaultProjectTrust": "always"})
+    write_json(
+        home / ".pi/agent/settings.json",
+        {
+            "defaultProjectTrust": "always",
+            "defaultProvider": "mock",
+            "defaultModel": "mock-model",
+        },
+    )
     write_json(
         home / ".pi/agent/models.json",
         {
@@ -37,10 +44,19 @@ def configure(home, url):
 
 
 def command(frontend, prompt):
-    args = ["pi", "--provider", "mock", "--model", "mock-model"]
     if frontend == "headless":
-        args += ["--mode", "json", "-p"]
-    return args + prompt
+        return [
+            "pi",
+            "--mode",
+            "json",
+            "-p",
+            "--provider",
+            "mock",
+            "--model",
+            "mock-model",
+            *prompt,
+        ]
+    return ["pi", *prompt]
 
 
 def call(step, body, workspace):

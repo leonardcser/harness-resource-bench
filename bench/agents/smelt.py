@@ -12,17 +12,26 @@ def configure(home, url):
         + ', api_key_env = "MOCK_KEY", models = { { name = "mock-model",'
         f" context_window = {CONTEXT_WINDOW}, max_tokens = {MAX_TOKENS},"
         " supports_reasoning = true } } })\n"
-        'smelt.defaults.set({ model = "mock/mock-model" })\n'
+        'smelt.defaults.set({ model = "mock/mock-model", mode = "yolo" })\n'
         'smelt.settings.autoupgrade = "off"\n'
     )
     return {}
 
 
 def command(frontend, prompt):
-    args = ["smelt", "--model", "mock/mock-model", "--mode", "yolo"]
     if frontend == "headless":
-        args += ["--headless", "--format", "json"]
-    return args + prompt
+        return [
+            "smelt",
+            "--headless",
+            "--format",
+            "json",
+            "--model",
+            "mock/mock-model",
+            "--mode",
+            "yolo",
+            *prompt,
+        ]
+    return ["smelt", *prompt]
 
 
 def call(step, body, workspace):

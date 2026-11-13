@@ -1,4 +1,4 @@
-from agents import CONTEXT_WINDOW, Agent
+from agents import CONTEXT_WINDOW, Agent, write_json
 
 
 def configure(home, url):
@@ -10,6 +10,8 @@ model = "mock-model"
 model_context_window = {CONTEXT_WINDOW}
 tool_output_token_limit = 10000
 check_for_update_on_startup = false
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
 [model_providers.mock]
 name = "benchmark"
 base_url = "{url}/v1"
@@ -21,16 +23,25 @@ enabled = false
 [feedback]
 enabled = false
 ''')
+    # Its shared server has its own updater.
+    write_json(
+        home / ".codex/app-server-daemon/settings.json",
+        {"updater": {"autoUpdateEnabled": False}},
+    )
     return {}
 
 
 def command(frontend, prompt):
-    args = ["codex"]
     if frontend == "headless":
-        args += ["exec", "--skip-git-repo-check", "--json"]
-    else:
-        args += ["--no-daemon"]
-    return [*args, "--dangerously-bypass-approvals-and-sandbox", *prompt]
+        return [
+            "codex",
+            "exec",
+            "--json",
+            "--skip-git-repo-check",
+            "--dangerously-bypass-approvals-and-sandbox",
+            *prompt,
+        ]
+    return ["codex", *prompt]
 
 
 def call(step, body, workspace):
@@ -53,4 +64,5 @@ AGENT = Agent(
     ),
     # It clones its plugin repository to a temporary folder, then renames it.
     background_setup=".codex/.tmp/plugins",
+    server=("codex", "app-server", "daemon", "start"),
 )

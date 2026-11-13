@@ -11,6 +11,8 @@ def configure(home, url):
         {
             "startup": {"setupWizard": False, "checkUpdate": False},
             "marketplace": {"autoUpdate": "off"},
+            "modelRoles": {"default": "mock/mock-model"},
+            "tools": {"approvalMode": "yolo"},
         },
     )
     write_json(
@@ -38,10 +40,19 @@ def configure(home, url):
 
 
 def command(frontend, prompt):
-    args = ["omp", "--model", "mock/mock-model", "--approval-mode", "yolo"]
     if frontend == "headless":
-        args += ["--mode", "json", "-p"]
-    return args + prompt
+        return [
+            "omp",
+            "--mode",
+            "json",
+            "-p",
+            "--model",
+            "mock/mock-model",
+            "--approval-mode",
+            "yolo",
+            *prompt,
+        ]
+    return ["omp", *prompt]
 
 
 def hashline_patch(step, body, workspace):

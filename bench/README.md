@@ -31,7 +31,8 @@ from real sessions. To see it: `uv run bench.py transcript > transcript.json`.
 
 | Name            | Case id        | What it measures                                                                         |
 | --------------- | -------------- | ---------------------------------------------------------------------------------------- |
-| Startup         | `startup`      | Time from exec until a typed key shows in the TUI, at the first and next launch          |
+| Startup         | `startup`      | Time from exec until a typed key shows in the TUI, at the first and a warm launch        |
+| Headless start  | `task`         | Time from exec until the first request with the task, headless, with flags               |
 | Memory at start | `start-memory` | Memory (PSS) once the agent settles after its first request, headless, cold file cache   |
 | Install size    | -              | Bytes that the install adds under `/root`, `/usr/local` and `/opt`                       |
 | Coding task     | `task`         | CPU and memory of a task with 24 tool calls, headless at 60 tokens/s, TUI at 30 to 1,000 |
@@ -137,6 +138,7 @@ knows no agent.
 | `installers/`         | The frozen installer of each agent                        |
 | `setup.sh`            | Prepares a fresh Ubuntu VM                                |
 | `container/launch.py` | In the container: marks the exec time of a launch         |
+| `container/warm.py`   | In the container: starts a shared server before a launch  |
 | `container/evict.py`  | In the container: empties the file cache for start-memory |
 
 Lint: `uv run ruff check .`
@@ -161,8 +163,12 @@ Lint: `uv run ruff check .`
   - telemetry, error reports and automatic updates are off (`ENV` in
     `agents/__init__.py`). Other requests stay on, such as session titles.
   - approvals and the sandbox are off, so the run needs no person.
-  - opencode runs with `--standalone` and codex with `--no-daemon`. Their
-    default shared server would stay after quit.
+  - codex's shared server does not update itself.
+- **Launch:** the TUI starts as a user starts it each day: the bare command,
+  with the model and approvals in the agent's config. opencode and codex start
+  their shared background server, which stays after quit, as for a user.
+  Headless starts as automation starts it: the same settings as flags, and no
+  shared server.
 - **Context window:** 200k tokens for every agent. codex also gets the tool
   output limit of its real models (`tool_output_token_limit`), because it does
   not know the mock model.
@@ -341,13 +347,18 @@ These live in each agent's file in `agents/`.
 - The startup case times two launches: `first_launch_seconds` and
   `input_ready_seconds`. Both run with podman's `--init`, so the first can quit
   with SIGTERM.
+- The first launch is cold: it starts the shared server of opencode and codex.
+  The next launch is warm: `warm.py` first starts that server with the agent's
+  own command (`server`), and waits until the container is idle, as after an
+  earlier launch of the day. This happens before the exec mark, so it does not
+  count.
 - The first launch types its own probe key and deletes it before it quits. So a
   draft that the agent keeps cannot pass for the next probe.
 - Each launch stops with an error if the agent draws the key of the other
   launch, which it never got. A key that the agent draws itself would pass for
   an echo.
 - `first_request_seconds`: the time from the exec to the first request with the
-  task.
+  task. Headless startup is this time, with the flags.
 
 **Quit**
 
