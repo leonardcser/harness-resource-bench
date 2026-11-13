@@ -55,27 +55,33 @@ def history(body):
     return body.get("messages", body.get("input", []))
 
 
-def instruction(body):
+def tail(body):
+    """The user messages after the agent's last answer, newest first. System
+    notes between them, such as a reminder, do not end the tail."""
     messages = history(body)
-    if (
-        not isinstance(messages, list)
-        or not messages
-        or messages[-1].get("role") != "user"
-    ):
-        return []
-    return list(strings(messages[-1].get("content", [])))
+    found = []
+    for message in reversed(messages if isinstance(messages, list) else []):
+        role = message.get("role") if isinstance(message, dict) else None
+        if role == "system":
+            continue
+        if role != "user":
+            break
+        found.append(message)
+    return found
+
+
+def instruction(body):
+    """The texts of the last user message."""
+    last = tail(body)[:1]
+    return [text for message in last for text in strings(message.get("content", []))]
 
 
 def is_side_request(body, agent):
     """Whether the user messages after the last answer carry one of the agent's
     side request marks."""
-    messages = history(body)
-    tail = []
-    for message in reversed(messages if isinstance(messages, list) else []):
-        if not isinstance(message, dict) or message.get("role") != "user":
-            break
-        tail.append(message)
-    return any(mark in text for text in strings(tail) for mark in agent.side_requests)
+    return any(
+        mark in text for text in strings(tail(body)) for mark in agent.side_requests
+    )
 
 
 def is_compaction(body, agent):
