@@ -1,4 +1,4 @@
-from agents import KEY, Agent, write_json
+from agents import CONTEXT_WINDOW, KEY, Agent, write_json
 
 
 def configure(home, url):
@@ -19,6 +19,10 @@ def configure(home, url):
         home / ".claude/settings.json",
         {
             "model": "claude-sonnet-5-5",
+            # The mock model's window, as for the other agents. Otherwise it
+            # takes the real model's window and compacts only after a request
+            # fails as too long.
+            "autoCompactWindow": CONTEXT_WINDOW,
             "permissions": {"defaultMode": "bypassPermissions"},
             "enabledPlugins": {},
         },
