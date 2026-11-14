@@ -98,7 +98,7 @@
   const startupRows = $derived(rows(startup, "input_ready_seconds"));
   // Where the first row of each chart starts, to line up the two side by side
   let startupTop = $state(0);
-  let memoryTop = $state(0);
+  let responseTop = $state(0);
   const install = $derived(
     sortStack(
       installRows(manifest, INSTALL_PIECES, startup, FIRST_LAUNCH_FILES),
@@ -244,8 +244,8 @@
     class="grid grid-cols-1 gap-x-(--gap-x) gap-y-(--gap-y) [--gap-x:--spacing(10)] [--gap-y:--spacing(12)] xl:grid-cols-2"
   >
     <Figure
-      title="Startup"
-      note="Time from launch until a typed key shows on screen. Log scale."
+      title="TUI startup"
+      note="Time from launch until a typed key shows on screen. Bare command, settings in config, and the opencode and codex servers already running. Log scale."
     >
       <Bars
         rows={startupRows}
@@ -265,22 +265,28 @@
     </div>
     <div class="xl:col-start-2 xl:row-start-1">
       <Figure
-        title="Memory at start"
-        note="Memory once the agent settles after its first request, with a cold file cache."
+        title="Headless first response"
+        note="Time from launch until the first request to the model, with settings as flags. Log scale."
       >
         <!-- Side by side, its rows line up with the startup rows. -->
         <div
           class="xl:pt-(--below)"
-          style:--below="{Math.max(0, startupTop - memoryTop)}px"
+          style:--below="{Math.max(0, startupTop - responseTop)}px"
         >
           <Bars
-            rows={rows(cold, "pss_bytes")}
-            format={bytes}
-            bind:rowsTop={memoryTop}
+            rows={rows(headless, "first_request_seconds")}
+            format={seconds}
+            bind:rowsTop={responseTop}
           />
         </div>
       </Figure>
     </div>
+    <Figure
+      title="Memory at start"
+      note="Memory once the agent settles after its first request, with a cold file cache."
+    >
+      <Bars rows={rows(cold, "pss_bytes")} format={bytes} />
+    </Figure>
     <div class="xl:col-span-2">
       <Figure
         title="Install size"

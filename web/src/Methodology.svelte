@@ -24,8 +24,12 @@
   const CANARY = run.summary.canary;
   const QUESTIONS = [
     [
-      "Startup",
-      "Time from launch until a key typed in the TUI shows on screen, with a warm file cache. At the first launch in a new home folder, and at the launch after it.",
+      "TUI startup",
+      "Time from launch until a typed key shows on screen, with a warm file cache. At the first launch in a new home folder, and at a later launch, with the opencode and codex servers still running.",
+    ],
+    [
+      "Headless first response",
+      "Time from launch until the first request to the model.",
     ],
     [
       "Memory at start",
@@ -71,7 +75,7 @@
     ],
     [
       "Same start",
-      "Each agent comes from its official installer, at a fixed version, with its defaults. Only telemetry, error reports and updates are off. Each case starts a new container, in a home folder that a first launch used, as on a user's machine. Measurement starts when the agent's CPU settles after its first request, so startup work does not count twice. One practice task per agent does not count.",
+      "Each agent comes from its official installer, at a fixed version, with its defaults. Only telemetry, error reports and updates are off. The TUI starts as a user starts it each day: the bare command, with the settings in the agent's config. Headless starts as automation starts it, with the settings as flags. Each case starts a new container, in a home folder that a first launch used, as on a user's machine. Measurement starts when the agent's CPU settles after its first request, so startup work does not count twice. One practice task per agent does not count.",
     ],
     [
       "Same work",
