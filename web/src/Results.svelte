@@ -225,7 +225,7 @@
 
 <Section
   title="Overview"
-  description="The median of each question. Blue marks a lead: the agent is clearly lowest, because all its runs beat all runs of the next agent by at least 10%. Agents with as many leads share a rank. Click a column to sort by it."
+  description="The median of each question. Blue marks a lead: all the agent's runs beat all runs of the next agent by at least 10%. Agents with as many leads share a rank. Click a column to sort."
   wide
 >
   <Overview {run} />
@@ -283,14 +283,14 @@
     </div>
     <Figure
       title="Memory at start"
-      note="Memory once the agent settles after its first request, with a cold file cache."
+      note="Memory once settled after the first request, with a cold file cache."
     >
       <Bars rows={rows(cold, "pss_bytes")} format={bytes} />
     </Figure>
     <div class="xl:col-span-2">
       <Figure
         title="Install size"
-        note="Disk space that the official installer uses, split by what the files are. The stripes are what the agent writes into its home folder at the first launch. For pi, this includes Node.js, which it needs to run. Hover a part for the files in it."
+        note="Disk space of the official install. For pi, this includes Node.js. Hover a part for its files."
       >
         <Stack rows={install} parts={INSTALL_PARTS} format={bytes} />
         {#snippet more()}<Why topic={INSTALL} rows={install} />{/snippet}
@@ -307,7 +307,7 @@
     <div class="xl:col-span-2">
       <Figure
         title="Where the CPU time goes"
-        note="The parts add up to the total. Headless is the same task without the TUI. + TUI is the extra CPU time of the agent when it runs with its TUI. + Terminal is the time that tmux needs to draw the output, which your machine also pays. It is much smaller, so it has its own scale. Click a column to sort by it."
+        note="Headless is the task without the TUI. + TUI is the extra CPU time of the TUI. + Terminal is the time tmux needs to draw the output, on its own scale. Click a column to sort."
       >
         <Columns
           rows={task}
@@ -321,14 +321,14 @@
     </div>
     <Figure
       title="Terminal output"
-      note="Bytes that the agent writes to the terminal, with escape codes."
+      note="Bytes written to the terminal, with escape codes."
     >
       <Bars rows={rows(tui, "terminal_bytes")} format={bytes} />
     </Figure>
     <div class="xl:col-span-2">
       <Figure
         title="CPU use while streaming"
-        note="Average CPU use during the task, at different streaming speeds."
+        note="Average CPU use during the task, by streaming speed."
       >
         <Lines series={byRate} xLabel="tokens/s" yFormat={percent} log />
       </Figure>
@@ -338,7 +338,7 @@
 
 <Section
   title="A long session"
-  description={`One session of ${turns} turns. Each turn has as many tool calls as a real one. Each agent compacts its history when it gets near the context limit.`}
+  description={`One session of ${turns} turns, each with as many tool calls as a real one. Each agent compacts its history near the context limit.`}
 >
   <div class="grid grid-cols-1 gap-y-12">
     <Figure title="Memory" note="Memory after each checkpoint.">
@@ -358,7 +358,7 @@
     </Figure>
     <Figure
       title="Session data on disk"
-      note="Transcripts, history, databases and logs that the session adds. What the first launch writes is in the install size."
+      note="Transcripts, history, databases and logs that the session adds. First-launch files are in the install size."
     >
       <Lines
         series={series(growth, "session_bytes_after_")}
@@ -371,7 +371,7 @@
     {#if session.length}
       <Figure
         title="What the session data holds"
-        note="Session data after {turns} turns, split by file format. The line is the text of the session itself: tool calls, tool output and answers."
+        note="Session data after {turns} turns, by file format. The line is the session text itself: tool calls, output and answers."
       >
         <Stack
           rows={session}
@@ -389,7 +389,7 @@
 
 <Section
   title="New sessions"
-  description={`${sessions} sessions in one process, each started with the agent's new-session command. This shows memory that a finished session leaves behind.`}
+  description={`${sessions} sessions in one process, each started with the agent's new-session command. It shows memory that finished sessions leave behind.`}
 >
   <Figure title="Memory" note="Memory after each session.">
     <Lines
@@ -406,7 +406,7 @@
     {#if idleRate.length}
       <Figure
         title="What wakes an idle agent"
-        note="Two seconds of idle. Each tick is a timer from the agent's source code, as tall as the CPU time of one wake-up. Wake-ups/s counts all its threads over the whole idle. CPU/s is the CPU time per second of idle, after the first 30 s. A few costly wake-ups can cost more than many cheap ones. No agent draws to the screen while idle."
+        note="Two seconds of idle. Each tick is a timer from the agent's source, as tall as the CPU time of one wake-up. Wake-ups/s counts all threads over the whole idle. CPU/s is CPU time per second of idle, after the first 30 s. No agent draws while idle."
       >
         <Beats rows={idleRate} timers={TIMERS} />
         {#snippet more()}<Why topic={IDLE} rows={idleRate} />{/snippet}
@@ -433,7 +433,7 @@
       title="What the memory holds"
       note="Memory after {minutes(
         lastIdle,
-      )} of idle. Code and mapped files are pages that the kernel can read again from disk, mostly the program itself. Heap and data is all the rest."
+      )} of idle. Code and mapped files can be read again from disk, and are mostly the program itself."
     >
       <Stack rows={memory} parts={MEMORY_PARTS} format={bytes} />
       {#snippet more()}<Why topic={MEMORY} rows={memory} />{/snippet}
