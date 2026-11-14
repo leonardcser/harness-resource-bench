@@ -45,27 +45,27 @@ export const STARTUP: Topic = {
     },
     codex: {
       tag: "Native",
-      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also clones an 80 MiB plugin repository in the background. A short first session can quit before the clone is done.",
+      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also installs a 515 MiB copy of itself for its shared server, which stays after quit, and clones an 80 MiB plugin repository in the background.",
       source: trace("bpftrace: futex wait of the main thread"),
     },
     "claude-code": {
       tag: "Loads JavaScript",
-      text: "Bun starts in 7 ms at most. Then it runs 103 MiB of precompiled JavaScript on the CPU until the first frame, and runs git 3 times. At the first launch, it also clones the plugin marketplace.",
+      text: "Bun starts in 7 ms at most. Then it runs 104 MiB of precompiled JavaScript on the CPU until the first frame, and runs git 3 times. At the first launch, it also clones the plugin marketplace.",
       source: trace("bpftrace: CPU, exec and connect"),
     },
     pi: {
       tag: "Loads JavaScript",
-      text: "A shell script starts Node.js in 6 ms. Node.js starts in 16 ms, then loads 22 JavaScript files and runs them.",
+      text: "A shell script starts Node.js in 6 ms. Node.js starts in 16 ms, then loads 24 JavaScript files and runs them.",
       source: trace("bpftrace: exec and open"),
     },
     omp: {
       tag: "Loads JavaScript",
-      text: "Bun starts in 3 ms. Then a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 123 MiB native module into the home folder and builds a model catalog database.",
+      text: "Bun starts in 3 ms. Then a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 124 MiB native module into the home folder and builds a model catalog database.",
       source: trace("bpftrace: CPU and open"),
     },
     opencode: {
       tag: "Two processes",
-      text: "Bun starts in 3 ms. The TUI starts a server and waits for it, for about a quarter of the startup. The first launch also fills a database with the models.dev catalog. Here the server quits with the TUI (--standalone). By default, it stays for later launches.",
+      text: "Bun starts in 3 ms. The TUI connects to a shared server. The first launch starts that server, which stays after quit, and fills a database with the models.dev catalog. Later launches use the running server.",
       source: trace("bpftrace: event loop waits of the TUI"),
     },
   },
@@ -284,7 +284,7 @@ export const SESSION: Topic = {
     },
     opencode: {
       tag: "One database",
-      text: "One SQLite database for all sessions. It also holds the models.dev catalog, which the first launch writes.",
+      text: "One SQLite database for all sessions.",
     },
     smelt: {
       tag: "One database",
@@ -327,6 +327,7 @@ export const FIRST_LAUNCH_FILES: Record<string, FirstLaunchFiles> = {
   },
   codex: {
     folders: {
+      ".codex/packages": "copy of codex for its shared server",
       ".codex/.tmp/plugins": "plugin repository",
       ".codex/skills": "built-in skills",
     },
@@ -363,7 +364,7 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   codex: [
     {
       part: "code",
-      value: 320.6 * MB,
+      value: 320.2 * MB,
       items: ["codex: 239 MiB machine code, 34 MiB unwind tables"],
     },
     {
@@ -381,8 +382,8 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   "claude-code": [
     {
       part: "code",
-      value: 58.2 * MB,
-      items: ["JavaScript, 52.0 MiB", "assets, 3.5 MiB"],
+      value: 58.6 * MB,
+      items: ["JavaScript, 52.3 MiB", "assets, 3.6 MiB"],
     },
     { part: "runtime", value: 149.4 * MB, items: ["Bun"] },
     { part: "bytecode", value: 109.4 * MB, items: ["JavaScriptCore bytecode"] },
@@ -391,26 +392,26 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   omp: [
     {
       part: "code",
-      value: 75.1 * MB,
+      value: 75.7 * MB,
       items: [
-        "native module for new CPUs, 38.9 MiB",
-        "JavaScript, 28.3 MiB",
-        "scripts and docs, 4 MiB",
+        "native module for new CPUs, 39.3 MiB",
+        "JavaScript, 28.9 MiB",
+        "scripts and docs, 3.9 MiB",
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 47.9 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 48.0 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 40.7 * MB,
-      items: ["native module for old CPUs, 38.8 MiB"],
+      value: 41.3 * MB,
+      items: ["native module for old CPUs, 39.3 MiB"],
     },
     { part: "other" },
   ],
   opencode: [
     {
       part: "code",
-      value: 49.9 * MB,
+      value: 50.0 * MB,
       items: [
         "JavaScript, 15.7 MiB",
         "file search library, 12.3 MiB",
@@ -423,8 +424,8 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
     { part: "bytecode", value: 49.3 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 42.3 * MB,
-      items: ["web UI archive, 24.7 MiB", "models.dev catalog, 15.6 MiB"],
+      value: 42.4 * MB,
+      items: ["web UI archive, 24.7 MiB", "models.dev catalog, 15.7 MiB"],
     },
     { part: "other" },
   ],
@@ -439,7 +440,7 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
         "npm and corepack, 18.0 MiB",
       ],
     },
-    { part: "extra", value: 27.3 * MB, items: ["npm download cache"] },
+    { part: "extra", value: 27.5 * MB, items: ["npm download cache"] },
     { part: "other" },
   ],
 };
