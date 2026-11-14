@@ -159,17 +159,20 @@ export function taskRows(
   });
 }
 
+/** Idle memory split into heap and data, which is the anonymous memory, and
+ * code and mapped files, which is the rest. A program that runs from the HOME
+ * folder maps its code as shared memory, as the HOME is in tmpfs. */
 export function memoryRows(idle: Map<string, Group>, mark: number): StackRow[] {
   return [...idle].flatMap(([agent, group]) => {
     const total = median(group, `idle_pss_bytes_after_${mark}`);
-    const code = median(group, `idle_pss_file_bytes_after_${mark}`);
-    if (total === undefined || code === undefined) return [];
+    const heap = median(group, `idle_pss_anon_bytes_after_${mark}`);
+    if (total === undefined || heap === undefined) return [];
     return [
       {
         agent,
         pieces: [
-          { part: "code", value: code },
-          { part: "heap", value: total - code },
+          { part: "code", value: total - heap },
+          { part: "heap", value: heap },
         ],
       },
     ];
