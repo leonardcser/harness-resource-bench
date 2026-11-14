@@ -40,6 +40,10 @@ IDLE_CHECKPOINT_SECONDS = 30
 # The memory limit of each container. The highest peak of any agent is under
 # 1 GiB.
 MEMORY = "4g"
+# The folder of each case's HOME and workspace: on disk, as on a user's
+# machine. In a tmpfs such as /tmp, code that runs from the HOME would count as
+# shared memory, and the file cache could not drop it.
+CASES = "/var/tmp"
 
 
 def save(path, value):
@@ -256,7 +260,7 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
     stolen = steal()
     try:
         with (
-            tempfile.TemporaryDirectory(prefix="harness-bench-") as tmp,
+            tempfile.TemporaryDirectory(prefix="harness-bench-", dir=CASES) as tmp,
             ExitStack() as resources,
         ):
             root = Path(tmp)

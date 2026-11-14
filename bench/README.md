@@ -42,6 +42,7 @@ from real sessions. To see it: `uv run bench.py transcript > transcript.json`.
 | Quit            | -              | Time to quit the TUI at the end of `startup`, `task` and `long-session`                  |
 
 - Every case starts in a HOME that a first launch used, as on a user's machine.
+  The HOME is on disk, in `/var/tmp`, not in a tmpfs.
 - TUI cases also measure the CPU time that the terminal (tmux) spends.
 - Every case runs 3 times. Startup and memory at start run 10 times. Results
   show the median and the range.
