@@ -53,7 +53,7 @@
     ],
     [
       "Quit",
-      "Time from Ctrl+C until the agent's process exits, at start, after the coding task and after the long session. The agent gets a second press 10 ms later, if it asks to confirm, and must exit with status 0.",
+      "Time from /quit until the agent's process exits, at start, after the coding task and after the long session. The agent must exit with status 0.",
     ],
   ];
   const CONTROLS = [

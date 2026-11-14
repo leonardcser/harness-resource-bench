@@ -269,9 +269,8 @@ class Terminal:
         self.command(f"send-keys -t {self.target} -l -- {shlex.quote(keys)}")
 
     def quit(self, pid, timeout=10):
-        """Type `/quit`, which every agent takes, wait until the agent has drawn
-        it, then press Enter. Return the seconds from Enter until process `pid`
-        exits."""
+        """Type `/quit`, wait until the agent has drawn it, then press Enter.
+        Return the seconds from Enter until process `pid` exits."""
         # The exit output goes to its own log, so that the terminal replay of
         # the case leaves it out. Some agents print their transcript on exit.
         self.log = Path(self.logs[0].name).with_name("quit.log").open("wb")

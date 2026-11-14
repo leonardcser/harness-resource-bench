@@ -436,13 +436,10 @@
 </Section>
 
 {#if quitSeries.length}
-  <Section
-    title="Quit"
-    description="How long each agent takes to exit when you press Ctrl+C. Some agents ask for a second press; the time includes it."
-  >
+  <Section title="Quit" description="How fast each agent exits after /quit.">
     <Figure
       title="Time to quit"
-      note="Time from the first press until the agent's process exits, once its CPU is idle."
+      note="Time from Enter until the process exits. The agent is idle before."
     >
       <Lines
         series={quitSeries}
