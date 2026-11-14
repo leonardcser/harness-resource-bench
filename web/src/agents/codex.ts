@@ -14,7 +14,7 @@ export default {
     windows: yes(),
     models: yes(
       "OpenAI",
-      "Also Amazon Bedrock and any server with the Responses API. It no longer supports Chat Completions.",
+      "Also Amazon Bedrock, Google Cloud Vertex AI and any server with the Responses API. It no longer supports Chat Completions.",
     ),
     localModels: yes("Ollama, LM Studio"),
     tools: tools(

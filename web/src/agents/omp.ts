@@ -9,7 +9,7 @@ export default {
     // At a glance
     language: yes(
       "TypeScript, Rust",
-      "TypeScript on Bun, with about 680,000 lines of Rust.",
+      "TypeScript on Bun, with about 710,000 lines of Rust.",
     ),
     nativeBinary: no(
       "It is a Bun executable with the runtime inside, plus a Rust core.",
