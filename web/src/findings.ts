@@ -60,8 +60,8 @@ export const STARTUP: Topic = {
     },
     omp: {
       tag: "Loads JavaScript",
-      text: "Bun starts in 3 ms. Then a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 124 MiB native module into the home folder and builds a model catalog database.",
-      source: trace("bpftrace: CPU and open"),
+      text: "Bun starts in 3 ms. It draws a live prompt that takes typed keys at once, while a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 124 MiB native module into the home folder and builds a model catalog database.",
+      source: src(OMP, "packages/coding-agent/src/cli.ts", "564-576"),
     },
     opencode: {
       tag: "Two processes",
@@ -146,16 +146,16 @@ export const MEMORY: Topic = {
     smelt: { tag: "Small", text: "Most of its memory is its own code." },
     codex: {
       tag: "Own code",
-      text: "About 80% is program code; little is data.",
+      text: "About 80% is program code, of the TUI and of its shared server. Little is data.",
     },
     pi: { tag: "JavaScript heap", text: "Node.js code and a small heap." },
     "claude-code": {
       tag: "JavaScript heap",
-      text: "The JavaScript heap is two thirds of its memory.",
+      text: "The JavaScript heap is most of its memory.",
     },
     omp: {
       tag: "JavaScript heap",
-      text: "The JavaScript heap, plus a 50 MiB native module.",
+      text: "The JavaScript heap, plus a 40 MiB native module.",
     },
     opencode: {
       tag: "Two heaps",
@@ -181,7 +181,7 @@ export const RENDER: Topic = {
       source: src(
         CODEX,
         "codex-rs/tui/src/status_indicator_widget.rs",
-        "308-318",
+        "307-318",
       ),
     },
     fx: {
@@ -190,7 +190,7 @@ export const RENDER: Topic = {
       source: src(
         FX,
         "src/ui/render_engine/transcript_blocks.zig",
-        "2497-2513",
+        "2514-2540",
       ),
     },
     "claude-code": {
@@ -201,7 +201,7 @@ export const RENDER: Topic = {
     smelt: {
       tag: "Animates",
       text: "Animations add redraws between tokens, without clearing the screen.",
-      source: src(SMELT, "runtime/lua/smelt/prompt_chrome.lua", "175"),
+      source: src(SMELT, "runtime/lua/smelt/prompt_chrome.lua", "234-245"),
     },
     pi: {
       tag: "Rewrites rows",
@@ -252,7 +252,7 @@ export const GROWTH: Topic = {
       source: src(
         FX,
         "src/ui/render_engine/transcript_blocks.zig",
-        "2497-2513",
+        "2514-2540",
       ),
     },
   },
