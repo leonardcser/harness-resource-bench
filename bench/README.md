@@ -159,7 +159,8 @@ Lint: `uv run ruff check .`
 - **CPUs:** the agent runs on CPUs 2 to 5, the harness on CPUs 0 and 1. One case
   runs at a time. In a test, 4 neighbours on the same CCD added 6% to 8% CPU,
   against under 1% of noise.
-- **Order:** each repeat shuffles the agents, with a fixed seed.
+- **Order:** each repeat shuffles the agents, with a fixed seed. start-memory
+  runs last, because it empties the file cache.
 - **Defaults:** each agent runs with its defaults, except:
   - telemetry, error reports and automatic updates are off (`ENV` in
     `agents/__init__.py`). Other requests stay on, such as session titles.

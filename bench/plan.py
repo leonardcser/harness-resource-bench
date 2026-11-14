@@ -5,6 +5,9 @@ import random
 from workload import PROFILE, SEED, steps, transcript
 
 QUESTIONS = ("startup", "start-memory", "task", "long-session", "new-sessions", "idle")
+# The order of the questions in a run. start-memory empties the file cache, so
+# it runs last: the next case would read its files again and pay for them.
+RUN_ORDER = (*(q for q in QUESTIONS if q != "start-memory"), "start-memory")
 # A typical hosted model's streaming rate, in tokens per second.
 TUI_RATE = 60
 # Streaming rates for the coding task in the TUI, in tokens per second.
@@ -85,7 +88,7 @@ def plan(selected, smoke=False):
         cases += block
     cases.sort(
         key=lambda c: (
-            QUESTIONS.index(c["question"]),
+            RUN_ORDER.index(c["question"]),
             -c["rate"],
             c["frontend"],
             c["turns"],
