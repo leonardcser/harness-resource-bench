@@ -293,8 +293,6 @@ These live in each agent's file in `agents/`.
   - When omp refuses an edit and asks for a retry, the model sends it once more
     (`retried_edits`).
 - **fx**
-  - Its TUI takes no prompt argument, so the harness types the first prompt when
-    the screen is stable.
   - It writes its history to the terminal scrollback, not to an alternate
     screen.
   - Its compaction asks for notes under each turn heading, and asks again if one

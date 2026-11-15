@@ -36,7 +36,7 @@ def configure(home, url):
 def command(frontend, prompt):
     if frontend == "headless":
         return ["fx", "ask", "--full-access", "--json", *prompt]
-    return ["fx"]
+    return ["fx", *prompt]
 
 
 def call(step, body, workspace):
@@ -77,5 +77,4 @@ AGENT = Agent(
         ("", "Your notes on the turns above left some out."),
         ("", "Your notes left out the summary of the earlier"),
     ),
-    typed_prompt=True,
 )

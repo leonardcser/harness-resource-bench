@@ -56,8 +56,6 @@ class Agent:
     - `edit_retries` are marks of a refused edit that asks for the same edit
       again. The model retries such an edit once, as a real model would.
     - `reset` starts a new session in the TUI.
-    - `typed_prompt` is for a TUI that takes no prompt argument. The harness
-      types the first prompt.
     - `background_setup` is what the agent's first launch writes into HOME in
       the background, after the prompt shows. The first launch waits for it.
     - `server` is for a TUI that starts a shared background server, which
@@ -77,7 +75,6 @@ class Agent:
     side_requests: tuple = ()
     edit_retries: tuple = ()
     reset: str = "/new"
-    typed_prompt: bool = False
     background_setup: str = ""
     server: bool = False
 

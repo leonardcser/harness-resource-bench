@@ -327,9 +327,6 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
             connections = Connections(cgroup_for(pid))
             connections.start()
             resources.callback(connections.stop)
-            if case["frontend"] == "tui" and agent.typed_prompt:
-                terminal.settle()
-                terminal.send(PROMPT.format(turn=0))
             if not model.received.wait(30):
                 raise RuntimeError(
                     model.error or "Agent never reached inference; see terminal.log"
