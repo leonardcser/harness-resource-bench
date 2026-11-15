@@ -18,10 +18,10 @@ export type Topic = {
 /** An agent's source at the version that the analysis read. */
 const at = (agent: Agent, version: string) =>
   `${PROFILES[agent].repo}/blob/${tagOf(agent, version)}`;
-const FX = at("fx", "0.0.16");
-const OPENCODE = at("opencode", "2.2.7");
-const OMP = at("omp", "18.19.0");
-const CODEX = at("codex", "0.167.2");
+const FX = at("fx", "0.0.17");
+const OPENCODE = at("opencode", "2.3.0");
+const OMP = at("omp", "18.20.2");
+const CODEX = at("codex", "0.169.0");
 const PI = at("pi", "1.5.2");
 const SMELT = at("smelt", "0.8.0");
 
@@ -45,12 +45,12 @@ export const STARTUP: Topic = {
     },
     codex: {
       tag: "Native",
-      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also installs a 515 MiB copy of itself for its shared server, which stays after quit, and clones an 80 MiB plugin repository in the background.",
+      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also installs a 474 MiB copy of itself for its shared server, which stays after quit, and clones an 80 MiB plugin repository in the background.",
       source: trace("bpftrace: futex wait of the main thread"),
     },
     "claude-code": {
       tag: "Loads JavaScript",
-      text: "Bun starts in 7 ms at most. Then it runs 104 MiB of precompiled JavaScript on the CPU until the first frame, and runs git 3 times. At the first launch, it also clones the plugin marketplace.",
+      text: "Bun starts in 8 ms at most. Then it runs 116 MiB of precompiled JavaScript on the CPU until the first frame, and runs git 3 times. At the first launch, it also clones the plugin marketplace.",
       source: trace("bpftrace: CPU, exec and connect"),
     },
     pi: {
@@ -61,7 +61,7 @@ export const STARTUP: Topic = {
     omp: {
       tag: "Loads JavaScript",
       text: "Bun starts in 3 ms. It draws a live prompt that takes typed keys at once, while a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 124 MiB native module into the home folder and builds a model catalog database.",
-      source: src(OMP, "packages/coding-agent/src/cli.ts", "564-576"),
+      source: src(OMP, "packages/coding-agent/src/cli.ts", "570-582"),
     },
     opencode: {
       tag: "Two processes",
@@ -134,7 +134,7 @@ export const IDLE: Topic = {
     fx: {
       tag: "Busy loop",
       text: "Checks for input every 8 ms, about 120 times a second.",
-      source: src(FX, "src/main.zig", "174"),
+      source: src(FX, "src/main.zig", "188"),
     },
   },
   note: "Bun agents spend most idle CPU time on memory cleanup after wake-ups.",
@@ -155,7 +155,7 @@ export const MEMORY: Topic = {
     },
     omp: {
       tag: "JavaScript heap",
-      text: "The JavaScript heap, plus a 40 MiB native module.",
+      text: "The JavaScript heap, plus its native module.",
     },
     opencode: {
       tag: "Two heaps",
@@ -181,7 +181,7 @@ export const RENDER: Topic = {
       source: src(
         CODEX,
         "codex-rs/tui/src/status_indicator_widget.rs",
-        "307-318",
+        "308-319",
       ),
     },
     fx: {
@@ -190,7 +190,7 @@ export const RENDER: Topic = {
       source: src(
         FX,
         "src/ui/render_engine/transcript_blocks.zig",
-        "2514-2540",
+        "2666-2693",
       ),
     },
     "claude-code": {
@@ -247,13 +247,9 @@ export const GROWTH: Topic = {
       ),
     },
     fx: {
-      tag: "Walks all per update",
-      text: "Renders the whole transcript on each change. A longer session means more work.",
-      source: src(
-        FX,
-        "src/ui/render_engine/transcript_blocks.zig",
-        "2514-2540",
-      ),
+      tag: "Flat",
+      text: "CPU per turn stays level after turn 16. Each update renders only the current turn, after a saved state of the finished turns.",
+      source: src(FX, "src/ui/transcript/frozen_prefix.zig", "1-3"),
     },
   },
 };
@@ -268,7 +264,7 @@ export const SESSION: Topic = {
     },
     omp: {
       tag: "File per session",
-      text: "Keeps extra copies of tool results and edits.",
+      text: "Its log is 3 times the session text. It also keeps each edited file before and after each edit.",
     },
     "claude-code": {
       tag: "File per session",
@@ -280,11 +276,11 @@ export const SESSION: Topic = {
     },
     fx: {
       tag: "Folder per session",
-      text: "Saves tool output in both a log and separate files: about 4,370 files in 64 turns.",
+      text: "Saves tool output in both a log and separate files: about 4,320 files in 64 turns.",
     },
     opencode: {
       tag: "One database",
-      text: "One SQLite database for all sessions.",
+      text: "One SQLite database for all sessions. The first shell command also copies a 3.5 MiB terminal helper into the home folder.",
     },
     smelt: {
       tag: "One database",
@@ -292,10 +288,6 @@ export const SESSION: Topic = {
     },
   },
 };
-
-/** fx: blocks that one update renders, in each eighth of a 32-turn session,
- * from its own trace (FX_TRACE=1). */
-export const FX_WALK = [91, 227, 535, 628, 687, 735, 849, 968];
 
 /** The timers that wake each agent when idle, from its source. */
 export const TIMERS: Record<string, { ms: number; label: string }[]> = {
@@ -364,15 +356,15 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   codex: [
     {
       part: "code",
-      value: 320.2 * MB,
-      items: ["codex: 239 MiB machine code, 34 MiB unwind tables"],
+      value: 294.3 * MB,
+      items: ["codex: 234 MiB machine code, 28 MiB unwind tables"],
     },
     {
       part: "extra",
-      value: 207 * MB,
+      value: 189.9 * MB,
       items: [
-        "codex-exec-server, 78 MiB",
-        "codex-code-mode-host, 75 MiB",
+        "codex-exec-server, 71 MiB",
+        "codex-code-mode-host, 67 MiB",
         "codex-voice-host, 38 MiB",
         "ripgrep, 5 MiB",
       ],
@@ -382,50 +374,50 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   "claude-code": [
     {
       part: "code",
-      value: 58.6 * MB,
-      items: ["JavaScript, 52.3 MiB", "assets, 3.6 MiB"],
+      value: 64.8 * MB,
+      items: ["JavaScript, 58.2 MiB", "assets, 3.7 MiB"],
     },
-    { part: "runtime", value: 149.4 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 109.4 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "runtime", value: 152.9 * MB, items: ["Bun"] },
+    { part: "bytecode", value: 121.5 * MB, items: ["JavaScriptCore bytecode"] },
     { part: "other" },
   ],
   omp: [
     {
       part: "code",
-      value: 75.7 * MB,
+      value: 76.1 * MB,
       items: [
-        "native module for new CPUs, 39.3 MiB",
-        "JavaScript, 28.9 MiB",
+        "native module for new CPUs, 39.4 MiB",
+        "JavaScript, 29.3 MiB",
         "scripts and docs, 3.9 MiB",
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 48.0 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 48.7 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
       value: 41.3 * MB,
-      items: ["native module for old CPUs, 39.3 MiB"],
+      items: ["native module for old CPUs, 39.4 MiB"],
     },
     { part: "other" },
   ],
   opencode: [
     {
       part: "code",
-      value: 50.0 * MB,
+      value: 50.2 * MB,
       items: [
-        "JavaScript, 15.7 MiB",
+        "JavaScript, 15.6 MiB",
         "file search library, 12.3 MiB",
         "TUI library, 8.1 MiB",
         "tree-sitter and other wasm, 6.6 MiB",
-        "terminal helper, 3.3 MiB",
+        "terminal helper, 3.5 MiB",
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 49.3 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 49.0 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 42.4 * MB,
-      items: ["web UI archive, 24.7 MiB", "models.dev catalog, 15.7 MiB"],
+      value: 34.4 * MB,
+      items: ["web UI archive, 24.7 MiB", "models.dev catalog, 8.0 MiB"],
     },
     { part: "other" },
   ],

@@ -7,7 +7,6 @@
   import Stack from "./charts/Stack.svelte";
   import {
     FIRST_LAUNCH_FILES,
-    FX_WALK,
     GROWTH,
     IDLE,
     INSTALL,
@@ -153,36 +152,6 @@
   ];
   const MIB = 2 ** 20;
 </script>
-
-{#snippet walk()}
-  {@const top = Math.max(...FX_WALK)}
-  <figure>
-    <h4 class="mb-2 text-xs font-medium">fx: blocks rendered for one update</h4>
-    <div
-      class="flex h-20 items-end gap-[2px]"
-      role="img"
-      aria-label="From {FX_WALK[0]} to {FX_WALK.at(-1)} blocks"
-    >
-      {#each FX_WALK as n, i (i)}
-        <div class="flex h-full w-8 flex-col justify-end">
-          <div
-            class="bg-bar"
-            style:height="{(n / top) * 100}%"
-            title="{count(n)} blocks"
-          ></div>
-        </div>
-      {/each}
-      <span class="ml-2 self-center text-xs text-muted tabular-nums"
-        >{FX_WALK[0]} → {FX_WALK.at(-1)}</span
-      >
-    </div>
-    <figcaption class="mt-2 text-xs leading-relaxed text-muted">
-      The average in each eighth of a 32-turn session, from fx's own trace. The
-      work grows with the session, so the cost of a session grows with its
-      square.
-    </figcaption>
-  </figure>
-{/snippet}
 
 <svelte:head>
   <title>Resource use of coding agents - Harness resource bench</title>
@@ -352,9 +321,7 @@
     </Figure>
     <Figure title="CPU time per turn" note="Average between two checkpoints.">
       <Lines series={growthSeries} xLabel="turns" yFormat={seconds} log />
-      {#snippet more()}<Why topic={GROWTH} rows={growthSeries}>
-          {@render walk()}
-        </Why>{/snippet}
+      {#snippet more()}<Why topic={GROWTH} rows={growthSeries} />{/snippet}
     </Figure>
     <Figure
       title="Session data on disk"
