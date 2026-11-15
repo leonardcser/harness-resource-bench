@@ -59,11 +59,10 @@ def build(selected, local, fetch):
     return {"base_image_id": base_id, "agents": {r["agent"]: r for r in records}}
 
 
-def run(out, selected, images, smoke, commit, keep_homes=False):
+def run(out, selected, images, smoke, commit):
     """Every case of the plan, one at a time, into `out`, which holds no run. A run
     is one session: a measured case that fails stops it, and the setup check
-    runs all its cases, then names the failed ones. `commit` is from `commit()`.
-    With `keep_homes`, each case keeps the agent's HOME for analysis."""
+    runs all its cases, then names the failed ones. `commit` is from `commit()`."""
     cases = plan(selected, smoke)
     config = {
         "smoke": smoke,
@@ -91,7 +90,7 @@ def run(out, selected, images, smoke, commit, keep_homes=False):
         print(f"START {case['id']}", flush=True)
         image_id = images["agents"][case["agent"]]["image_id"]
         path = out / "cases" / case["id"]
-        result = execute(case, path, image_id, smoke, keep_homes)
+        result = execute(case, path, image_id, smoke)
         print(
             f"{result['status'].upper()} {case['id']} {result.get('error', '')}",
             flush=True,
@@ -126,11 +125,6 @@ def main():
             metavar="AGENT=PATH",
             help="install a local build of an agent that ships as one binary",
         )
-        bench.add_argument(
-            "--keep-homes",
-            action="store_true",
-            help="copy each case's HOME to cases/ID/home, for the recipes in RELEASE.md",
-        )
     commands.add_parser("transcript", help="print the work that the model sends")
     args = parser.parse_args()
     if args.command == "transcript":
@@ -153,7 +147,6 @@ def main():
             "selected": selected,
             "images": images,
             "commit": commit() if args.command == "run" else None,
-            "keep_homes": args.keep_homes,
         }
         if args.command == "check":
             out = RESULTS / "check"

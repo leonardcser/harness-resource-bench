@@ -82,8 +82,6 @@ Good to know:
 - **Installers:** `installers/` holds each agent's official installer, frozen at
   its version, so an old commit installs as its run did. When a version changes,
   `check` freezes the new installer; commit it.
-- **Kept homes:** `--keep-homes` copies each case's HOME to `cases/ID/home`, for
-  the [recipes](../RELEASE.md#recipes). Never commit it.
 - **Local build:** `--local-binary AGENT=PATH` installs a local build of an
   agent that ships as one binary.
 - **Release:** [RELEASE.md](../RELEASE.md) gives every step, from the version

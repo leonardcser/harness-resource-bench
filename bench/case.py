@@ -2,7 +2,6 @@
 sampler. The host measures the container from outside."""
 
 import json
-import shutil
 import subprocess
 import tempfile
 import time
@@ -239,9 +238,8 @@ def container_pid(container, terminal):
     raise RuntimeError("Container failed to start")
 
 
-def execute(case, folder, image_id, smoke=False, keep_home=False):
-    """Measure `case` and save its result in `folder`. With `keep_home`, copy
-    the agent's HOME to `folder/home` once the container is gone."""
+def execute(case, folder, image_id, smoke=False):
+    """Measure `case` and save its result in `folder`."""
     folder.mkdir(parents=True, exist_ok=True)
     question = case["question"]
     agent = AGENTS[case["agent"]]
@@ -273,11 +271,6 @@ def execute(case, folder, image_id, smoke=False, keep_home=False):
             home.mkdir()
             (root / "workspace" / "fixtures").mkdir(parents=True)
             model.workspace = root / "workspace"
-            if keep_home:
-                # Runs after the container is removed, before the folder is.
-                kept = folder / "home"
-                shutil.rmtree(kept, ignore_errors=True)
-                resources.callback(shutil.copytree, home, kept, symlinks=True)
             env = agent.configure(home, f"http://127.0.0.1:{model.port}")
             log = folder / "first-launch.log"
             result.update(launch_once(root, image_id, env, agent, model, log))
