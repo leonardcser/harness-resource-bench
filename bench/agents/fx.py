@@ -63,7 +63,7 @@ def call(step, body, workspace):
 
 AGENT = Agent(
     name="fx",
-    version="0.0.16",
+    version="0.0.17",
     installer="https://fx.sh/setup.sh",
     install="curl -fsSL @INSTALLER_BASE@/fx.sh | bash -s -- v@VERSION@",
     executable="fx",
