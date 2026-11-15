@@ -24,6 +24,10 @@ Do all the work of a release on one branch.
      models.
    - `background_setup` is still the only work after the prompt shows.
    - the [agent quirks](bench/README.md#agent-quirks) are still true.
+
+   Then do the [recipes](#recipes) that trace the agent: idle, install size,
+   startup and CPU time. They need only the new images, so do them now, while
+   the VM is free.
 3. **Commit and push** all changes to `bench/`.
 4. **Run:** on the benchmark VM, in tmux. Do not rebase the branch after this:
    the manifest names its commit.
@@ -43,8 +47,10 @@ Do all the work of a release on one branch.
    ```
 
    Check each cell of `web/src/agents/AGENT.ts` against the release notes and
-   docs. Update `web/src/findings.ts` with the [recipes](#recipes) below until
-   it explains the numbers. Link the source at the new versions.
+   docs. Compare the run with the previous one, and update the numbers in
+   `web/src/findings.ts`. The session and first-launch recipes read the run.
+   If neither a recipe nor the source explains a change, leave its cause out.
+   Link the source at the new versions.
 
 6. **Freeze and commit:** `RUN=ID bun run freeze` builds the run's page into
    `results/ID/site/`. Commit the run folder and the other changes.
@@ -72,9 +78,6 @@ podman run --rm -it IMAGE AGENT   # IMAGE from `podman images harness-bench-*`
 PID=$(pgrep -n -f AGENT)
 ```
 
-Some recipes need the files of a case. `--keep-homes` copies each case's HOME to
-`cases/ID/home` after the case. It holds session stores, so never commit it.
-
 ### Idle: which timers wake the agent
 
 ```sh
@@ -88,32 +91,20 @@ Result: `WAKEUPS[agent].timers` and `IDLE.causes[agent]`.
 
 ### Session data: what the files hold
 
-```sh
-uv run bench.py run AGENT --keep-homes
-cd ../results/RUN/cases/ID/home   # ID of the long session
-find . -type f -printf '%s\t%p\n' | sort -rn | head -20
-```
-
-Size the tables of each SQLite database:
+Each checkpoint of the long session keeps `disk_dirs`, the size of each folder
+of the HOME. Subtract the first checkpoint from the last to see which folders
+the session fills:
 
 ```sh
-sqlite3 -readonly FILE \
-  "select name, sum(pgsize)/1048576.0 from dbstat group by 1 order by 2 desc"
+jq -r '.checkpoints | (.[0].disk_dirs) as $a | .[-1].disk_dirs
+  | to_entries[] | [.value - ($a[.key] // 0), .key] | @tsv' \
+  ../results/RUN/cases/ID/result.json | sort -rn | head   # ID of the long session
 ```
 
-Size the records of each JSONL file by type, then the fields of the largest
-type. Two large fields of the same size hold the same text twice:
+`session_<kind>_bytes_after_N` splits the bytes by format. Then read in the
+agent's source what it writes in those folders.
 
-```sh
-jq -c '[.type, (tostring | length)]' FILE |
-  jq -s -c 'group_by(.[0]) | map([.[0][0], (map(.[1]) | add / 1048576)])'
-jq -c 'select(.type == "TYPE") | paths(strings) as $p
-  | [($p | map(tostring) | join(".")), (getpath($p) | length)]' FILE |
-  jq -s -c 'group_by(.[0]) | map([.[0][0], (map(.[1]) | add / 1048576)])
-    | sort_by(-.[1]) | .[:8]'
-```
-
-Result: `SESSION_PIECES[agent]` in MiB and `SESSION.causes[agent]`.
+Result: `SESSION.causes[agent]`.
 
 ### Install size: what the files are
 
