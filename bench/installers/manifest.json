@@ -1,7 +1,7 @@
 {
   "agents": {
     "claude-code": {
-      "version": "2.1.322",
+      "version": "2.1.325",
       "files": {
         "claude-code.sh": {
           "url": "https://claude.ai/install.sh",
@@ -11,17 +11,17 @@
       }
     },
     "codex": {
-      "version": "0.167.2",
+      "version": "0.169.0",
       "files": {
         "codex.sh": {
           "url": "https://chatgpt.com/codex/install.sh",
-          "sha256": "44ac252c1b9a68c02bdf0de8e1c6cbfde36fc1afa8684624962eae7d4c461e70",
-          "bytes": 43667
+          "sha256": "5a8eea5c3716b555fd8e539db7e5b0e7470bcee5693191b4758a0de373624a70",
+          "bytes": 43647
         }
       }
     },
     "fx": {
-      "version": "0.0.16",
+      "version": "0.0.17",
       "files": {
         "fx.sh": {
           "url": "https://fx.sh/setup.sh",
@@ -31,17 +31,17 @@
       }
     },
     "omp": {
-      "version": "18.19.0",
+      "version": "18.20.2",
       "files": {
         "omp.sh": {
           "url": "https://omp.sh/install",
-          "sha256": "20b3883dbeb675ea8b9b680c177146178ed6b1e9c974f6af0a36c1064e123bc3",
-          "bytes": 12444
+          "sha256": "9d8aea7105ab30b46f048c3ba9216ae9f92375491b883e510059069dbf968a5f",
+          "bytes": 15790
         }
       }
     },
     "opencode": {
-      "version": "2.2.7",
+      "version": "2.3.0",
       "files": {
         "opencode.sh": {
           "url": "https://opencode.ai/v2/install",
