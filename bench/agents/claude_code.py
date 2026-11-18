@@ -66,7 +66,7 @@ def call(step, body, workspace):
 
 AGENT = Agent(
     name="claude-code",
-    version="2.1.325",
+    version="2.1.327",
     installer="https://claude.ai/install.sh",
     install="curl -fsSL @INSTALLER_BASE@/claude-code.sh | bash -s -- @VERSION@",
     executable="claude",

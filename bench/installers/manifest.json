@@ -1,7 +1,7 @@
 {
   "agents": {
     "claude-code": {
-      "version": "2.1.325",
+      "version": "2.1.327",
       "files": {
         "claude-code.sh": {
           "url": "https://claude.ai/install.sh",
@@ -11,7 +11,7 @@
       }
     },
     "codex": {
-      "version": "0.169.0",
+      "version": "0.170.0",
       "files": {
         "codex.sh": {
           "url": "https://chatgpt.com/codex/install.sh",
@@ -31,7 +31,7 @@
       }
     },
     "omp": {
-      "version": "18.20.2",
+      "version": "18.22.2",
       "files": {
         "omp.sh": {
           "url": "https://omp.sh/install",
@@ -41,7 +41,7 @@
       }
     },
     "opencode": {
-      "version": "2.3.0",
+      "version": "2.3.2",
       "files": {
         "opencode.sh": {
           "url": "https://opencode.ai/v2/install",
@@ -76,7 +76,7 @@
       }
     },
     "smelt": {
-      "version": "0.8.0",
+      "version": "0.8.1",
       "files": {
         "smelt.sh": {
           "url": "https://smeltagent.dev/install.sh",

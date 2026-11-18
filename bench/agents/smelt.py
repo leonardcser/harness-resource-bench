@@ -59,7 +59,7 @@ def call(step, body, workspace):
 
 AGENT = Agent(
     name="smelt",
-    version="0.8.0",
+    version="0.8.1",
     installer="https://smeltagent.dev/install.sh",
     install="curl -fsSL @INSTALLER_BASE@/smelt.sh | SMELT_VERSION=v@VERSION@ sh",
     executable="smelt",
