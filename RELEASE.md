@@ -7,13 +7,13 @@ The site root shows the newest frozen run. Each run also gets a frozen page at
 
 Do all the work of a release on one branch.
 
-1. **Versions:** set `version` in each agent's file in `bench/agents/`, then
-   commit and push the branch. On the benchmark VM, with the branch checked out
-   (see step 4), `uv run bench.py check` freezes the new installers in
-   `bench/installers/`. Copy them back:
-   `rsync -a VM:harness-resource-bench/bench/installers/ bench/installers/`.
-   `check` fails if the mock model does not know a request, such as a new
-   compaction prompt.
+1. **Versions:** set `version` in each agent's file in `bench/agents/`. From
+   `bench/`, freeze and verify the installers without building images or running
+   cases. This does not need the benchmark VM.
+
+   ```sh
+   uv run freeze_installers.py
+   ```
 2. **Assumptions:** for each new version, check that:
    - the flags in `command()` and the config in `configure()` still work:
      approvals off, no updates or telemetry. The TUI gets these from the
@@ -26,11 +26,13 @@ Do all the work of a release on one branch.
    - the [agent quirks](bench/README.md#agent-quirks) are still true.
 
    Then do the [recipes](#recipes) that trace the agent: idle, install size,
-   startup and CPU time. They need only the new images, so do them now, while
-   the VM is free.
-3. **Commit and push** all changes to `bench/`.
-4. **Run:** on the benchmark VM, in tmux. Do not rebase the branch after this:
-   the manifest names its commit.
+   startup and CPU time. Do them while the VM is free. Use `bench.py check AGENT`
+   for targeted troubleshooting or profiling, not as a separate release gate.
+3. **Commit and push** all changes to `bench/`, including the frozen installers.
+4. **Run:** on the benchmark VM, in tmux. `run` builds the images and smoke-tests
+   them before measuring. If a case fails, for example because the mock model
+   does not know a new compaction prompt, measurement does not start. Do not
+   rebase the branch after the run: the manifest names its commit.
 
    ```sh
    git clone https://github.com/leonardcser/harness-resource-bench.git  # once

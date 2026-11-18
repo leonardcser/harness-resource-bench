@@ -72,7 +72,7 @@ class InstallerCache:
                 if not fetch:
                     raise ValueError(
                         f"No frozen installer for {agent} {version}: run"
-                        f" `bench.py check {agent}`, then commit installers/"
+                        " `uv run freeze_installers.py`, then commit installers/"
                     )
                 self.freeze(agent, version)
                 manifest.write_text(json.dumps(self.manifest, indent=2) + "\n")
