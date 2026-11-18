@@ -19,7 +19,7 @@ Do all the work of a release on one branch.
      approvals off, no updates or telemetry. The TUI gets these from the
      config only, the headless mode from the flags.
    - `server` still marks each agent whose TUI starts a shared server, and
-     the headless mode still starts none.
+     headless runs do not start a shared server.
    - codex's `tool_output_token_limit` still equals the limit of its real
      models.
    - `background_setup` is still the only work after the prompt shows.

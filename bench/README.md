@@ -168,7 +168,8 @@ Lint: `uv run ruff check .`
   with the model and approvals in the agent's config. opencode and codex start
   their shared background server, which stays after quit, as for a user.
   Headless starts as automation starts it: the same settings as flags, and no
-  shared server.
+  shared server. OpenCode's `--standalone` starts a private child server that
+  exits with the CLI. Its resource use counts toward the headless measurement.
 - **Context window:** 200k tokens for every agent. codex also gets the tool
   output limit of its real models (`tool_output_token_limit`), because it does
   not know the mock model.
