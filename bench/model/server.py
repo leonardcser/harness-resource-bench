@@ -114,6 +114,9 @@ class Model:
 
     def verify_tool_result(self, body, call_id, step):
         returned = results_of(body, call_id)
+        if not returned and self.agent.checkpoint_results:
+            name, args = self.agent.call(step, body, self.workspace)
+            returned = self.agent.checkpoint_results(body, name, args)
         if not returned:
             return False
         content = "\n".join(strings(returned[0]))

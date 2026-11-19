@@ -49,6 +49,8 @@ class Agent:
     - `call(step, body, workspace)` is the tool call, as (name, arguments), that
       runs a step of the work. `body` is the request, `workspace` the host
       directory that the agent sees as /workspace.
+    - `checkpoint_results` reads tool results that a compaction kept as text,
+      matching the original tool name and arguments.
     - `summaries` are the summary prompts of its compaction, as (start, mark):
       the last user message starts with `start` and contains `mark`.
     - `side_requests` are marks of requests that keep the tool schemas but must
@@ -71,6 +73,7 @@ class Agent:
     configure: Callable
     command: Callable
     call: Callable
+    checkpoint_results: Callable | None = None
     summaries: tuple = ()
     side_requests: tuple = ()
     edit_retries: tuple = ()
