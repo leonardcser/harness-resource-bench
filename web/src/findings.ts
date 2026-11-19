@@ -19,11 +19,11 @@ export type Topic = {
 const at = (agent: Agent, version: string) =>
   `${PROFILES[agent].repo}/blob/${tagOf(agent, version)}`;
 const FX = at("fx", "0.0.17");
-const OPENCODE = at("opencode", "2.3.0");
-const OMP = at("omp", "18.20.2");
-const CODEX = at("codex", "0.169.0");
+const OPENCODE = at("opencode", "2.3.2");
+const OMP = at("omp", "18.22.2");
+const CODEX = at("codex", "0.170.0");
 const PI = at("pi", "1.5.2");
-const SMELT = at("smelt", "0.8.0");
+const SMELT = at("smelt", "0.8.1");
 
 const src = (repo: string, path: string, lines: string): Source => ({
   label: `${path.split("/").pop()}:${lines}`,
@@ -45,12 +45,12 @@ export const STARTUP: Topic = {
     },
     codex: {
       tag: "Native",
-      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also installs a 474 MiB copy of itself for its shared server, which stays after quit, and clones an 80 MiB plugin repository in the background.",
+      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also installs a 478 MiB copy of itself for its shared server, which stays after quit, and clones an 82 MiB plugin repository in the background.",
       source: trace("bpftrace: futex wait of the main thread"),
     },
     "claude-code": {
       tag: "Loads JavaScript",
-      text: "Bun starts in 8 ms at most. Then it runs 116 MiB of precompiled JavaScript on the CPU until the first frame, and runs git 3 times. At the first launch, it also clones the plugin marketplace.",
+      text: "Bun starts in 8 ms at most. Then it runs 120 MiB of precompiled JavaScript on the CPU until the first frame, and runs git 3 times. At the first launch, it also clones the plugin marketplace.",
       source: trace("bpftrace: CPU, exec and connect"),
     },
     pi: {
@@ -60,7 +60,7 @@ export const STARTUP: Topic = {
     },
     omp: {
       tag: "Loads JavaScript",
-      text: "Bun starts in 3 ms. It draws a live prompt that takes typed keys at once, while a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 124 MiB native module into the home folder and builds a model catalog database.",
+      text: "Bun starts in 3 ms. It draws a live prompt that takes typed keys at once, while a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 130 MiB native module into the home folder and builds a model catalog database.",
       source: src(OMP, "packages/coding-agent/src/cli.ts", "570-582"),
     },
     opencode: {
@@ -127,9 +127,9 @@ export const IDLE: Topic = {
       source: src(OPENCODE, "packages/tui/src/plugin/watch.ts", "100"),
     },
     omp: {
-      tag: "Watchdog",
-      text: "Checks for a blocked event loop every 250 ms.",
-      source: src(OMP, "packages/tui/src/loop-watchdog.ts", "78"),
+      tag: "Profiler",
+      text: "A JavaScriptCore sampling profiler, which names the code behind a blocked event loop, wakes about 1,000 times a second. A watchdog also checks for a blocked event loop every 250 ms.",
+      source: src(OMP, "packages/tui/src/loop-sampler.ts", "78"),
     },
     fx: {
       tag: "Busy loop",
@@ -137,7 +137,7 @@ export const IDLE: Topic = {
       source: src(FX, "src/main.zig", "188"),
     },
   },
-  note: "Bun agents spend most idle CPU time on memory cleanup after wake-ups.",
+  note: "Claude Code and opencode spend about half their idle CPU time on memory cleanup after wake-ups. omp spends most of it in its profiler.",
 };
 
 export const MEMORY: Topic = {
@@ -201,7 +201,7 @@ export const RENDER: Topic = {
     smelt: {
       tag: "Animates",
       text: "Animations add redraws between tokens, without clearing the screen.",
-      source: src(SMELT, "runtime/lua/smelt/prompt_chrome.lua", "234-245"),
+      source: src(SMELT, "runtime/lua/smelt/prompt_chrome.lua", "252-263"),
     },
     pi: {
       tag: "Rewrites rows",
@@ -210,7 +210,8 @@ export const RENDER: Topic = {
     },
     omp: {
       tag: "Animates",
-      text: "Animations add redraws between tokens. The task clears the screen only at startup.",
+      text: "Animations add redraws between tokens. Its stack sampling profiler adds about 10 ms of CPU time a second. The task clears the screen only at startup.",
+      source: src(OMP, "packages/tui/src/loop-sampler.ts", "78"),
     },
   },
 };
@@ -298,7 +299,10 @@ export const TIMERS: Record<string, { ms: number; label: string }[]> = {
     { ms: 1000, label: "~/.claude.json check" },
     { ms: 2000, label: "~/.claude folder check" },
   ],
-  omp: [{ ms: 250, label: "event loop watchdog" }],
+  omp: [
+    { ms: 1, label: "stack sampling profiler" },
+    { ms: 250, label: "event loop watchdog" },
+  ],
   opencode: [
     { ms: 500, label: "plugin folder check" },
     { ms: 15000, label: "server heartbeat" },
@@ -350,18 +354,18 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   smelt: [
     {
       part: "code",
-      items: ["smelt, a static Rust binary", "Lua runtime files, 0.8 MiB"],
+      items: ["smelt, a static Rust binary", "Lua runtime files, 0.9 MiB"],
     },
   ],
   codex: [
     {
       part: "code",
-      value: 294.3 * MB,
-      items: ["codex: 234 MiB machine code, 28 MiB unwind tables"],
+      value: 298.3 * MB,
+      items: ["codex: 237 MiB machine code, 28 MiB unwind tables"],
     },
     {
       part: "extra",
-      value: 189.9 * MB,
+      value: 190.1 * MB,
       items: [
         "codex-exec-server, 71 MiB",
         "codex-code-mode-host, 67 MiB",
@@ -374,29 +378,29 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   "claude-code": [
     {
       part: "code",
-      value: 64.8 * MB,
-      items: ["JavaScript, 58.2 MiB", "assets, 3.7 MiB"],
+      value: 66.8 * MB,
+      items: ["JavaScript, 60.4 MiB", "assets, 3.3 MiB"],
     },
     { part: "runtime", value: 152.9 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 121.5 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 125.7 * MB, items: ["JavaScriptCore bytecode"] },
     { part: "other" },
   ],
   omp: [
     {
       part: "code",
-      value: 76.1 * MB,
+      value: 77.9 * MB,
       items: [
-        "native module for new CPUs, 39.4 MiB",
-        "JavaScript, 29.3 MiB",
-        "scripts and docs, 3.9 MiB",
+        "native module for new CPUs, 40.7 MiB",
+        "JavaScript, 29.5 MiB",
+        "scripts and docs, 4.0 MiB",
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 48.7 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 49.4 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 41.3 * MB,
-      items: ["native module for old CPUs, 39.4 MiB"],
+      value: 42.7 * MB,
+      items: ["native module for old CPUs, 40.7 MiB"],
     },
     { part: "other" },
   ],
@@ -405,7 +409,7 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
       part: "code",
       value: 50.2 * MB,
       items: [
-        "JavaScript, 15.6 MiB",
+        "JavaScript, 15.7 MiB",
         "file search library, 12.3 MiB",
         "TUI library, 8.1 MiB",
         "tree-sitter and other wasm, 6.6 MiB",
@@ -413,11 +417,11 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
       ],
     },
     { part: "runtime", value: 109.1 * MB, items: ["Bun"] },
-    { part: "bytecode", value: 49.0 * MB, items: ["JavaScriptCore bytecode"] },
+    { part: "bytecode", value: 49.3 * MB, items: ["JavaScriptCore bytecode"] },
     {
       part: "extra",
-      value: 34.4 * MB,
-      items: ["web UI archive, 24.7 MiB", "models.dev catalog, 8.0 MiB"],
+      value: 36.2 * MB,
+      items: ["web UI archive, 25.5 MiB", "models.dev catalog, 8.9 MiB"],
     },
     { part: "other" },
   ],

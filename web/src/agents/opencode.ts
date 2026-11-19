@@ -89,8 +89,8 @@ export default {
     nextPrompt: no(),
     customThemes: yes(),
     latexMath: some(
-      "Code blocks",
-      "Only latex and math code blocks, as Unicode text.",
+      "Desktop, web",
+      "The desktop and web apps typeset math. The terminal shows only latex and math code blocks, as Unicode text.",
     ),
     diagrams: yes("Text", "Mermaid diagrams, drawn with text."),
   },
