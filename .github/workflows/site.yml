@@ -35,6 +35,17 @@ jobs:
         working-directory: web
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      # Each frozen page links to the commit that measured its run.
+      - name: Check that the commit of each run is in the history
+        working-directory: .
+        run: |
+          for manifest in results/*/manifest.json; do
+            commit=$(jq -r '.commit // empty' "$manifest")
+            [ -z "$commit" ] || git merge-base --is-ancestor "$commit" HEAD ||
+              { echo "::error file=$manifest::$commit is not in the history of HEAD"; exit 1; }
+          done
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.4.4
