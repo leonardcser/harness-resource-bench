@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
@@ -13,11 +14,24 @@ export default defineConfig(({ mode }) => {
       readFileSync(new URL(`src/data/${name}`, import.meta.url), "utf8"),
     );
   const run: { id: string; date: string } = data("run.json");
-  // The frozen page links to the code that measured the run
-  if (freeze && !data("manifest.json").commit) {
-    throw new Error(
-      `Run ${run.id} names no commit: run again from a commit with no changes`,
-    );
+  // The frozen page links to the code that measured the run, so that commit
+  // must stay in the history of the release.
+  if (freeze) {
+    const commit: string | undefined = data("manifest.json").commit;
+    if (!commit) {
+      throw new Error(
+        `Run ${run.id} names no commit: run again from a commit with no changes`,
+      );
+    }
+    try {
+      execFileSync("git", ["merge-base", "--is-ancestor", commit, "HEAD"], {
+        stdio: "ignore",
+      });
+    } catch {
+      throw new Error(
+        `Run ${run.id} measured ${commit}, which is not in the history of HEAD: do not rewrite the commits of a run`,
+      );
+    }
   }
   const page = `${SITE}/${freeze ? `runs/${run.id}/` : ""}`;
 
