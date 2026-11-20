@@ -3,36 +3,22 @@
 The site root shows the newest frozen run. Each run also gets a frozen page at
 `runs/ID/`, stored in `results/ID/site/`, which never changes.
 
+## The rule
+
+A run measures the commit it starts from. So a change to what or how the bench
+measures (new versions, a fix, a new metric) goes in before the run, as a normal
+commit. After the run, only the publish commit follows:
+`feat(results): publish run ID`. To list the releases:
+`git log --grep 'publish run'`.
+
 ## Steps
 
-Do all the work of a release on one branch.
+Do all the work on one branch.
 
-1. **Versions:** set `version` in each agent's file in `bench/agents/`. From
-   `bench/`, freeze and verify the installers without building images or running
-   cases. This does not need the benchmark VM.
-
-   ```sh
-   uv run freeze_installers.py
-   ```
-2. **Assumptions:** for each new version, check that:
-   - the flags in `command()` and the config in `configure()` still work:
-     approvals off, no updates or telemetry. The TUI gets these from the
-     config only, the headless mode from the flags.
-   - `server` still marks each agent whose TUI starts a shared server, and
-     headless runs do not start a shared server.
-   - codex's `tool_output_token_limit` still equals the limit of its real
-     models.
-   - `background_setup` is still the only work after the prompt shows.
-   - the [agent quirks](bench/README.md#agent-quirks) are still true.
-
-   Then do the [recipes](#recipes) that trace the agent: idle, install size,
-   startup and CPU time. Do them while the VM is free. Use `bench.py check AGENT`
-   for targeted troubleshooting or profiling, not as a separate release gate.
-3. **Commit and push** all changes to `bench/`, including the frozen installers.
-4. **Run:** on the benchmark VM, in tmux. `run` builds the images and smoke-tests
-   them before measuring. If a case fails, for example because the mock model
-   does not know a new compaction prompt, measurement does not start. Do not
-   rebase the branch after the run: the manifest names its commit.
+1. **Change:** commit and push each change as usual. For new versions, see
+   [new versions](#new-versions).
+2. **Run:** on the benchmark VM, in tmux, from the pushed commit. `run` builds
+   the images and smoke-tests them before it measures.
 
    ```sh
    git clone https://github.com/leonardcser/harness-resource-bench.git  # once
@@ -41,29 +27,58 @@ Do all the work of a release on one branch.
    uv run bench.py run     # makes results/ID
    ```
 
-5. **Agents page and findings:** on your machine, copy the run and read it:
+3. **Publish:** on your machine, copy the run and read it:
 
    ```sh
    rsync -a VM:harness-resource-bench/results/ID results/
    cd web && bun install && RUN=ID bun run dev
    ```
 
-   Check each cell of `web/src/agents/AGENT.ts` against the release notes and
-   docs. Compare the run with the previous one, and update the numbers in
-   `web/src/findings.ts`. The session and first-launch recipes read the run.
-   If neither a recipe nor the source explains a change, leave its cause out.
-   Link the source at the new versions.
+   Compare it with the previous run. Update `web/src/findings.ts`, and
+   `web/src/agents/AGENT.ts` for new versions. Then `RUN=ID bun run freeze`, and
+   commit all of it as `feat(results): publish run ID`.
 
-6. **Freeze and commit:** `RUN=ID bun run freeze` builds the run's page into
-   `results/ID/site/`. Commit the run folder and the other changes.
-7. **Land:** fast-forward `main` to the branch and push. CI deploys the site.
+4. **Land:** fast-forward `main` to the branch and push. CI deploys the site.
 
-Good to know:
+If you must change something after the run:
 
-- **Link:** "Copy link" next to the run date copies the frozen page's URL.
-- **Fixes:** a site fix reaches the root at once, and never a frozen page.
-- **Code:** the manifest names the commit that measured the run, and the
-  Methodology page links to it. `freeze` refuses a run without one.
+- **Bench:** go back to step 1 and run again. Do not publish the old run.
+- **Site or findings, before you land:** amend the publish commit, and freeze
+  again.
+- **Site or findings, after you land:** a normal commit. It changes the root,
+  and never a frozen page.
+
+`freeze` refuses a run whose commit is not in the history of `HEAD`. So never
+rebase the commits of a run.
+
+## New versions
+
+1. Set `version` in each agent's file in `bench/agents/`. Then, from `bench/`,
+   freeze and verify the installers. This does not need the VM:
+
+   ```sh
+   uv run freeze_installers.py
+   ```
+
+2. For each new version, check that:
+   - the flags in `command()` and the config in `configure()` still work:
+     approvals off, no updates or telemetry. The TUI gets these from the config
+     only, the headless mode from the flags.
+   - `server` still marks each agent whose TUI starts a shared server, and
+     headless runs do not start a shared server.
+   - codex's `tool_output_token_limit` still equals the limit of its real
+     models.
+   - `background_setup` is still the only work after the prompt shows.
+   - the [agent quirks](bench/README.md#agent-quirks) are still true.
+
+3. On the VM, do the [recipes](#recipes) that trace the agent: idle, install
+   size, startup and CPU time. `bench.py check AGENT` helps to troubleshoot.
+4. After the run, check each cell of `web/src/agents/AGENT.ts` against the
+   release notes and docs. The session and first-launch recipes read the run. If
+   neither a recipe nor the source explains a change, leave its cause out. Link
+   the source at the new versions.
+
+"Copy link" next to the run date copies the frozen page's URL.
 
 ## Recipes
 
