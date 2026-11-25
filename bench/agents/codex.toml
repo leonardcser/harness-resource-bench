@@ -1,5 +1,5 @@
 name = "codex"
-version = "0.170.0"
+version = "0.172.0"
 executable = "codex"
 # It clones its plugin repository to a temporary folder, then renames it.
 background_setup = ".codex/.tmp/plugins"

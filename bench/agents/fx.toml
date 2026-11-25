@@ -1,5 +1,5 @@
 name = "fx"
-version = "0.0.17"
+version = "0.0.18"
 executable = "fx"
 
 # fx asks for its notes under exact turn headings, and asks again if one is

@@ -1,27 +1,27 @@
 {
   "agents": {
     "claude-code": {
-      "version": "2.1.327",
+      "version": "2.1.332",
       "files": {
         "claude-code.sh": {
           "url": "https://claude.ai/install.sh",
-          "sha256": "3a68d3406cf674e17bed1733a4dcf37805e2e47d87417700007d7e1aa766a944",
-          "bytes": 9704
+          "sha256": "2c5506d110560bf618bbe88f678f2c2a0047c86a9c6585fc84976120b1de0b44",
+          "bytes": 9822
         }
       }
     },
     "codex": {
-      "version": "0.170.0",
+      "version": "0.172.0",
       "files": {
         "codex.sh": {
           "url": "https://chatgpt.com/codex/install.sh",
-          "sha256": "5a8eea5c3716b555fd8e539db7e5b0e7470bcee5693191b4758a0de373624a70",
-          "bytes": 43647
+          "sha256": "b698d8eb50c0fbe0214ea57b5bf2af439054108404c6d2b872989db02f4bd574",
+          "bytes": 43352
         }
       }
     },
     "fx": {
-      "version": "0.0.17",
+      "version": "0.0.18",
       "files": {
         "fx.sh": {
           "url": "https://fx.sh/setup.sh",
@@ -31,7 +31,7 @@
       }
     },
     "omp": {
-      "version": "18.22.2",
+      "version": "19.2.1",
       "files": {
         "omp.sh": {
           "url": "https://omp.sh/install",
@@ -41,37 +41,37 @@
       }
     },
     "opencode": {
-      "version": "2.3.2",
+      "version": "2.4.1",
       "files": {
         "opencode.sh": {
           "url": "https://opencode.ai/v2/install",
-          "sha256": "bbc4584fd6a888bcd14623b8a63afa0f1b4075a2e84a2c3518cd509b446b3135",
-          "bytes": 15734
+          "sha256": "b60226508704fc97d7b9d12ae6d4a6f819dfe02b22c190a0425c14ef632b056b",
+          "bytes": 16804
         }
       }
     },
     "pi": {
-      "version": "1.5.2",
+      "version": "1.6.1",
       "files": {
         "pi.sh": {
           "url": "https://pi.dev/install.sh",
-          "sha256": "ff4ed7b1ea1c058f33249a44093863b50cf95224ab4ff654e722fcbbbdaa31df",
-          "bytes": 56130
+          "sha256": "002b54681059b7e0b0d6581d96bfe6502128ba84835d7fc3bfa2a8b63088a137",
+          "bytes": 59465
         },
         "pi/latest": {
-          "url": "https://pi.dev/api/installer/releases/latest",
-          "sha256": "f2c2882f0fa5a409d4be2e3194abff6fd11a48b0f344bd1673b1e08f49464f0e",
+          "url": "https://pi.dev/api/installer/releases/1.6.1",
+          "sha256": "82b7dcb39c135aaeeca18c7573f846038eb1f46059bb0c18a3942f220099dea5",
           "bytes": 3223
         },
-        "pi/1.5.2/package.json": {
-          "url": "https://pi.dev/api/installer/releases/1.5.2/package.json",
-          "sha256": "6c433244d03aa280f1aa298035ba59f54afd0c486566771ef83cc5aef318c4cc",
+        "pi/1.6.1/package.json": {
+          "url": "https://pi.dev/api/installer/releases/1.6.1/package.json",
+          "sha256": "c7edca0f48d8f3eeeee33db442190099122a4c4b28c4e2b29eb96c5fdbedabe5",
           "bytes": 317
         },
-        "pi/1.5.2/package-lock.json": {
-          "url": "https://pi.dev/api/installer/releases/1.5.2/package-lock.json",
-          "sha256": "57e3b475e52f630cf903f73b0d2a02c405875af61ce4a845f481dcc798f58005",
-          "bytes": 52064
+        "pi/1.6.1/package-lock.json": {
+          "url": "https://pi.dev/api/installer/releases/1.6.1/package-lock.json",
+          "sha256": "fd07d62d5a6b160757b66b100f61f09f9db39473b5186537851c141b05b34efd",
+          "bytes": 52151
         }
       }
     },

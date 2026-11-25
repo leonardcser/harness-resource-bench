@@ -53,6 +53,12 @@ pi_installer_main() {
   fi
 
   PI_EXISTING_PATH=$(command -v "$PI_CMD" 2>/dev/null || true)
+  # WSL appends the Windows PATH, so command -v can find the Windows Pi. That
+  # install belongs to Windows: leave it alone and install Pi for Linux. A Linux
+  # managed install stored on a Windows drive is still recognized by its marker.
+  if [ -n "$PI_EXISTING_PATH" ] && path_is_on_windows_drive "$PI_EXISTING_PATH" && ! managed_install_root_for_command "$PI_EXISTING_PATH" >/dev/null 2>&1; then
+    PI_EXISTING_PATH=
+  fi
   export PI_EXISTING_PATH
 
   if pi_managed_install_enabled; then
@@ -72,12 +78,21 @@ pi_installer_main() {
   export PI_NPM_INSTALL_PREFIX
 
   PI_LEGACY_NPM_MIGRATION=0
+  PI_OTHER_PI_PATH=
   if pi_managed_install_enabled && managed_install_root_for_command "$PI_EXISTING_PATH" >/dev/null 2>&1; then
     PI_NPM_UNINSTALL_PREFIX=
   else
     PI_NPM_UNINSTALL_PREFIX=$(select_npm_uninstall_prefix "$PI_EXISTING_PATH")
-    if pi_managed_install_enabled && [ -n "$PI_EXISTING_PATH" ] && npm_package_is_installed_for_uninstall; then
-      PI_LEGACY_NPM_MIGRATION=1
+    if pi_managed_install_enabled && [ -n "$PI_EXISTING_PATH" ]; then
+      if npm_owns_existing_pi; then
+        PI_LEGACY_NPM_MIGRATION=1
+      else
+        # A pi this installer did not install, such as Ubuntu's apt package. It
+        # cannot reinstall or uninstall it, so the user decides whether Pi is
+        # installed alongside it. The legacy npm install keeps its old behavior.
+        PI_OTHER_PI_PATH=$PI_EXISTING_PATH
+        PI_EXISTING_PATH=
+      fi
     fi
   fi
   export PI_NPM_UNINSTALL_PREFIX PI_LEGACY_NPM_MIGRATION
@@ -147,6 +162,16 @@ prompt_start_pi() {
   printf '\n'
   unset PI_EXISTING_PATH PI_MANAGED_INSTALL_DIR PI_MANAGED_AGENT_DIR PI_MANAGED_BIN_DIR PI_NPM_INSTALL_PREFIX PI_NPM_UNINSTALL_PREFIX PI_LEGACY_NPM_MIGRATION
   exec "$start_pi_path" </dev/tty
+}
+
+# wslpath -w maps Linux files to \\wsl.localhost\... and Windows drive files
+# to C:\..., following symlinks and any automount root.
+path_is_on_windows_drive() {
+  command -v wslpath >/dev/null 2>&1 || return 1
+  case "$(wslpath -w "$1" 2>/dev/null)" in
+    [A-Za-z]:\\*) return 0 ;;
+  esac
+  return 1
 }
 
 run_preflight_checks() {
@@ -675,6 +700,8 @@ default_pi_action() {
     printf 'migrate'
   elif [ -n "$existing_pi_path" ]; then
     printf 'reinstall'
+  elif [ -n "$PI_OTHER_PI_PATH" ]; then
+    printf 'none'
   else
     printf 'install'
   fi
@@ -684,6 +711,12 @@ choose_pi_action() {
   existing_pi_path="$1"
 
   if ! ( : <>/dev/tty ) 2>/dev/null; then
+    if [ -n "$PI_OTHER_PI_PATH" ]; then
+      print_other_pi_path >&2
+      printf 'No terminal detected, so Pi was not installed alongside it. Uninstall it\n' >&2
+      printf 'or remove its directory from PATH, then run this installer again.\n' >&2
+      exit 1
+    fi
     print_pi_action_menu "$existing_pi_path"
     printf 'No terminal detected; continuing without confirmation.\n'
     PI_INSTALL_ACTION=$(default_pi_action "$existing_pi_path")
@@ -699,8 +732,17 @@ choose_pi_action() {
     key=$(read_tty_key)
 
     case "$key" in
-      ""|" "|"$PI_CR"|y|Y)
+      ""|" "|"$PI_CR")
         PI_INSTALL_ACTION=$(default_pi_action "$existing_pi_path")
+        break
+        ;;
+      y|Y)
+        # With another pi on PATH the default is to do nothing; y installs alongside it.
+        if [ -n "$PI_OTHER_PI_PATH" ]; then
+          PI_INSTALL_ACTION=install
+        else
+          PI_INSTALL_ACTION=$(default_pi_action "$existing_pi_path")
+        fi
         break
         ;;
       u|U)
@@ -749,6 +791,13 @@ print_pi_action_menu() {
     printf '  %s\n\n' "$existing_pi_path"
   fi
 
+  if [ -n "$PI_OTHER_PI_PATH" ]; then
+    print_other_pi_path
+    printf 'Pi can be installed alongside it and leaves it in place. Whichever comes\n'
+    printf 'first on PATH then runs as pi; to avoid that, uninstall it or remove its\n'
+    printf 'directory from PATH first.\n\n'
+  fi
+
   if [ -n "${PI_NPM_INSTALL_PREFIX:-}" ]; then
     printf "npm's global directory is not writable; Pi will be installed under %s.\n\n" "$PI_NPM_INSTALL_PREFIX"
   fi
@@ -778,10 +827,21 @@ print_pi_action_menu() {
   elif [ -n "$existing_pi_path" ]; then
     printf '  %s%-4s%s %sReinstall Pi%s %s(default)%s\n' "$cyan" 'y' "$reset" "$green" "$reset" "$dim" "$reset"
     printf '  %s%-4s%s %sUninstall Pi%s\n' "$cyan" 'u' "$reset" "$red" "$reset"
+  elif [ -n "$PI_OTHER_PI_PATH" ]; then
+    printf '  %s%-4s%s %sInstall Pi alongside it%s\n' "$cyan" 'y' "$reset" "$green" "$reset"
   else
     printf '  %s%-4s%s %sInstall Pi%s %s(default)%s\n' "$cyan" 'y' "$reset" "$green" "$reset" "$dim" "$reset"
   fi
-  printf '  %s%-4s%s %sDo nothing%s\n' "$cyan" 'n' "$reset" "$dim" "$reset"
+  if [ -n "$PI_OTHER_PI_PATH" ]; then
+    printf '  %s%-4s%s %sDo nothing%s %s(default)%s\n' "$cyan" 'n' "$reset" "$dim" "$reset" "$dim" "$reset"
+  else
+    printf '  %s%-4s%s %sDo nothing%s\n' "$cyan" 'n' "$reset" "$dim" "$reset"
+  fi
+}
+
+print_other_pi_path() {
+  printf 'Another pi command is on PATH, and this installer did not install it:\n\n'
+  printf '  %s\n\n' "$PI_OTHER_PI_PATH"
 }
 
 print_pi_action_selection() {
@@ -848,10 +908,14 @@ managed_install_marker_is_valid() {
   node - "$marker_path" <<'NODE' >/dev/null 2>&1
 const fs = require("node:fs");
 const marker = JSON.parse(fs.readFileSync(process.argv[2], "utf8").replace(/^\uFEFF/, ""));
+// install.ps1 records a Windows entrypoint (C:\...\pi.cmd). WSL can reach that
+// install through PATH or an inherited PI_MANAGED_INSTALL_ROOT; it is not ours.
+const windowsEntrypoint = /^(?:[A-Za-z]:\\|\\\\)/.test(marker.entrypoint?.path ?? "");
 if (
 	marker.kind !== "pi-managed-install" ||
 	marker.schemaVersion !== 1 ||
-	marker.layout !== "releases-v1"
+	marker.layout !== "releases-v1" ||
+	windowsEntrypoint
 ) {
 	process.exit(1);
 }
@@ -1206,11 +1270,11 @@ write_managed_install_link() {
     return 1
   fi
 
-  managed_link_target=$(node - "$managed_bin_dir" "$managed_launcher" <<'NODE'
-const path = require("node:path");
-console.log(path.relative(process.argv[2], process.argv[3]));
-NODE
-  )
+  # The PATH directory may itself be a symlink, so use an absolute target.
+  case "$managed_launcher" in
+    /*) managed_link_target="$managed_launcher" ;;
+    *) managed_link_target="$PWD/$managed_launcher" ;;
+  esac
   managed_link_tmp="$managed_bin_dir/.$PI_CMD.tmp.$$"
   rm -f "$managed_link_tmp"
   ln -s "$managed_link_target" "$managed_link_tmp"
@@ -1388,6 +1452,20 @@ uninstall_pi_package() {
     printf '\nnpm uninstall finished, but pi is still present at:\n\n  %s\n' "$PI_EXISTING_PATH" >&2
     return 1
   fi
+}
+
+# npm owns the pi on PATH only if it is the bin link of the prefix that has the
+# package. Compare resolved files, so a PATH entry such as prefix/bin// matches.
+npm_owns_existing_pi() {
+  npm_owner_bin=$(resolve_existing_file "${PI_NPM_UNINSTALL_PREFIX:-$(npm_global_prefix)}/bin/$PI_CMD") || return 1
+  npm_existing_bin=$(resolve_existing_file "$PI_EXISTING_PATH") || return 1
+  [ "$npm_existing_bin" = "$npm_owner_bin" ] && npm_package_is_installed_for_uninstall
+}
+
+resolve_existing_file() {
+  node - "$1" <<'NODE' 2>/dev/null
+console.log(require("node:fs").realpathSync(process.argv[2]));
+NODE
 }
 
 npm_package_is_installed_for_uninstall() {

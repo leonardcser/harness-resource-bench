@@ -1,5 +1,5 @@
 name = "omp"
-version = "18.22.2"
+version = "19.2.1"
 executable = "omp"
 # omp refuses an edit of lines that it has not shown under the file's current
 # tag.

@@ -1,5 +1,5 @@
 name = "claude-code"
-version = "2.1.327"
+version = "2.1.332"
 executable = "claude"
 reset = "/clear"
 # It clones the official plugin marketplace, then lists it in this file.
