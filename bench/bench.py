@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Resource benchmark of coding agents. Run containers only on the measurement host.
 
-bench.py run [AGENT ...] [--local-binary AGENT=PATH]
-bench.py check [AGENT ...] [--local-binary AGENT=PATH]
+bench.py run [AGENT ...] [--recipe PATH] [--local-binary AGENT=PATH]
+bench.py check [AGENT ...] [--recipe PATH] [--local-binary AGENT=PATH]
 bench.py transcript > transcript.json
 
 README.md explains the commands.
@@ -16,7 +16,7 @@ import time
 from pathlib import Path
 
 import host
-from agents import AGENTS, VERSIONS
+from agents import AGENTS, register
 from case import MEMORY, execute, save
 from images import InstallerCache, prepare
 from plan import plan, warmups, work
@@ -50,7 +50,7 @@ def folder(selected):
 def build(selected, local, fetch):
     """The images of the agents, built with the frozen installers. With
     `fetch`, an installer of a new version is frozen first."""
-    targets = [(agent, VERSIONS[agent]) for agent in selected]
+    targets = [(agent, AGENTS[agent].version) for agent in selected]
     cache = InstallerCache(targets, fetch)
     try:
         base_id, records = prepare(targets, cache, local)
@@ -66,7 +66,7 @@ def run(out, selected, images, smoke, commit):
     cases = plan(selected, smoke)
     config = {
         "smoke": smoke,
-        "versions": {agent: VERSIONS[agent] for agent in selected},
+        "versions": {agent: AGENTS[agent].version for agent in selected},
         "images": images,
         "seed": SEED,
         "cpus": host.AGENT_CPUS,
@@ -121,6 +121,11 @@ def main():
             "agents", nargs="*", metavar="AGENT", help=f"default: {' '.join(AGENTS)}"
         )
         bench.add_argument(
+            "--recipe",
+            metavar="PATH",
+            help="also measure the agent of this recipe; with no AGENT, only it",
+        )
+        bench.add_argument(
             "--local-binary",
             metavar="AGENT=PATH",
             help="install a local build of an agent that ships as one binary",
@@ -130,10 +135,11 @@ def main():
     if args.command == "transcript":
         print(json.dumps(work()))
         return
+    custom = [register(args.recipe).name] if args.recipe else []
     unknown = set(args.agents) - AGENTS.keys()
     if unknown:
         parser.error(f"unknown agents {sorted(unknown)}; known: {' '.join(AGENTS)}")
-    selected = [a for a in AGENTS if a in args.agents or not args.agents]
+    selected = [*args.agents, *custom] or list(AGENTS)
     local = None
     if args.local_binary:
         agent, _, path = args.local_binary.partition("=")
@@ -146,7 +152,8 @@ def main():
         bench = {
             "selected": selected,
             "images": images,
-            "commit": commit() if args.command == "run" else None,
+            # A recipe outside the repository is not in the commit.
+            "commit": commit() if args.command == "run" and not custom else None,
         }
         if args.command == "check":
             out = RESULTS / "check"

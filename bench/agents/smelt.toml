@@ -1,0 +1,40 @@
+name = "smelt"
+version = "0.8.1"
+executable = "smelt"
+
+summaries = [
+    ["The conversation above is becoming long.", "CONTEXT CHECKPOINT COMPACTION"],
+    ["You are performing a CONTEXT CHECKPOINT COMPACTION.", "handoff summary"],
+]
+
+[install]
+installer = "https://smeltagent.dev/install.sh"
+command = "curl -fsSL ${installers}/smelt.sh | SMELT_VERSION=v${version} sh"
+
+[[files]]
+path = ".config/smelt/init.lua"
+text = '''
+smelt.provider.register("mock", { type = "openai-compatible", api_base = "${url}/v1", api_key_env = "MOCK_KEY", models = { { name = "mock-model", context_window = ${context_window}, max_tokens = ${max_tokens}, supports_reasoning = true } } })
+smelt.defaults.set({ model = "mock/mock-model", mode = "yolo" })
+smelt.settings.autoupgrade = "off"
+'''
+
+[commands]
+headless = ["smelt", "--headless", "--format", "json", "--model", "mock/mock-model", "--mode", "yolo"]
+tui = ["smelt"]
+
+[tools.read]
+name = "read_file"
+arguments = { file_path = "${path}" }
+[tools.edit]
+name = "edit_file"
+arguments = { file_path = "${path}", old_string = "${old}", new_string = "${new}" }
+[tools.write]
+name = "write_file"
+arguments = { file_path = "${path}", content = "${output}" }
+[tools.search]
+name = "grep"
+arguments = { pattern = "${pattern}", path = "${path}", output_mode = "content", "-n" = true }
+[tools.shell]
+name = "bash"
+arguments = { command = "${command}" }

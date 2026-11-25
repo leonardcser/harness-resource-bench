@@ -1,0 +1,42 @@
+name = "fx"
+version = "0.0.17"
+executable = "fx"
+
+# fx asks for its notes under exact turn headings, and asks again if one is
+# missing. The model's summary has a heading for each turn that it names.
+summaries = [
+    ["", "Write the compaction notes for the"],
+    ["", "Your notes on the turns above left some out."],
+    ["", "Your notes left out the summary of the earlier"],
+]
+
+[install]
+installer = "https://fx.sh/setup.sh"
+command = "curl -fsSL ${installers}/fx.sh | bash -s -- v${version}"
+
+# fx accepts plain HTTP only on loopback.
+[[files]]
+path = ".fx/settings.json"
+mode = 0o600
+dir_mode = 0o700
+json = { provider = "mock", models = { mock = "mock-model" }, providers = { mock = { protocol = "openai-chat-completions", base_url = "${url}/v1", auth = { type = "bearer", env = "MOCK_KEY" }, model_metadata = { mock-model = { context_window = "${context_window}", max_output_tokens = "${max_tokens}", supports_tool_use = true } } } }, permission_mode = "full-access", yolo_acknowledged = true, auto_upgrade = false }
+
+[commands]
+headless = ["fx", "ask", "--full-access", "--json"]
+tui = ["fx"]
+
+[tools.read]
+name = "read_file"
+arguments = { path = "${path}" }
+[tools.edit]
+name = "edit_file"
+arguments = { path = "${path}", old_string = "${old}", new_string = "${new}" }
+[tools.write]
+name = "write_file"
+arguments = { path = "${path}", content = "${output}" }
+[tools.search]
+name = "grep_files"
+arguments = { pattern = "${pattern}", path = "${path}", mode = "matches" }
+[tools.shell]
+name = "shell"
+arguments = { action = "run", command = "${command}" }

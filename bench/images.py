@@ -1,13 +1,13 @@
 """Freeze the official installers and build one versioned image per agent.
 
-The scripts are served without changes. Pi has no version flag. So its
-documented installer API override points to a fixed copy of its public release
-metadata.
+The scripts are served without changes. A recipe may list more files to freeze,
+such as the release metadata of an installer that has no version flag.
 """
 
 import hashlib
 import json
 import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -96,15 +96,7 @@ class InstallerCache:
         of an earlier version."""
         for name in self.manifest["agents"].get(agent, {}).get("files", {}):
             (INSTALLERS / name).unlink(missing_ok=True)
-        files = {agent + ".sh": AGENTS[agent].installer}
-        if agent == "pi":
-            releases = "https://pi.dev/api/installer/releases"
-            latest = json.loads(fetch_url(releases + "/latest"))
-            if latest["version"] != version:
-                raise ValueError("Pi installer latest release differs from the pin")
-            files["pi/latest"] = releases + "/latest"
-            for name in ("package.json", "package-lock.json"):
-                files[f"pi/{version}/{name}"] = f"{releases}/{version}/{name}"
+        files = AGENTS[agent].installer_files()
         records = {}
         for name, url in files.items():
             data = fetch_url(url)
@@ -180,10 +172,7 @@ def prepare(targets, cache, local=None):
         install = (
             f"COPY binary /usr/local/bin/{spec.executable}"
             if binary
-            else "RUN "
-            + spec.install.replace("@INSTALLER_BASE@", cache.url()).replace(
-                "@VERSION@", version
-            )
+            else "RUN " + spec.install_command(cache.url())
         )
         dockerfile = AGENT_DOCKERFILE.format(base=BASE, install=install)
         image_id = build(image(agent, version), dockerfile, binary)
@@ -204,7 +193,7 @@ def prepare(targets, cache, local=None):
             "installer_sha256": None if binary else cache.installer_sha256(agent),
             "dockerfile_sha256": hashlib.sha256(dockerfile.encode()).hexdigest(),
         }
-        if agent == "pi":
-            record["node_version"] = run(image_id, "node", "--version")
+        for name, command in spec.install.get("probes", {}).items():
+            record[name] = run(image_id, *shlex.split(command))
         records.append(record)
     return base_id, records

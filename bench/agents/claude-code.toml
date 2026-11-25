@@ -1,0 +1,53 @@
+name = "claude-code"
+version = "2.1.327"
+executable = "claude"
+reset = "/clear"
+# It clones the official plugin marketplace, then lists it in this file.
+background_setup = ".claude/plugins/known_marketplaces.json"
+
+summaries = [
+    [
+        "CRITICAL: Respond with TEXT ONLY. Do NOT call any tools.",
+        "Your task is to create a detailed summary of the conversation so far",
+    ],
+]
+
+[install]
+installer = "https://claude.ai/install.sh"
+command = "curl -fsSL ${installers}/claude-code.sh | bash -s -- ${version}"
+
+# Not CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: it also turns off Claude Code's
+# session titles, which are model requests that users make.
+[environment]
+ANTHROPIC_BASE_URL = "${url}"
+DISABLE_BUG_COMMAND = "1"
+
+[[files]]
+path = ".claude.json"
+json = { hasCompletedOnboarding = true, projects = { "/workspace" = { hasTrustDialogAccepted = true } }, theme = "dark", customApiKeyResponses = { approved = ["${key_hint}"], rejected = [] }, bypassPermissionsModeAccepted = true, hasSeenAutoDefaultNudge = true, hasSeenAutoDefaultNotice = true, hasResetAutoModeOptInForDefaultOffer = true }
+
+# autoCompactWindow is the mock model's window, as for the other agents.
+# Otherwise it takes the real model's window and compacts only after a request
+# fails as too long.
+[[files]]
+path = ".claude/settings.json"
+json = { model = "claude-sonnet-5-5", autoCompactWindow = "${context_window}", permissions = { defaultMode = "bypassPermissions" }, enabledPlugins = {} }
+
+[commands]
+headless = ["claude", "--print", "--output-format", "stream-json", "--verbose", "--model", "claude-sonnet-5-5", "--dangerously-skip-permissions"]
+tui = ["claude"]
+
+# Claude Code offers no search tool to this model, so a search runs in the
+# shell.
+[tools.read]
+name = "Read"
+arguments = { file_path = "${path}" }
+[tools.edit]
+name = "Edit"
+arguments = { file_path = "${path}", old_string = "${old}", new_string = "${new}" }
+[tools.write]
+name = "Write"
+arguments = { file_path = "${path}", content = "${output}" }
+[tools.shell]
+name = "Bash"
+arguments = { command = "${command}" }

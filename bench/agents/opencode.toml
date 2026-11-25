@@ -1,0 +1,44 @@
+name = "opencode"
+version = "2.3.2"
+executable = "opencode"
+server = true
+
+summaries = [
+    ["<conversation>\n", "Keep each section concise."],
+    ["You MUST summarize the conversation above", "structured summary"],
+    ["Update the existing checkpoint in the conversation above", "structured summary"],
+    ["The previous response did not fill in the required summary template.", ""],
+]
+
+[install]
+installer = "https://opencode.ai/v2/install"
+command = "curl -fsSL ${installers}/opencode.sh | bash -s -- --version ${version}"
+
+[environment]
+OPENCODE_DISABLE_AUTOUPDATE = "1"
+
+[environment.OPENCODE_CONFIG_CONTENT]
+model = "mock/mock-model"
+permissions = [{ action = "*", resource = "*", effect = "allow" }]
+providers = { mock = { package = "@opencode/ai/providers/openai-compatible", settings = { baseURL = "${url}/v1", apiKey = "${key}" }, models = { mock-model = { limit = { context = "${context_window}", output = "${max_tokens}" }, capabilities = { tools = true, reasoning = { supported = true } } } } } }
+
+[commands]
+headless = ["opencode", "run", "--format", "json", "--standalone", "--auto"]
+tui = ["opencode"]
+tui_prompt = ["--prompt"]
+
+[tools.read]
+name = "read"
+arguments = { path = "${path}" }
+[tools.edit]
+name = "edit"
+arguments = { path = "${path}", oldString = "${old}", newString = "${new}" }
+[tools.write]
+name = "write"
+arguments = { path = "${path}", content = "${output}" }
+[tools.search]
+name = "grep"
+arguments = { pattern = "${pattern}", path = "${path}", literal = true }
+[tools.shell]
+name = "shell"
+arguments = { command = "${command}" }

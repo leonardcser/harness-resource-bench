@@ -1,0 +1,52 @@
+name = "codex"
+version = "0.170.0"
+executable = "codex"
+# It clones its plugin repository to a temporary folder, then renames it.
+background_setup = ".codex/.tmp/plugins"
+server = true
+
+summaries = [
+    ["You are performing a CONTEXT CHECKPOINT COMPACTION.", "handoff summary"],
+]
+
+[install]
+installer = "https://chatgpt.com/codex/install.sh"
+command = "curl -fsSL ${installers}/codex.sh | CODEX_NON_INTERACTIVE=1 sh -s -- --release ${version}"
+
+# Codex cuts tool output at 10 KB for a model it does not know. Its own models
+# cut at 10,000 tokens, so the mock model gets that limit.
+[[files]]
+path = ".codex/config.toml"
+text = '''
+model_provider = "mock"
+model = "mock-model"
+model_context_window = ${context_window}
+tool_output_token_limit = 10000
+check_for_update_on_startup = false
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+[model_providers.mock]
+name = "benchmark"
+base_url = "${url}/v1"
+wire_api = "responses"
+env_key = "OPENAI_API_KEY"
+supports_websockets = false
+[analytics]
+enabled = false
+[feedback]
+enabled = false
+'''
+
+# Its shared server has its own updater.
+[[files]]
+path = ".codex/app-server-daemon/settings.json"
+json = { updater = { autoUpdateEnabled = false } }
+
+[commands]
+headless = ["codex", "exec", "--json", "--skip-git-repo-check", "--dangerously-bypass-approvals-and-sandbox"]
+tui = ["codex"]
+
+# Codex runs every step in its shell. An edit is an apply_patch command.
+[tools.shell]
+name = "exec_command"
+arguments = { cmd = "${command}" }

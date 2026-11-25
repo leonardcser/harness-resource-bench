@@ -53,7 +53,7 @@ rebase the commits of a run.
 
 ## New versions
 
-1. Set `version` in each agent's file in `bench/agents/`. Then, from `bench/`,
+1. Set `version` in each agent's recipe in `bench/agents/`. Then, from `bench/`,
    freeze and verify the installers. This does not need the VM:
 
    ```sh

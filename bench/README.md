@@ -59,12 +59,13 @@ an idle machine.
 
 ```sh
 uv run bench.py run          # all agents, about 8.5 hours
+uv run bench.py run omp      # one agent
 uv run bench.py check omp    # build and run the setup check only
 ```
 
 `run` does three steps:
 
-1. **Build:** it builds one image per agent, at the version in `agents/`, with
+1. **Build:** it builds one image per agent, at the version of its recipe, with
    the official installer frozen in `installers/`.
 2. **Check:** it runs one short case per question (`smoke/`), which uses every
    tool kind. It stops if a check fails.
@@ -98,6 +99,23 @@ Each run writes:
 
 Never commit session stores, credentials or private history.
 
+## Add an agent
+
+An agent is a TOML recipe in `agents/`: version, install command, config files,
+commands and tool calls. Copy the closest recipe, for example `agents/pi.toml`,
+and change it. [`agents/agent.py`](agents/agent.py) lists the fields and
+placeholders, and the loader rejects an unknown field. A Python file of the same
+name beside the recipe holds what a template cannot say (`omp.py`).
+
+To measure it without adding it to the repository, and only it:
+
+```sh
+uv run bench.py check --recipe mine.toml   # build, freeze the installer, setup check
+uv run bench.py run --recipe mine.toml
+```
+
+Such a run records no commit, so it cannot be frozen for the site.
+
 ## Reproduce a run
 
 On a fresh Ubuntu VM with 6 CPUs or more:
@@ -114,7 +132,7 @@ other numbers, but the order of the agents should hold.
 
 ## Code
 
-Each agent's file in `agents/` holds everything about it. The rest of the code
+Each agent's recipe in `agents/` holds everything about it. The rest of the code
 knows no agent.
 
 | File                  | Role                                                      |
@@ -125,7 +143,8 @@ knows no agent.
 | `report.py`           | Summaries and the terminal replay                         |
 | `host.py`             | Host checks, CPUs, steal time and machine info            |
 | `proxmox/`            | The hook that reserves the benchmark VM's cores           |
-| `agents/NAME.py`      | Version, install, config, tool calls and request texts    |
+| `agents/NAME.toml`    | Version, install, config, tool calls and request texts    |
+| `agents/agent.py`     | The format of a recipe, and how it becomes an agent       |
 | `model/server.py`     | The mock model server and its checks                      |
 | `model/requests.py`   | What a request holds: history, results, compaction        |
 | `model/formats.py`    | The three API formats of the replies                      |
@@ -161,7 +180,8 @@ Lint: `uv run ruff check .`
   runs last, because it empties the file cache.
 - **Defaults:** each agent runs with its defaults, except:
   - telemetry, error reports and automatic updates are off (`ENV` in
-    `agents/__init__.py`). Other requests stay on, such as session titles.
+    `agents/agent.py`, and each recipe's `[environment]`). Other requests stay
+    on, such as session titles.
   - approvals and the sandbox are off, so the run needs no person.
   - codex's shared server does not update itself.
 - **Launch:** the TUI starts as a user starts it each day: the bare command,
@@ -223,7 +243,7 @@ take the calls of each turn from the profile. 64 turns hold about as much as the
 #### Tool calls
 
 Each call uses the agent's own tool for its kind, or its shell tool if it has
-none, as in real use. Each agent's `call` in `agents/` writes them. The model
+none, as in real use. Each agent's recipe sets them in `[tools]`. The model
 checks that the tool is on offer, with every required argument.
 
 | Kind   | smelt        | pi      | omp     | codex          | claude code | opencode | fx           |
@@ -282,7 +302,7 @@ all requests by path.
 
 #### Agent quirks
 
-These live in each agent's file in `agents/`.
+These live in each agent's recipe in `agents/`.
 
 - **omp** edits with hashline patches.
   - The file tag comes from the newest read or edit result. The line numbers

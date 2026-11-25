@@ -1,0 +1,54 @@
+name = "omp"
+version = "18.22.2"
+executable = "omp"
+# omp refuses an edit of lines that it has not shown under the file's current
+# tag.
+edit_retries = ["a straight retry now succeeds"]
+side_requests = ["Ephemeral side-channel turn; reuses current conversation context."]
+
+summaries = [
+    ["You MUST summarize the conversation above", "structured summary"],
+    ["<conversation>\n", "into a structured handoff summary"],
+    ["<conversation>\n", "Update existing handoff summary"],
+    ["<conversation>\n", "MUST summarize prefix for retained suffix"],
+    ["<conversation>\n", "Summarize conversation changes as a pull request"],
+    ["", "Write a handoff document for another instance of yourself."],
+]
+
+[install]
+installer = "https://omp.sh/install"
+command = "curl -fsSL ${installers}/omp.sh | sh -s -- --binary --ref v${version}"
+
+[environment]
+PI_OFFLINE = "1"
+PI_TELEMETRY = "0"
+
+# YAML reads JSON.
+[[files]]
+path = ".omp/agent/config.yml"
+json = { startup = { setupWizard = false, checkUpdate = false }, marketplace = { autoUpdate = "off" }, modelRoles = { default = "mock/mock-model" }, tools = { approvalMode = "yolo" } }
+
+[[files]]
+path = ".omp/agent/models.yml"
+json = { providers = { mock = { baseUrl = "${url}/v1", api = "openai-completions", auth = "apiKey", apiKey = "MOCK_KEY", models = [{ id = "mock-model", reasoning = true, contextWindow = "${context_window}", maxTokens = "${max_tokens}" }] } } }
+
+[commands]
+headless = ["omp", "--mode", "json", "-p", "--model", "mock/mock-model", "--approval-mode", "yolo"]
+tui = ["omp"]
+
+# Every omp tool takes `i`, a short note of what the call is for.
+[tools.read]
+name = "read"
+arguments = { i = "Run the ${kind} fixture", path = "${path}" }
+[tools.edit]
+name = "edit"
+arguments = { i = "Run the ${kind} fixture", input = "${hashline_patch}" }
+[tools.write]
+name = "write"
+arguments = { i = "Run the ${kind} fixture", path = "${path}", content = "${output}" }
+[tools.search]
+name = "grep"
+arguments = { i = "Run the ${kind} fixture", pattern = "${pattern}", path = "${path}" }
+[tools.shell]
+name = "bash"
+arguments = { i = "Run the ${kind} fixture", command = "${command}" }

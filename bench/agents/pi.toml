@@ -1,0 +1,59 @@
+name = "pi"
+version = "1.5.2"
+executable = "pi"
+
+summaries = [
+    ["<conversation>\n", "Keep each section concise."],
+    ["# Conversation\n", "Create a concise checkpoint of the user's request"],
+]
+
+[install]
+installer = "https://pi.dev/install.sh"
+# Node, then pi.
+command = [
+    "curl -fsSL https://nodejs.org/dist/v22.23.4/node-v22.23.4-linux-x64.tar.xz -o /tmp/node-v22.23.4-linux-x64.tar.xz",
+    "curl -fsSL https://nodejs.org/dist/v22.23.4/SHASUMS256.txt -o /tmp/node-sums",
+    "(cd /tmp && grep ' node-v22.23.4-linux-x64.tar.xz$' node-sums | sha256sum -c -)",
+    "tar -xJf /tmp/node-v22.23.4-linux-x64.tar.xz -C /usr/local --strip-components=1",
+    "rm /tmp/node-v22.23.4-linux-x64.tar.xz /tmp/node-sums",
+    "curl -fsSL ${installers}/pi.sh | PI_INSTALLER_API_BASE=${installers}/pi sh",
+]
+
+# The release metadata that the installer reads, under ${installers}/pi.
+[install.files]
+"pi/latest" = "https://pi.dev/api/installer/releases/${version}"
+"pi/${version}/package.json" = "https://pi.dev/api/installer/releases/${version}/package.json"
+"pi/${version}/package-lock.json" = "https://pi.dev/api/installer/releases/${version}/package-lock.json"
+
+[install.probes]
+node_version = "node --version"
+
+[environment]
+PI_OFFLINE = "1"
+PI_TELEMETRY = "0"
+
+[[files]]
+path = ".pi/agent/settings.json"
+json = { defaultProjectTrust = "always", defaultProvider = "mock", defaultModel = "mock-model" }
+
+[[files]]
+path = ".pi/agent/models.json"
+json = { providers = { mock = { baseUrl = "${url}/v1", api = "openai-completions", apiKey = "${key}", models = [{ id = "mock-model", reasoning = true, contextWindow = "${context_window}", maxTokens = "${max_tokens}" }] } } }
+
+[commands]
+headless = ["pi", "--mode", "json", "-p", "--provider", "mock", "--model", "mock-model"]
+tui = ["pi"]
+
+# pi has no search tool, so a search runs in the shell.
+[tools.read]
+name = "read"
+arguments = { path = "${path}" }
+[tools.edit]
+name = "edit"
+arguments = { path = "${path}", edits = [{ oldText = "${old}", newText = "${new}" }] }
+[tools.write]
+name = "write"
+arguments = { path = "${path}", content = "${output}" }
+[tools.shell]
+name = "bash"
+arguments = { command = "${command}" }
