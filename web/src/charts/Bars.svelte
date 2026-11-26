@@ -3,6 +3,7 @@
   import { scaleLinear, scaleLog } from "d3-scale";
   import { span } from "../lib/chart";
   import { nameOf, type Row, type Stat } from "../lib/data";
+  import { DIM, Focus } from "../lib/focus.svelte";
   import AgentRows from "./AgentRows.svelte";
 
   type Zone = { from: number; label: string };
@@ -26,6 +27,8 @@
     rowsTop?: number;
   } = $props();
 
+  // Hover a legend entry, "every" or "first", to bring its bars out.
+  const focus = new Focus();
   let root = $state<HTMLDivElement>();
   $effect(() => {
     if (!root) return;
@@ -127,12 +130,14 @@
       ></div>
     {/each}
     <div
-      class="relative h-4 shrink-0 bg-bar"
+      class="relative h-4 shrink-0 bg-bar transition-opacity"
       style:width={at(x(s.median))}
+      style:opacity={focus.dims("every") ? DIM : 1}
     ></div>
     {#if more}
       <div
-        class="absolute h-4"
+        class="absolute h-4 transition-opacity"
+        style:opacity={focus.dims("first") ? DIM : 1}
         style:left={at(x(s.median))}
         style:width="calc({at(x(more.median))} - {at(x(s.median))})"
         style:background="var(--first-launch)"
@@ -195,11 +200,19 @@
 <div bind:this={root}>
   {#if first.length}
     <div class="mb-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-      <span class="inline-flex items-center gap-1.5">
+      <span
+        class="inline-flex cursor-default items-center gap-1.5 transition-opacity"
+        style:opacity={focus.dims("every") ? DIM * 2 : 1}
+        {...focus.on("every")}
+      >
         <i class="inline-block size-2.5 bg-bar"></i>
         Every launch
       </span>
-      <span class="inline-flex items-center gap-1.5">
+      <span
+        class="inline-flex cursor-default items-center gap-1.5 transition-opacity"
+        style:opacity={focus.dims("first") ? DIM * 2 : 1}
+        {...focus.on("first")}
+      >
         <i class="inline-block size-2.5" style:background="var(--first-launch)"
         ></i>
         Extra at first launch

@@ -4,6 +4,7 @@
   import { scaleLinear, scaleLog } from "d3-scale";
   import { area, line } from "d3-shape";
   import { spread, textWidth, thin } from "../lib/chart";
+  import { DIM, Focus } from "../lib/focus.svelte";
   import { colorOf, nameOf, type Point, type Series } from "../lib/data";
   import { scrub } from "../lib/scrub";
   import Tip from "./Tip.svelte";
@@ -36,6 +37,8 @@
   // Narrow charts show a legend below instead, to keep the plot wide.
   const compact = $derived(width < 520);
   let hover = $state<number | null>(null);
+  // Hover a label to bring its line out.
+  const focus = new Focus();
 
   const drawn = $derived(series.filter((s) => s.points.length));
   const xs = $derived(
@@ -126,7 +129,8 @@
     aria-label={summary}
     class="block overflow-visible"
     {@attach scrub(
-      (p) => (hover = nearest(p.x)),
+      // The end labels are past the plot, and show no reading.
+      (p) => (hover = p.x <= width - right + 6 ? nearest(p.x) : null),
       () => (hover = null),
     )}
   >
@@ -171,57 +175,76 @@
     {/if}
     {#each drawn as s, i (s.agent)}
       {@const color = colorOf(s.agent)}
-      <path d={band(s.points)} fill={color} fill-opacity="0.08" />
-      <path
-        d={path(s.points)}
-        fill="none"
-        stroke={color}
-        stroke-width="2"
-        stroke-linejoin="round"
-      />
-      {#each s.points as p (p.x)}
-        <circle
-          cx={x(p.x)}
-          cy={at(p, "median")}
-          r="3"
-          fill={color}
-          class="stroke-bg"
+      <g
+        class="transition-opacity"
+        style:opacity={focus.dims(s.agent) ? DIM : 1}
+      >
+        <path d={band(s.points)} fill={color} fill-opacity="0.08" />
+        <path
+          d={path(s.points)}
+          fill="none"
+          stroke={color}
           stroke-width="2"
+          stroke-linejoin="round"
         />
-      {/each}
-      {#if !compact}
-        <!-- A label pushed off its line's end gets a leader back to it. -->
-        {#if Math.abs(labelY[i] - at(ends[i], "median")) > 1}
-          <line
-            x1={width - right + 6}
-            y1={at(ends[i], "median")}
-            x2={width - right + 11}
-            y2={labelY[i]}
-            stroke={color}
-            stroke-opacity="0.6"
+        {#each s.points as p (p.x)}
+          <circle
+            cx={x(p.x)}
+            cy={at(p, "median")}
+            r="3"
+            fill={color}
+            class="stroke-bg"
+            stroke-width="2"
           />
-        {/if}
-        <foreignObject
-          x={width - right + 13}
-          y={labelY[i] - LOGO / 2}
-          width={LOGO}
-          height={LOGO}
+        {/each}
+      </g>
+      {#if !compact}
+        <g
+          class="cursor-default transition-opacity"
+          style:opacity={focus.dims(s.agent) ? DIM * 2 : 1}
+          {...focus.on(s.agent)}
         >
-          <div class="flex size-full leading-none">
-            <Logo agent={s.agent} name={false} size={LOGO} />
-          </div>
-        </foreignObject>
-        <text
-          x={width - right + 13 + LOGO + 4}
-          y={labelY[i]}
-          dy="0.35em"
-          class="text-[11px]"
-        >
-          <tspan class="fill-fg">{nameOf(s.agent)}</tspan>
-          <tspan class="fill-muted tabular-nums"
-            >{yFormat(ends[i].stat.median)}</tspan
+          <!-- The hover target: the whole label, gaps included. -->
+          <rect
+            x={width - right + 13}
+            y={labelY[i] - 6.5}
+            width={right - 13}
+            height="13"
+            fill="transparent"
+          />
+          <!-- A label pushed off its line's end gets a leader back to it. -->
+          {#if Math.abs(labelY[i] - at(ends[i], "median")) > 1}
+            <line
+              x1={width - right + 6}
+              y1={at(ends[i], "median")}
+              x2={width - right + 11}
+              y2={labelY[i]}
+              stroke={color}
+              stroke-opacity="0.6"
+            />
+          {/if}
+          <foreignObject
+            x={width - right + 13}
+            y={labelY[i] - LOGO / 2}
+            width={LOGO}
+            height={LOGO}
           >
-        </text>
+            <div class="flex size-full leading-none">
+              <Logo agent={s.agent} name={false} size={LOGO} />
+            </div>
+          </foreignObject>
+          <text
+            x={width - right + 13 + LOGO + 4}
+            y={labelY[i]}
+            dy="0.35em"
+            class="text-[11px]"
+          >
+            <tspan class="fill-fg">{nameOf(s.agent)}</tspan>
+            <tspan class="fill-muted tabular-nums"
+              >{yFormat(ends[i].stat.median)}</tspan
+            >
+          </text>
+        </g>
       {/if}
     {/each}
   </svg>
@@ -244,7 +267,11 @@
     class="mt-3 grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-6 gap-y-1.5 text-xs"
   >
     {#each drawn as s (s.agent)}
-      <li class="flex items-center gap-1.5 whitespace-nowrap">
+      <li
+        class="flex cursor-default items-center gap-1.5 whitespace-nowrap transition-opacity"
+        style:opacity={focus.dims(s.agent) ? DIM * 2 : 1}
+        {...focus.on(s.agent)}
+      >
         {@render swatch(s.agent)}
         <Logo agent={s.agent} name={false} size={12} />
         <span>{nameOf(s.agent)}</span>

@@ -2,6 +2,7 @@
   // Horizontal bars split into parts, in the supplied row order.
   import { span } from "../lib/chart";
   import { nameOf } from "../lib/data";
+  import { DIM, Focus } from "../lib/focus.svelte";
   import type { Part, StackRow } from "../lib/splits";
   import AgentRows from "./AgentRows.svelte";
 
@@ -34,6 +35,8 @@
       drawn.some((r) => r.pieces.some((p) => p.part === part.id)),
     ),
   );
+  // Hover a legend entry to bring its part out.
+  const focus = new Focus();
   const partOf = (id: string) => parts.find((p) => p.id === id)!;
   const percent = (v: number, of: number) => `${Math.round((v / of) * 100)}%`;
 </script>
@@ -44,9 +47,10 @@
     <div class="flex h-4 shrink-0 gap-[2px]" style:width={span(sum / top)}>
       {#each row.pieces as piece (piece.part)}
         <div
-          class="h-full min-w-[2px]"
+          class="h-full min-w-[2px] transition-opacity"
           style:flex="{piece.value / sum} 1 0"
           style:background={partOf(piece.part).color}
+          style:opacity={focus.dims(piece.part) ? DIM : null}
           data-part={piece.part}
         ></div>
       {/each}
@@ -95,7 +99,11 @@
 
 <div class="mb-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
   {#each used as part (part.id)}
-    <span class="inline-flex items-center gap-1.5">
+    <span
+      class="inline-flex cursor-default items-center gap-1.5 transition-opacity"
+      style:opacity={focus.dims(part.id) ? DIM * 2 : 1}
+      {...focus.on(part.id)}
+    >
       <i class="inline-block size-2.5" style:background={part.color}></i>
       {part.label}
     </span>
