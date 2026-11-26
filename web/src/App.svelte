@@ -19,13 +19,21 @@
     ["#/methodology", "Methodology"],
   ];
 
-  let hash = $state(location.hash || "#/");
+  /** The page of a hash. Any other hash, such as an anchor in the results,
+   * is on the first page. */
+  const pageOf = (hash: string) =>
+    PAGES.find(([href]) => href === hash)?.[0] ?? "#/";
+
+  let page = $state(pageOf(location.hash));
   let menu = $state(false);
 </script>
 
 <svelte:window
   onhashchange={() => {
-    hash = location.hash || "#/";
+    const next = pageOf(location.hash);
+    // A new page starts at its top, as on any other site.
+    if (next !== page) scrollTo(0, 0);
+    page = next;
     menu = false;
   }}
   onkeydown={(e) => e.key === "Escape" && (menu = false)}
@@ -54,7 +62,7 @@
           {href}
           class={[
             "transition-colors",
-            hash === href ? "text-fg" : "text-muted hover:text-fg",
+            page === href ? "text-fg" : "text-muted hover:text-fg",
           ]}>{label}</a
         >
       {/each}
@@ -91,7 +99,7 @@
           {href}
           class={[
             "block py-2.5 text-base font-medium transition-colors",
-            hash === href ? "text-fg" : "text-muted hover:text-fg",
+            page === href ? "text-fg" : "text-muted hover:text-fg",
           ]}>{label}</a
         >
       {/each}
@@ -101,9 +109,9 @@
 <Newer />
 
 <main class="mx-auto max-w-6xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24">
-  {#if hash === "#/methodology"}
+  {#if page === "#/methodology"}
     <Methodology />
-  {:else if hash === "#/agents"}
+  {:else if page === "#/agents"}
     <Agents run={RUN} />
   {:else}
     <Results run={visible(RUN)} />
