@@ -19,15 +19,16 @@ PROMPT = "BENCH_TURN_{turn:06d}: inspect the fixture, apply the requested update
 # sources that it reads, searches, edits and writes.
 FIXTURES = "/workspace/fixtures"
 SOURCES = "/workspace/src"
+# Sentences of prose, with three nouns from `NAMES`.
 SENTENCES = (
-    "The parser retains a partial record until the next chunk arrives.",
-    "Check the cursor boundary before replacing text in the buffer.",
-    "This update preserves the existing session history and cache entries.",
-    "The fixture covers an empty input, a normal result, and a missing key.",
-    "Use the request index to associate each tool result with its caller.",
-    "The expected output is deterministic and does not require network access.",
-    "The layout wraps long rows at the cell width and keeps the cursor visible.",
-    "A stale frame redraws only the rows whose cells changed.",
+    "The {a} retains a partial {b} until the next {c} arrives.",
+    "Check the {a} boundary before replacing the {b} in the {c}.",
+    "This update preserves the existing {a} and the {b} entries of the {c}.",
+    "The fixture covers an empty {a}, a normal {b}, and a missing {c}.",
+    "Use the {a} index to associate each {b} with its {c}.",
+    "The expected {a} is deterministic and does not require the {b} or {c}.",
+    "The {a} wraps long rows at the {b} width and keeps the {c} visible.",
+    "A stale {a} redraws only the rows whose {b} or {c} changed.",
 )
 NAMES = (
     "buffer", "cursor", "frame", "render", "session", "history", "cache",
@@ -103,17 +104,22 @@ def lines(rng, size, line):
     return "\n".join(rows)
 
 
-def prose(rng, size):
-    """Assistant text: paragraphs and bullet lists with inline code."""
+def sentence(rng):
+    a, b, c = rng.sample(NAMES, 3)
+    return rng.choice(SENTENCES).format(a=a, b=b, c=c)
+
+
+def prose(rng, size, lists=0.3):
+    """Paragraphs, and a `lists` share of bullet lists with inline code."""
     parts, total = [], 0
     while total < size:
-        if rng.random() < 0.3:
+        if rng.random() < lists:
             part = "\n".join(
-                f"- `{rng.choice(NAMES)}`: {rng.choice(SENTENCES)}"
+                f"- `{rng.choice(NAMES)}`: {sentence(rng)}"
                 for _ in range(rng.randint(2, 4))
             )
         else:
-            part = " ".join(rng.choice(SENTENCES) for _ in range(rng.randint(1, 3)))
+            part = " ".join(sentence(rng) for _ in range(rng.randint(2, 4)))
         parts.append(part)
         total += len(part) + 2
     return "\n\n".join(parts)[:size].rstrip()
@@ -128,7 +134,8 @@ def answer(rng, size):
 
 
 def thinking(rng, size):
-    return " ".join(rng.choice(SENTENCES) for _ in range(size // 60 + 1))[:size]
+    """Reasoning: paragraphs without lists."""
+    return prose(rng, size, lists=0)
 
 
 def tagged(rng, size, tag):
@@ -144,7 +151,7 @@ def shell_command(rng, path, size):
     if rest < 120:
         comment = ""
         while len(comment) < rest - 4:
-            comment += " " + rng.choice(SENTENCES)
+            comment += " " + sentence(rng)
         return f"{head}  # {comment.strip()}"[:size].rstrip() if rest > 4 else head
     return f"{head}\n: <<'EOF'\n{lines(rng, rest - 12, lambda r, _: shell(r))}\nEOF"
 
