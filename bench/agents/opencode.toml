@@ -16,6 +16,11 @@ command = "curl -fsSL ${installers}/opencode.sh | bash -s -- --version ${version
 
 [environment]
 OPENCODE_DISABLE_AUTOUPDATE = "1"
+# The TUI sends --prompt to the first model it lists, and the mock provider
+# loads after the built-in ones. So no built-in provider may list a model.
+OPENCODE_DISABLE_FREE_MODELS = "1"
+OPENAI_API_KEY = ""
+ANTHROPIC_API_KEY = ""
 
 [environment.OPENCODE_CONFIG_CONTENT]
 model = "mock/mock-model"
