@@ -1,6 +1,5 @@
 """Generated coding work with the shape of real sessions, from a seed. It uses
-no session content. `profile.json` holds only size quantiles and shares, which
-`fit.py` makes."""
+no session content. `fit.py` builds `profile.json` from aggregate statistics."""
 
 import functools
 import hashlib
@@ -187,22 +186,35 @@ def tag(turn, index):
     return f"fixture-{turn:06d}-{index:03d}"
 
 
+def order(rng, calls):
+    """The kinds of `calls` tool calls. The first kind follows how real turns
+    start, and each later kind follows what came after the kind before it in
+    real turns. With no earlier read, an edit becomes a read, because agents
+    edit only files that they read."""
+    tools = PROFILE["tools"]
+    kinds, counts, drawn = list(tools), PROFILE["turn"]["first"], []
+    for _ in range(calls):
+        kind = rng.choices(kinds, [counts.get(k, 0) for k in kinds])[0]
+        if kind == "edit" and "read" not in drawn:
+            kind = "read"
+        drawn.append(kind)
+        counts = tools[kind]["next"]
+    return tuple(drawn)
+
+
 @functools.cache
 def steps(turn, calls=None, seed=SEED):
-    """The tool calls of one turn. There are `calls` calls, or as many as a
-    real turn has when `calls` is None. An edit changes the file of the last
-    read in the turn, because agents edit only files that they read. With no
-    earlier read, an edit becomes a read."""
+    """The tool calls of one turn. `calls` is a tuple of their kinds, or their
+    number, or None for as many as a real turn has; `order` draws the kinds of
+    a number. An edit changes the file of the last read before it in the turn."""
     rng = random.Random(seed + turn)
     profile, tools = PROFILE["step"], PROFILE["tools"]
     if calls is None:
         calls = round(sample(rng, PROFILE["turn"]["calls"]))
-    kinds = list(tools)
+    if isinstance(calls, int):
+        calls = order(rng, calls)
     drawn, read = [], None
-    for index in range(calls):
-        kind = rng.choices(kinds, [tools[k]["share"] for k in kinds])[0]
-        if kind == "edit" and read is None:
-            kind = "read"
+    for index, kind in enumerate(calls):
         if kind == "read":
             read = index
         drawn.append(

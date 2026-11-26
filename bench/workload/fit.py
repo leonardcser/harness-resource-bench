@@ -4,8 +4,8 @@
     uv run --group fit workload/fit.py [~/.local/state/smelt/smelt.db] > workload/profile.json
 
 Reads the history that the model saw in every top-level session. Writes only
-aggregates, which are quantiles of sizes and counts, and shares. No session text
-leaves the store.
+aggregates: quantiles, shares and counts of which tool kind starts a turn and
+which follows each kind. No session text leaves the store.
 
 A turn runs from one user message to the next. Each tool call is one step,
 because the benchmark's model serves one call per response. So a response with
@@ -19,6 +19,8 @@ import json
 import math
 import sqlite3
 import sys
+from collections import Counter, defaultdict
+from itertools import pairwise
 from pathlib import Path
 
 import zstandard
@@ -100,14 +102,13 @@ def turns(store):
     ({"reasoning", "text", "kind", "arguments", "result"}, ...), {"reasoning", "text"}
     """
     db = sqlite3.connect(f"file:{store}?mode=ro", uri=True)
-    top = {
-        sid for (sid,) in db.execute("select sid from sessions where parent_id is null")
-    }
-    rows = db.execute("select sid, body from history order by sid, idx")
+    rows = db.execute(
+        "select sid, body from history "
+        "where sid in (select sid from sessions where parent_id is null) "
+        "order by sid, idx"
+    )
     current, steps, pending = None, [], {"reasoning": 0, "text": 0}
     for sid, body in rows:
-        if sid not in top:
-            continue
         message = decode(db, body)
         kind = message["kind"]
         if kind == "user" or sid != current:
@@ -140,22 +141,24 @@ def share(part, whole):
 
 def fit(store):
     calls, reasoning, text, final_reasoning, final_text = [], [], [], [], []
-    tools = {}
-    all_steps = []
+    tools, first, following = {}, Counter(), defaultdict(Counter)
     for steps, final in turns(store):
         calls.append(len(steps))
-        all_steps += steps
         reasoning += [s["reasoning"] for s in steps if s["reasoning"]]
         text += [s["text"] for s in steps if s["text"]]
         final_reasoning.append(final["reasoning"])
         final_text.append(final["text"])
         for step in steps:
             tools.setdefault(step["kind"], []).append(step)
-    count = len(all_steps)
+        kinds = [s["kind"] for s in steps]
+        first.update(kinds[:1])
+        for previous, kind in pairwise(kinds):
+            following[previous][kind] += 1
+    count = sum(calls)
     return {
         "source": {"turns": len(calls), "steps": count},
         "points": POINTS,
-        "turn": {"calls": quantiles(calls)},
+        "turn": {"calls": quantiles(calls), "first": dict(sorted(first.items()))},
         "step": {
             "reasoning": share(len(reasoning), count),
             "reasoning_bytes": quantiles(reasoning),
@@ -173,6 +176,7 @@ def fit(store):
                 "share": share(len(steps), count),
                 "arguments_bytes": quantiles([s["arguments"] for s in steps]),
                 "result_bytes": quantiles([s["result"] for s in steps]),
+                "next": dict(sorted(following[kind].items())),
             }
             for kind, steps in sorted(tools.items(), key=lambda kv: -len(kv[1]))
         },

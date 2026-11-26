@@ -2,7 +2,7 @@
 
 import random
 
-from workload import PROFILE, SEED, steps, transcript
+from workload import SEED, transcript
 
 QUESTIONS = ("startup", "start-memory", "task", "long-session", "new-sessions", "idle")
 # The order of the questions in a run. start-memory empties the file cache, so
@@ -18,13 +18,9 @@ REPETITIONS = 3
 START_REPETITIONS = 10
 # Tool calls of the coding task.
 CODING_CALLS = 24
-# Tool calls of the coding task in a setup check: the fewest that use every
-# tool kind, so the check runs each tool of each agent.
-SMOKE_CALLS = next(
-    n
-    for n in range(1, CODING_CALLS + 1)
-    if {step.kind for step in steps(0, n)} == set(PROFILE["tools"])
-)
+# Tool calls of the coding task in a setup check: one of each kind, so the check
+# runs each tool of each agent. The read comes before the edit of its file.
+SMOKE_CALLS = ("shell", "read", "edit", "search", "write")
 # Checkpoints of the long session in turns, and of the new-session run in
 # sessions. Both take the tool calls of each turn from the profile. 64 such
 # turns hold about as much as the 98th percentile of real sessions.

@@ -219,13 +219,13 @@ starts and stops. While the VM runs:
 
 - quantiles of tool calls per turn
 - the share of each tool kind, and quantiles of its argument and result bytes
+- counts of which tool starts a turn and which tool follows each tool kind
 - the share of calls with reasoning or text, and quantiles of their bytes
 - the same for the answer at the end of a turn
 
 About the profile:
 
-- **Source:** the maintainer's smelt sessions. They average 23 tool calls per
-  turn, and a few turns have hundreds.
+- **Source:** the maintainer's top-level smelt sessions.
 - **Rebuild:** `uv run --group fit workload/fit.py > workload/profile.json`
 - **Record:** each run keeps a copy.
 - **Sizes:** the bytes that the model saw. A result that the agent cut counts at
@@ -241,6 +241,11 @@ take the calls of each turn from the profile. 64 turns hold about as much as the
 98th percentile of real sessions.
 
 #### Tool calls
+
+The kind of the first call follows how often each kind starts a real turn. The
+kind of each later call follows how often each kind comes after the kind before
+it (a first-order Markov chain). The argument and result sizes come from the
+quantiles of the kind.
 
 Each call uses the agent's own tool for its kind, or its shell tool if it has
 none, as in real use. Each agent's recipe sets them in `[tools]`. The model

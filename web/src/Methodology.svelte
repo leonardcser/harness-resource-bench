@@ -309,8 +309,15 @@
         0.9,
       )} or more, and the largest 1% make {calls(profile, 0.99)} or more.
     </p>
+    <p class="mt-3 max-w-2xl text-sm leading-relaxed">
+      The order of the tools also has the shape of real turns. The first tool
+      comes from how real turns start. Each later tool comes from what followed
+      the tool before it in real turns.
+    </p>
     <figure class="mt-8 max-w-2xl">
-      <h3 class="mb-3 text-sm font-medium">Tool calls by kind</h3>
+      <h3 class="mb-3 text-sm font-medium">
+        Tool calls in the source sessions
+      </h3>
       <Kinds {profile} />
       <figcaption class="mt-3 text-xs leading-relaxed text-muted">
         Typical size is the median. For shell, read and search, it is the size
