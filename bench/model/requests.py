@@ -36,6 +36,7 @@ SUMMARY_SECTIONS = "\n".join(
         "# Next steps",
         "# Critical context",
         "# Relevant files",
+        "## Goal",
         "## Objective",
         "## Requirements",
         "## Decisions",
