@@ -23,10 +23,11 @@ command = "curl -fsSL ${installers}/omp.sh | sh -s -- --binary --ref v${version}
 PI_OFFLINE = "1"
 PI_TELEMETRY = "0"
 
-# YAML reads JSON.
+# YAML reads JSON. The predictions of the next message would send the whole
+# conversation again after each turn, a request that no other agent makes.
 [[files]]
 path = ".omp/agent/config.yml"
-json = { startup = { setupWizard = false, checkUpdate = false }, marketplace = { autoUpdate = "off" }, modelRoles = { default = "mock/mock-model" }, tools = { approvalMode = "yolo" } }
+json = { startup = { setupWizard = false, checkUpdate = false }, marketplace = { autoUpdate = "off" }, modelRoles = { default = "mock/mock-model" }, tools = { approvalMode = "yolo" }, composer = { predictions = false } }
 
 [[files]]
 path = ".omp/agent/models.yml"
