@@ -25,6 +25,10 @@ A local mock model gives every agent the same scripted work: real tool calls
 against real files, with the shape of real sessions. Each agent runs at a pinned
 version in its own container, and the host measures the container from outside.
 
+The results and their analysis are on
+[harness lab](https://leonardcser.github.io/harness-lab/resources/), beside two
+other studies of the same agents.
+
 | Folder      | What it holds                                                                        |
 | ----------- | ------------------------------------------------------------------------------------ |
 | `bench/`    | The harness: agents, mock model, workload and measurement                            |
