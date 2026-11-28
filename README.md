@@ -2,54 +2,41 @@
   <img src=".github/readme/logo.svg" width="56" alt="" />
 </p>
 
-<h1 align="center">Harness resource bench</h1>
+<h1 align="center">harness resource bench</h1>
 
 <p align="center">
   Benchmarking CPU, memory and disk use of coding agents.
   <br />
   <a href="https://leonardcser.github.io/harness-lab/resources/"><strong>See the results</strong></a>
-  ·
-  <a href="bench/README.md">How it works</a>
 </p>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/readme/overview-dark.png" />
-  <img src=".github/readme/overview-light.png" alt="Overview: the median startup, memory, install size, CPU and disk of each agent, with the clear leads in blue" />
-</picture>
+Every agent gets the same scripted work from a local mock model, at a pinned
+version in its own container. The host measures the container from outside:
+Claude Code, codex, fx, omp, opencode, pi and smelt, side by side.
 
-How much does a coding agent cost your machine? This benchmark measures the
-startup time, memory, CPU time, session data on disk and install size of Claude
-Code, codex, fx, omp, opencode, pi and smelt.
+| Measure      | Question                                       |
+| ------------ | ---------------------------------------------- |
+| Startup      | How long until the agent takes a key?          |
+| Memory       | How much does it hold, at start and over time? |
+| CPU time     | How much work does a task cost?                |
+| Session data | How much does a long session write to disk?    |
+| Install size | How much does the install add?                 |
 
-A local mock model gives every agent the same scripted work: real tool calls
-against real files, with the shape of real sessions. Each agent runs at a pinned
-version in its own container, and the host measures the container from outside.
+## Quick start
 
-The results and their analysis are on
-[harness lab](https://leonardcser.github.io/harness-lab/resources/), beside two
-other studies of the same agents.
-
-| Folder      | What it holds                                                                        |
-| ----------- | ------------------------------------------------------------------------------------ |
-| `bench/`    | The harness: agents, mock model, workload and measurement                            |
-| `results/`  | One folder per run: manifest, summary and workload profile                           |
-| `redirect/` | The old site's redirect to [harness lab](https://github.com/leonardcser/harness-lab) |
-
-## Run the benchmark
-
-On a fresh Ubuntu VM with 6 CPUs or more, to reproduce a released run:
+On a fresh Ubuntu VM with 6 CPUs or more:
 
 ```sh
-git checkout COMMIT          # the commit on the Methodology page of the run
-cd bench && ./setup.sh       # once; then log out and in again
-uv run bench.py run          # all agents, about 8.5 hours
+cd bench && ./setup.sh        # once; then log out and in again
+uv run bench.py run omp       # one agent; leave out the name for all
 ```
 
-`run` checks the host, builds the images and measures, all in one session.
-[`bench/README.md`](bench/README.md) explains how it works and what each case
-measures.
+## Docs
 
-To release a new run and share it, see [RELEASE.md](RELEASE.md).
+- [How it works](bench/README.md): the cases, the commands and the code
+- [Release a run](RELEASE.md): from a version bump to published results
+- [Results](https://leonardcser.github.io/harness-lab/resources/): the numbers
+  and their analysis
 
 ## License
 

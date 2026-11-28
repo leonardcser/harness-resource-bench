@@ -68,7 +68,7 @@ commits of a run.
    - codex's `tool_output_token_limit` still equals the limit of its real
      models.
    - `background_setup` is still the only work after the prompt shows.
-   - the [agent quirks](bench/README.md#agent-quirks) are still true.
+   - the [agent quirks](bench/docs/mock-model.md#agent-quirks) are still true.
 
 3. On the VM, do the [recipes](#recipes) that trace the agent: idle, install
    size, startup and CPU time. `bench.py check AGENT` helps to troubleshoot.
