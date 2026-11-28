@@ -66,8 +66,8 @@ export default {
     worktrees: yes("Yes", "/worktree or --worktree."),
     diffViewer: yes("/diff"),
     fileViewer: some(
-      "Desktop app",
-      "The desktop app opens project files in its side panel. The terminal UI has none.",
+      "Desktop app, TUI",
+      "The desktop app opens project files in its side panel. In the terminal UI, a workspace sidebar lists the files and links of the conversation and opens Markdown and image previews that you cannot edit.",
     ),
     codeReview: yes("/review"),
     memory: some("Opt-in", "Off by default. /memories turns it on."),

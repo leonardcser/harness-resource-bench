@@ -100,7 +100,10 @@ export default {
     screen: some("Inline"),
     notifications: yes(),
     voiceInput: some("Opt-in", "Off by default. stt.enabled turns it on."),
-    nextPrompt: some("Opt-in", "Off by default."),
+    nextPrompt: yes(
+      "Yes",
+      "On by default. Each finished turn sends one more request over the whole conversation.",
+    ),
     customThemes: yes(),
     latexMath: some(
       "Text",

@@ -18,11 +18,11 @@ export type Topic = {
 /** An agent's source at the version that the analysis read. */
 const at = (agent: Agent, version: string) =>
   `${PROFILES[agent].repo}/blob/${tagOf(agent, version)}`;
-const FX = at("fx", "0.0.17");
-const OPENCODE = at("opencode", "2.3.2");
-const OMP = at("omp", "18.22.2");
-const CODEX = at("codex", "0.170.0");
-const PI = at("pi", "1.5.2");
+const FX = at("fx", "0.0.18");
+const OPENCODE = at("opencode", "2.4.1");
+const OMP = at("omp", "19.2.1");
+const CODEX = at("codex", "0.172.0");
+const PI = at("pi", "1.6.1");
 const SMELT = at("smelt", "0.8.1");
 
 const src = (repo: string, path: string, lines: string): Source => ({
@@ -45,7 +45,7 @@ export const STARTUP: Topic = {
     },
     codex: {
       tag: "Native",
-      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also installs a 478 MiB copy of itself for its shared server, which stays after quit, and clones an 82 MiB plugin repository in the background.",
+      text: "A large binary. A worker thread sets up codex while the main thread waits for it. At the first launch, it also installs a 503 MiB copy of itself for its shared server, which stays after quit, and clones an 82 MiB plugin repository in the background.",
       source: trace("bpftrace: futex wait of the main thread"),
     },
     "claude-code": {
@@ -60,8 +60,8 @@ export const STARTUP: Topic = {
     },
     omp: {
       tag: "Loads JavaScript",
-      text: "Bun starts in 3 ms. It draws a live prompt that takes typed keys at once, while a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 130 MiB native module into the home folder and builds a model catalog database.",
-      source: src(OMP, "packages/coding-agent/src/cli.ts", "570-582"),
+      text: "Bun starts in 3 ms. It draws a live prompt that takes typed keys at once, while a long chain of JavaScript setup runs on one thread. At the first launch, it also writes a 144 MiB native module into the home folder and builds a model catalog database.",
+      source: src(OMP, "packages/coding-agent/src/cli.ts", "577-592"),
     },
     opencode: {
       tag: "Two processes",
@@ -128,16 +128,16 @@ export const IDLE: Topic = {
     },
     omp: {
       tag: "Profiler",
-      text: "A JavaScriptCore sampling profiler, which names the code behind a blocked event loop, wakes about 1,000 times a second. A watchdog also checks for a blocked event loop every 250 ms.",
-      source: src(OMP, "packages/tui/src/loop-sampler.ts", "78"),
+      text: "A JavaScriptCore sampling profiler, which names the code behind a blocked event loop, wakes about 100 times a second. A watchdog also checks for a blocked event loop every 250 ms.",
+      source: src(OMP, "packages/tui/src/diag/loop-sampler.ts", "78"),
     },
     fx: {
       tag: "Busy loop",
       text: "Checks for input every 8 ms, about 120 times a second.",
-      source: src(FX, "src/main.zig", "188"),
+      source: src(FX, "src/main.zig", "202"),
     },
   },
-  note: "Claude Code and opencode spend about half their idle CPU time on memory cleanup after wake-ups. omp spends most of it in its profiler.",
+  note: "Claude Code and opencode spend about half their idle CPU time on memory cleanup after wake-ups.",
 };
 
 export const MEMORY: Topic = {
@@ -190,7 +190,7 @@ export const RENDER: Topic = {
       source: src(
         FX,
         "src/ui/render_engine/transcript_blocks.zig",
-        "2666-2693",
+        "2817-2844",
       ),
     },
     "claude-code": {
@@ -206,12 +206,12 @@ export const RENDER: Topic = {
     pi: {
       tag: "Rewrites rows",
       text: "Rewrites each screen row that changes. When the transcript scrolls, that is the whole screen.",
-      source: src(PI, "packages/tui/src/tui-alt-screen.ts", "1778-1781"),
+      source: src(PI, "packages/tui/src/tui-alt-screen.ts", "1795-1798"),
     },
     omp: {
       tag: "Animates",
-      text: "Animations add redraws between tokens. Its stack sampling profiler adds about 10 ms of CPU time a second. The task clears the screen only at startup.",
-      source: src(OMP, "packages/tui/src/loop-sampler.ts", "78"),
+      text: "Animations add redraws between tokens, and its stack sampling profiler runs alongside. The task clears the screen only at startup.",
+      source: src(OMP, "packages/tui/src/diag/loop-sampler.ts", "78"),
     },
   },
 };
@@ -300,7 +300,7 @@ export const TIMERS: Record<string, { ms: number; label: string }[]> = {
     { ms: 2000, label: "~/.claude folder check" },
   ],
   omp: [
-    { ms: 1, label: "stack sampling profiler" },
+    { ms: 10, label: "stack sampling profiler" },
     { ms: 250, label: "event loop watchdog" },
   ],
   opencode: [
@@ -360,16 +360,16 @@ export const INSTALL_PIECES: Record<string, Piece[]> = {
   codex: [
     {
       part: "code",
-      value: 298.3 * MB,
-      items: ["codex: 237 MiB machine code, 28 MiB unwind tables"],
+      value: 321.3 * MB,
+      items: ["codex: 257 MiB machine code, 24 MiB unwind tables"],
     },
     {
       part: "extra",
-      value: 190.1 * MB,
+      value: 193.6 * MB,
       items: [
-        "codex-exec-server, 71 MiB",
-        "codex-code-mode-host, 67 MiB",
-        "codex-voice-host, 38 MiB",
+        "codex-exec-server, 75 MiB",
+        "codex-code-mode-host, 66 MiB",
+        "codex-voice-host, 39 MiB",
         "ripgrep, 5 MiB",
       ],
     },
