@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Harness resource bench moved to harness lab</title>
+    <link
+      rel="canonical"
+      href="https://leonardcser.github.io/harness-lab/resources/"
+    />
+    <meta
+      http-equiv="refresh"
+      content="0; url=https://leonardcser.github.io/harness-lab/resources/"
+    />
+    <script>
+      // The old site had its pages in the hash.
+      const pages = {
+        "": "",
+        "#/": "",
+        "#/agents": "agents/",
+        "#/methodology": "methodology/",
+      };
+      const { hash } = location;
+      location.replace(
+        "https://leonardcser.github.io/harness-lab/resources/" +
+          (hash in pages ? pages[hash] : hash),
+      );
+    </script>
+  </head>
+  <body>
+    <p>
+      The resource bench is now part of
+      <a href="https://leonardcser.github.io/harness-lab/resources/"
+        >harness lab</a
+      >.
+    </p>
+  </body>
+</html>

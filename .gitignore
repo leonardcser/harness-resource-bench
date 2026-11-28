@@ -10,7 +10,3 @@ results/*/*
 !results/*/site/
 # The newest setup check
 results/check/
-web/dist/
-web/.svelte-check/
-web/src/data/
-web/public/og.png

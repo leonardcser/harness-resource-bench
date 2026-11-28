@@ -124,7 +124,6 @@ On a fresh Ubuntu VM with 6 CPUs or more:
 git checkout COMMIT       # the "commit" in results/ID/manifest.json
 cd bench && ./setup.sh    # once; then log out and in again
 uv run bench.py run
-cd ../web && RUN=ID bun run dev  # ID: the folder that run made in results/
 ```
 
 The commit holds the code, versions and installers of run ID. Your machine gives

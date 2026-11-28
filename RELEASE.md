@@ -1,7 +1,8 @@
 # Release a run
 
-The site root shows the newest frozen run. Each run also gets a frozen page at
-`runs/ID/`, stored in `results/ID/site/`, which never changes.
+The results show on [harness lab](https://github.com/leonardcser/harness-lab).
+This repo keeps each run's manifest, summary and profile in `results/ID/`; the
+site and its findings live in harness lab.
 
 ## The rule
 
@@ -31,25 +32,23 @@ Do all the work on one branch.
 
    ```sh
    rsync -a VM:harness-resource-bench/results/ID results/
-   cd web && bun install && RUN=ID bun run dev
    ```
 
-   Compare it with the previous run. Update `web/src/findings.ts`, and
-   `web/src/agents/AGENT.ts` for new versions. Then `RUN=ID bun run freeze`, and
-   commit all of it as `feat(results): publish run ID`.
+   Commit `manifest.json`, `summary.json` and `profile.json` as
+   `feat(results): publish run ID`. Then, in harness lab, copy them to
+   `data/bench/ID/`, compare the run with the previous one, and update
+   `web/src/bench/findings.ts`, and `web/src/bench/agents/AGENT.ts` for new
+   versions.
 
-4. **Land:** fast-forward `main` to the branch and push. CI deploys the site.
+4. **Land:** fast-forward `main` to the branch and push.
 
 If you must change something after the run:
 
 - **Bench:** go back to step 1 and run again. Do not publish the old run.
-- **Site or findings, before you land:** amend the publish commit, and freeze
-  again.
-- **Site or findings, after you land:** a normal commit. It changes the root,
-  and never a frozen page.
+- **Findings or site:** a normal commit in harness lab.
 
-`freeze` refuses a run whose commit is not in the history of `HEAD`. So never
-rebase the commits of a run.
+Each run's commit must stay in the history of `main`, so never rebase the
+commits of a run.
 
 ## New versions
 
@@ -73,16 +72,15 @@ rebase the commits of a run.
 
 3. On the VM, do the [recipes](#recipes) that trace the agent: idle, install
    size, startup and CPU time. `bench.py check AGENT` helps to troubleshoot.
-4. After the run, check each cell of `web/src/agents/AGENT.ts` against the
-   release notes and docs. The session and first-launch recipes read the run. If
-   neither a recipe nor the source explains a change, leave its cause out. Link
-   the source at the new versions.
-
-"Copy link" next to the run date copies the frozen page's URL.
+4. After the run, check each cell of `web/src/bench/agents/AGENT.ts` in harness
+   lab against the release notes and docs. The session and first-launch recipes
+   read the run. If neither a recipe nor the source explains a change, leave its
+   cause out. Link the source at the new versions.
 
 ## Recipes
 
-Each recipe finds the cause behind one chart, for `web/src/findings.ts`.
+Each recipe finds the cause behind one chart, for `web/src/bench/findings.ts` in
+harness lab.
 
 **Never attach a tool to `bench.py run`.** strace and perf slow the agent, and
 the run would measure that cost. Use the agent's image by hand, or the setup
